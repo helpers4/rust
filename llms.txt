@@ -24,6 +24,7 @@
   `is_valid_hostname`, `HostnameError`
 - string — string manipulation: `capitalize`, `camel_case`, `pascal_case`, `snake_case`,
   `kebab_case`, `slugify`, `truncate`, `dedent`, `escape_html`
+- time — the system clock as unix time: `unix_now`, `unix_now_millis`, `ClockError`
 
 ## Docs
 

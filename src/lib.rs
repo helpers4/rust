@@ -28,3 +28,6 @@ pub mod net;
 
 #[cfg(feature = "string")]
 pub mod string;
+
+#[cfg(feature = "time")]
+pub mod time;
