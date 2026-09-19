@@ -30,6 +30,11 @@ harness = false
 required-features = ["array"]
 
 [[bench]]
+name = "hex"
+harness = false
+required-features = ["hex"]
+
+[[bench]]
 name = "string"
 harness = false
 required-features = ["string"]
