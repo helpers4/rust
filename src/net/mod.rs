@@ -1,0 +1,10 @@
+// This file is part of helpers4.
+// Copyright (C) 2025 baxyz
+// SPDX-License-Identifier: LGPL-3.0-or-later
+
+//! Network helpers on `std::net` and plain text: no I/O, no resolution.
+
+mod _cidr;
+mod is_public_ip;
+
+pub use is_public_ip::is_public_ip;

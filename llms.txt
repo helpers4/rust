@@ -19,6 +19,8 @@
 - env — dotenv content helpers (pure text, no I/O): `parse`, `get`, `set`, `remove`
 - hex — hexadecimal encoding/decoding with typed errors: `encode`, `encode_upper`, `decode`,
   `decode_to_slice`, `decode_array`
+- net — network address and hostname checks: `is_public_ip` (SSRF guard, IANA registry),
+  `is_valid_hostname`, `HostnameError`
 - string — string manipulation: `capitalize`, `camel_case`, `pascal_case`, `snake_case`,
   `kebab_case`, `slugify`, `truncate`, `dedent`, `escape_html`
 
