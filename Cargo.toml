@@ -41,6 +41,16 @@ harness = false
 required-features = ["hex"]
 
 [[bench]]
+name = "net"
+harness = false
+required-features = ["net"]
+
+[[bench]]
+name = "cache"
+harness = false
+required-features = ["cache"]
+
+[[bench]]
 name = "string"
 harness = false
 required-features = ["string"]
