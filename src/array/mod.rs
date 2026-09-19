@@ -8,6 +8,7 @@
 //! helpers require `Eq + Hash`.
 
 mod difference;
+mod equals_unordered;
 mod intersection;
 mod intersects;
 mod symmetric_difference;
@@ -15,6 +16,7 @@ mod unique;
 mod unique_by;
 
 pub use difference::difference;
+pub use equals_unordered::equals_unordered;
 pub use intersection::intersection;
 pub use intersects::intersects;
 pub use symmetric_difference::symmetric_difference;
