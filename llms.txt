@@ -13,6 +13,9 @@
 
 ## Modules
 
+- array — slice helpers not in `std`: `unique`, `unique_by`, `difference`, `intersection`,
+  `symmetric_difference`, `intersects`, `equals_unordered`, `count_by`, `group_by`,
+  `cartesian_product`
 - string — string manipulation: `capitalize`, `camel_case`, `pascal_case`, `snake_case`,
   `kebab_case`, `slugify`, `truncate`, `dedent`, `escape_html`
 
