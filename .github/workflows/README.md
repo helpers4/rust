@@ -66,5 +66,6 @@ A release is a normal PR followed by one manual workflow run.
 - **Then** on crates.io, in the crate's settings, add a Trusted Publisher (repository
   `helpers4/rust`, workflow `release.yml`, environment `crates-io`), run the next release with
   `auth: trusted-publishing`, and delete the token secret.
-- Optional: the `TRIGGANATOR_*` / `PUSHINATOR_*` app credentials used to notify the website
-  repository (the notification is best-effort and never fails the release).
+
+The website is not notified yet: it needs a Rust docs generator and an `on-rust-release` workflow
+first (tracked in the project board card *Website: generate Rust docs*).
