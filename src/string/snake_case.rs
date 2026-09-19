@@ -26,33 +26,9 @@ pub fn snake_case(s: &str) -> String {
 }
 
 #[cfg(test)]
-mod tests {
-    use super::*;
-    use proptest::prelude::*;
+#[path = "snake_case.test.rs"]
+mod tests;
 
-    #[test]
-    fn converts_common_formats() {
-        assert_eq!(snake_case("helloWorld"), "hello_world");
-        assert_eq!(snake_case("kebab-case-input"), "kebab_case_input");
-        assert_eq!(snake_case("HTMLParser"), "html_parser");
-    }
-
-    #[test]
-    fn empty_input_is_empty() {
-        assert_eq!(snake_case(""), "");
-    }
-
-    proptest! {
-        #[test]
-        fn is_idempotent_on_ascii(s in "[ -~]*") {
-            let once = snake_case(&s);
-            prop_assert_eq!(snake_case(&once), once);
-        }
-
-        #[test]
-        fn has_no_edge_or_doubled_separators(s in "[ -~]*") {
-            let out = snake_case(&s);
-            prop_assert!(!out.starts_with('_') && !out.ends_with('_') && !out.contains("__"));
-        }
-    }
-}
+#[cfg(test)]
+#[path = "snake_case.spec.rs"]
+mod spec;

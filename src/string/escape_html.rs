@@ -44,41 +44,9 @@ pub fn escape_html(s: &str) -> Cow<'_, str> {
 }
 
 #[cfg(test)]
-mod tests {
-    use super::*;
-    use proptest::prelude::*;
+#[path = "escape_html.test.rs"]
+mod tests;
 
-    fn is_borrowed(c: Cow<'_, str>) -> bool {
-        matches!(c, Cow::Borrowed(_))
-    }
-
-    #[test]
-    fn escapes_all_five_characters() {
-        assert_eq!(escape_html("&<>\"'"), "&amp;&lt;&gt;&quot;&#39;");
-    }
-
-    #[test]
-    fn keeps_other_characters() {
-        assert_eq!(escape_html("a <b> é"), "a &lt;b&gt; é");
-    }
-
-    #[test]
-    fn borrows_when_nothing_to_escape() {
-        assert!(is_borrowed(escape_html("plain é")));
-        assert!(!is_borrowed(escape_html("a&b")));
-    }
-
-    proptest! {
-        #[test]
-        fn output_has_no_raw_specials(s in ".*") {
-            let out = escape_html(&s);
-            prop_assert!(!out.contains(['<', '>', '"', '\'']));
-        }
-
-        #[test]
-        fn borrowed_iff_input_has_no_specials(s in ".*") {
-            let has_special = s.contains(['&', '<', '>', '"', '\'']);
-            prop_assert_eq!(!is_borrowed(escape_html(&s)), has_special);
-        }
-    }
-}
+#[cfg(test)]
+#[path = "escape_html.spec.rs"]
+mod spec;

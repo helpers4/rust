@@ -42,50 +42,9 @@ pub fn slugify(s: &str) -> String {
 }
 
 #[cfg(test)]
-mod tests {
-    use super::*;
-    use proptest::prelude::*;
+#[path = "slugify.test.rs"]
+mod tests;
 
-    #[test]
-    fn slugifies_plain_text() {
-        assert_eq!(slugify("Hello World!"), "hello-world");
-    }
-
-    #[test]
-    fn collapses_runs_and_trims_edges() {
-        assert_eq!(slugify("  a --- b  "), "a-b");
-        assert_eq!(slugify("-a"), "a");
-    }
-
-    #[test]
-    fn drops_ascii_and_typographic_apostrophes() {
-        assert_eq!(slugify("It's"), "its");
-        assert_eq!(slugify("It\u{2019}s"), "its");
-    }
-
-    #[test]
-    fn keeps_unicode_letters() {
-        assert_eq!(slugify("Café Été"), "café-été");
-    }
-
-    #[test]
-    fn nothing_alphanumeric_gives_empty() {
-        assert_eq!(slugify(""), "");
-        assert_eq!(slugify("!!!"), "");
-    }
-
-    proptest! {
-        #[test]
-        fn is_idempotent_on_ascii(s in "[ -~]*") {
-            let once = slugify(&s);
-            prop_assert_eq!(slugify(&once), once);
-        }
-
-        #[test]
-        fn ascii_output_is_url_safe(s in "[ -~]*") {
-            let out = slugify(&s);
-            prop_assert!(out.chars().all(|c| c.is_ascii_lowercase() || c.is_ascii_digit() || c == '-'));
-            prop_assert!(!out.starts_with('-') && !out.ends_with('-') && !out.contains("--"));
-        }
-    }
-}
+#[cfg(test)]
+#[path = "slugify.spec.rs"]
+mod spec;

@@ -9,13 +9,20 @@
 
 ```text
 src/<module>/
-├── mod.rs                  # module docs + `pub use` of every helper
-├── function_name.rs        # one helper per file (snake_case)
-│                           #   holds the implementation, its `#[cfg(test)] mod tests`
-│                           #   (unit + proptest) and its doc examples (doctests)
-└── _internal.rs            # crate-private, not re-exported
-benches/<module>.rs         # criterion benchmarks, optional per helper
+├── function_name.rs        # one helper per file (snake_case): implementation + doctests
+├── function_name.test.rs    # unit tests — 100% coverage of the .rs file required
+├── function_name.spec.rs    # property-based tests (proptest): invariants, not branches
+├── function_name.bench.rs   # optional criterion benchmark (`pub fn bench(c: &mut Criterion)`)
+├── _internal.rs             # crate-private helper, not re-exported (same sibling files)
+└── mod.rs                   # module docs + `pub use` of every helper
+benches/<module>.rs         # one criterion target per module: pulls in each *.bench.rs
 ```
+
+Sibling files are wired from the helper with
+`#[cfg(test)] #[path = "function_name.test.rs"] mod tests;` (and `spec` likewise), so they keep
+access to private items. Benches are wired from `benches/<module>.rs` with
+`#[path = "../src/<module>/function_name.bench.rs"] mod function_name;` and listed in its
+`criterion_group!`.
 
 **Key commands:**
 
@@ -23,7 +30,8 @@ benches/<module>.rs         # criterion benchmarks, optional per helper
 cargo fmt --all --check
 cargo clippy --all-targets --all-features -- -D warnings
 cargo test --all-features && cargo test --no-default-features
-cargo llvm-cov --all-features --fail-under-lines 100 --fail-under-functions 100 --fail-under-regions 100
+cargo llvm-cov --all-features --ignore-filename-regex '\.(test|spec|bench)\.rs$' \
+  --fail-under-lines 100 --fail-under-functions 100 --fail-under-regions 100
 cargo doc --no-deps --all-features
 cargo bench --all-features
 cargo deny check
@@ -36,8 +44,9 @@ cargo deny check
   tests) and a `# Since` section
   - Not yet released → `next` (replaced at release time)
   - Existing version → **never change** (records the first published version)
-- 100% coverage: lines, functions, regions — no exceptions. Property tests (proptest) live
-  next to unit tests and cover invariants, not branches
+- 100% coverage: lines, functions, regions — no exceptions. `*.test.rs`, `*.spec.rs` and
+  `*.bench.rs` are excluded from the measurement, not held to it. Property tests (proptest,
+  `*.spec.rs`) cover invariants, not branches
 - Zero third-party dependencies by default. A module needing one gets its own Cargo feature
   and the dependency is `optional = true`
 - One Cargo feature per module (`default` enables all). New module ⇒ new feature, gated
