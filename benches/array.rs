@@ -1,0 +1,23 @@
+// This file is part of helpers4.
+// Copyright (C) 2025 baxyz
+// SPDX-License-Identifier: LGPL-3.0-or-later
+
+use criterion::{criterion_group, criterion_main};
+
+#[path = "../src/array/difference.bench.rs"]
+mod difference;
+#[path = "../src/array/equals_unordered.bench.rs"]
+mod equals_unordered;
+#[path = "../src/array/group_by.bench.rs"]
+mod group_by;
+#[path = "../src/array/unique.bench.rs"]
+mod unique;
+
+criterion_group!(
+    benches,
+    difference::bench,
+    equals_unordered::bench,
+    group_by::bench,
+    unique::bench,
+);
+criterion_main!(benches);
