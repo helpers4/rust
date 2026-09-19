@@ -7,6 +7,8 @@
 mod _epoch;
 mod error;
 mod unix_now;
+mod unix_now_millis;
 
 pub use error::ClockError;
 pub use unix_now::unix_now;
+pub use unix_now_millis::unix_now_millis;
