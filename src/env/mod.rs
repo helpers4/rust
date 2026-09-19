@@ -10,9 +10,11 @@ mod _line;
 mod error;
 mod get;
 mod parse;
+mod remove;
 mod set;
 
 pub use error::InvalidKeyError;
 pub use get::get;
 pub use parse::parse;
+pub use remove::remove;
 pub use set::set;
