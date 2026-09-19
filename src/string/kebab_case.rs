@@ -26,27 +26,9 @@ pub fn kebab_case(s: &str) -> String {
 }
 
 #[cfg(test)]
-mod tests {
-    use super::*;
-    use proptest::prelude::*;
+#[path = "kebab_case.test.rs"]
+mod tests;
 
-    #[test]
-    fn converts_common_formats() {
-        assert_eq!(kebab_case("helloWorld"), "hello-world");
-        assert_eq!(kebab_case("snake_case_input"), "snake-case-input");
-        assert_eq!(kebab_case("Hello World"), "hello-world");
-    }
-
-    #[test]
-    fn empty_input_is_empty() {
-        assert_eq!(kebab_case(""), "");
-    }
-
-    proptest! {
-        #[test]
-        fn is_idempotent_on_ascii(s in "[ -~]*") {
-            let once = kebab_case(&s);
-            prop_assert_eq!(kebab_case(&once), once);
-        }
-    }
-}
+#[cfg(test)]
+#[path = "kebab_case.spec.rs"]
+mod spec;

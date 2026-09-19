@@ -28,42 +28,9 @@ pub fn capitalize(s: &str) -> String {
 }
 
 #[cfg(test)]
-mod tests {
-    use super::*;
-    use proptest::prelude::*;
+#[path = "capitalize.test.rs"]
+mod tests;
 
-    #[test]
-    fn empty_string_stays_empty() {
-        assert_eq!(capitalize(""), "");
-    }
-
-    #[test]
-    fn uppercases_first_ascii_letter_only() {
-        assert_eq!(capitalize("hello World"), "Hello World");
-    }
-
-    #[test]
-    fn expands_multi_char_uppercase() {
-        assert_eq!(capitalize("ßa"), "SSa");
-    }
-
-    #[test]
-    fn leaves_non_letters_alone() {
-        assert_eq!(capitalize("1abc"), "1abc");
-    }
-
-    proptest! {
-        #[test]
-        fn is_idempotent(s in ".*") {
-            let once = capitalize(&s);
-            prop_assert_eq!(capitalize(&once), once);
-        }
-
-        #[test]
-        fn preserves_tail(s in ".+") {
-            let first_len = s.chars().next().unwrap().len_utf8();
-            let out = capitalize(&s);
-            prop_assert!(out.ends_with(&s[first_len..]));
-        }
-    }
-}
+#[cfg(test)]
+#[path = "capitalize.spec.rs"]
+mod spec;

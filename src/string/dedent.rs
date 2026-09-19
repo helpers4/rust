@@ -43,55 +43,9 @@ pub fn dedent(s: &str) -> String {
 }
 
 #[cfg(test)]
-mod tests {
-    use super::*;
-    use proptest::prelude::*;
+#[path = "dedent.test.rs"]
+mod tests;
 
-    #[test]
-    fn strips_common_indent_and_outer_blank_lines() {
-        assert_eq!(dedent("\n    Hello\n      World\n"), "Hello\n  World");
-    }
-
-    #[test]
-    fn works_without_outer_blank_lines() {
-        assert_eq!(dedent("  a\n  b"), "a\nb");
-    }
-
-    #[test]
-    fn blank_lines_do_not_affect_the_indent() {
-        assert_eq!(dedent("  a\n\n  b"), "a\n\nb");
-    }
-
-    #[test]
-    fn single_blank_line_is_kept_as_is() {
-        assert_eq!(dedent(""), "");
-        assert_eq!(dedent("   "), "   ");
-    }
-
-    #[test]
-    fn all_blank_lines_have_no_indent_to_strip() {
-        assert_eq!(dedent("\n\n"), "");
-    }
-
-    #[test]
-    fn unindented_input_is_unchanged() {
-        assert_eq!(dedent("a\nb"), "a\nb");
-    }
-
-    #[test]
-    fn counts_multibyte_whitespace_as_one_indent_unit() {
-        assert_eq!(dedent("\u{a0}a\n b"), "a\nb");
-    }
-
-    proptest! {
-        #[test]
-        fn removes_exactly_the_shared_indent(
-            words in prop::collection::vec("[a-z]{1,5}", 1..5),
-            n in 0usize..6,
-        ) {
-            let pad = " ".repeat(n);
-            let indented = words.iter().map(|w| format!("{pad}{w}")).collect::<Vec<_>>().join("\n");
-            prop_assert_eq!(dedent(&indented), words.join("\n"));
-        }
-    }
-}
+#[cfg(test)]
+#[path = "dedent.spec.rs"]
+mod spec;
