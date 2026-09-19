@@ -24,22 +24,26 @@ access to private items. Benches are wired from `benches/<module>.rs` with
 `#[path = "../src/<module>/function_name.bench.rs"] mod function_name;` and listed in its
 `criterion_group!`.
 
-**Key commands:**
+**Key commands** (the same checks CI runs — see `.github/workflows/README.md`):
 
 ```bash
 cargo fmt --all --check
-cargo clippy --all-targets --all-features -- -D warnings
-cargo test --all-features && cargo test --no-default-features
+cargo clippy --all-targets --all-features -- -D warnings   # strict [lints] table, see Cargo.toml
+typos && cargo machete                                    # spelling, unused dependencies
+cargo test --all-features
+cargo hack check --feature-powerset --no-dev-deps          # every feature combination builds
 cargo llvm-cov --all-features --ignore-filename-regex '\.(test|spec|bench)\.rs$' \
   --fail-under-lines 100 --fail-under-functions 100 --fail-under-regions 100
-cargo doc --no-deps --all-features
+RUSTDOCFLAGS='-D warnings' cargo doc --no-deps --all-features && cargo test --all-features --doc
 cargo bench --all-features
 cargo deny check
+cargo package --locked                                     # what would be published
 ```
 
 **Rules:**
 
-- `unsafe` forbidden (`#![forbid(unsafe_code)]`); no `unwrap()`/`expect()` outside tests
+- `unsafe` forbidden (`#![forbid(unsafe_code)]`); no `unwrap()`/`expect()`/`panic!` outside tests
+  (denied by clippy). Pure functions are `#[must_use]`
 - Rustdoc on every public item, with a runnable `# Examples` block (doctests are the smoke
   tests). No version annotation in the code: "since which version" is computed at release time
   by diffing the public API against the previous release (`cargo public-api diff`) into
