@@ -20,5 +20,8 @@ pub mod env;
 #[cfg(feature = "hex")]
 pub mod hex;
 
+#[cfg(feature = "net")]
+pub mod net;
+
 #[cfg(feature = "string")]
 pub mod string;
