@@ -30,6 +30,7 @@ body = """
 {% endif -%}
 {% endfor -%}
 {% endfor %}
+
 """
 footer = """
 {% for release in releases -%}
