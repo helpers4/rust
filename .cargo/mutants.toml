@@ -9,4 +9,10 @@ minimum_test_timeout = 60
 
 # Equivalent mutants (the mutated program behaves identically, so no test can catch them):
 # `(high << 4) | low` — the two nibbles never overlap, so `|` and `^` give the same byte.
-exclude_re = ["replace \\| with \\^ in decode_into"]
+#
+# `ExpiringMap::evict_expired` skips the sweep while `now` is below the earliest expiry. Making the
+# guard always true only sweeps needlessly: the result is identical, so no test can observe it.
+exclude_re = [
+  "replace \\| with \\^ in decode_into",
+  "replace match guard now >= earliest with true in .*evict_expired",
+]
