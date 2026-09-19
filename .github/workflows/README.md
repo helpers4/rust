@@ -8,6 +8,7 @@ entry-point workflows that call reusable `job-*.yml` building blocks (`workflow_
 | `pr-validation.yml` | `pull_request` | Build, tests + coverage, compatibility, lint, docs, security and conventional commits on every PR, plus one sticky status comment |
 | `main-validation.yml` | `push` to `main` | The same suite post-merge, uploading coverage to Codecov |
 | `mutation-dashboard.yml` | `push` to `main`, weekly, manual | Full [cargo-mutants](https://mutants.rs/) run in 4 shards, merged into one score in the job summary |
+| `release.yml` | manual (`workflow_dispatch`) | Publishes the version in `Cargo.toml` to crates.io, then tags it and creates the GitHub release |
 | `auto-assign.yml` | issues, PRs | Assigns the maintainer |
 
 ## Reusable jobs
@@ -34,3 +35,32 @@ rejects any other scope.
 
 `CODEOWNERS`-level maintainer setup that CI degrades gracefully without: `CODECOV_TOKEN`
 (coverage upload). Later workflows (release, scorecard) will list theirs here.
+
+## Releasing
+
+A release is a normal PR followed by one manual workflow run.
+
+1. **Prepare**: a PR `chore(release): 🔖 X.Y.Z` that bumps `version` in `Cargo.toml` (and
+   `Cargo.lock`) and adds the changelog section (`git cliff --tag vX.Y.Z -o CHANGELOG.md`).
+   Merge it.
+2. **Run** *Actions → Release → Run workflow* on `main`. `dry-run` first if in doubt. The workflow
+   checks the version and its changelog section, re-runs lint, tests, compatibility, docs and
+   security on that exact commit, then (in the `crates-io` environment) publishes, waits until
+   crates.io serves the version, attests the `.crate` (SLSA provenance), and creates the tag and
+   the GitHub release from the changelog. It never commits.
+3. **Resume**: if a run published but failed afterwards, run it again. It detects that the version
+   is already on crates.io and only finishes the tag and the release.
+
+### One-time setup (maintainer)
+
+- crates.io account with a verified e-mail and 2FA.
+- GitHub environment `crates-io` in this repository, with the secret `CARGO_REGISTRY_TOKEN` (a
+  crates.io API token with the `publish-new` and `publish-update` scopes) and, ideally, the
+  maintainer as required reviewer so nothing is published without a click.
+- **First publish only** uses that token (`auth: token`): crates.io trusted publishing can only be
+  configured for a crate that already exists.
+- **Then** on crates.io, in the crate's settings, add a Trusted Publisher (repository
+  `helpers4/rust`, workflow `release.yml`, environment `crates-io`), run the next release with
+  `auth: trusted-publishing`, and delete the token secret.
+- Optional: the `TRIGGANATOR_*` / `PUSHINATOR_*` app credentials used to notify the website
+  repository (the notification is best-effort and never fails the release).
