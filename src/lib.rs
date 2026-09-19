@@ -14,5 +14,8 @@
 #[cfg(feature = "array")]
 pub mod array;
 
+#[cfg(feature = "env")]
+pub mod env;
+
 #[cfg(feature = "string")]
 pub mod string;

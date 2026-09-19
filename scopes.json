@@ -4,6 +4,7 @@
   "CI-CD",
   "coherency",
   "deps",
+  "env",
   "license",
   "release",
   "scorecard",
