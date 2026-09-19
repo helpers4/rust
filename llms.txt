@@ -1,0 +1,22 @@
+# helpers4 (Rust)
+
+> General-purpose Rust helpers: one crate, `helpers4`, one module per category, each behind its
+> own Cargo feature (all enabled by default). Zero third-party dependencies by default, 100%
+> test coverage, every rustdoc `# Examples` block is a doctest — treat those as verified usage.
+
+## Conventions
+
+- Import through the module path: `use helpers4::string::capitalize;`. Names may repeat across
+  modules (`array::compact` vs `object::compact`), so never glob-import modules.
+- Helpers take `&str`/slices and return owned values; nothing is mutated unless documented.
+- `unsafe` is never used.
+
+## Modules
+
+- string — string manipulation: `capitalize`
+
+## Docs
+
+- [README.md](README.md): quick start
+- [AGENTS.md](AGENTS.md): layout, rules, checks
+- [CONTRIBUTING.md](CONTRIBUTING.md): how to add a helper or module

@@ -1,0 +1,31 @@
+[package]
+name = "helpers4"
+version = "0.0.0"
+edition = "2024"
+rust-version = "1.85"
+license = "LGPL-3.0-or-later"
+authors = ["baxyz <craft@baxyz.dev>"]
+repository = "https://github.com/helpers4/rust"
+homepage = "https://helpers4.dev"
+description = "General-purpose Rust helpers, one crate, one feature per module (string, array, ...)"
+keywords = ["helpers", "utilities", "string"]
+categories = ["algorithms"]
+
+[features]
+default = ["string"]
+# One feature per module: `default-features = false, features = ["string"]`
+# compiles only what is used.
+string = []
+
+[dev-dependencies]
+criterion = { version = "0.7", default-features = false }
+proptest = "1"
+
+[[bench]]
+name = "string"
+harness = false
+required-features = ["string"]
+
+[profile.release]
+lto = "thin"
+codegen-units = 1
