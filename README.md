@@ -28,7 +28,7 @@ through the module path.
 
 ## Status
 
-Pre-release (`0.0.0`). Sister project of [helpers4/typescript](https://github.com/helpers4/typescript).
+Pre-release (`0.0.1`). Sister project of [helpers4/typescript](https://github.com/helpers4/typescript).
 See the [roadmap](https://github.com/orgs/helpers4/projects/1) and [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
