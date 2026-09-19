@@ -23,6 +23,11 @@ criterion = { version = "0.7", default-features = false }
 proptest = "1"
 
 [[bench]]
+name = "array"
+harness = false
+required-features = ["array"]
+
+[[bench]]
 name = "string"
 harness = false
 required-features = ["string"]
