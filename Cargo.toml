@@ -12,9 +12,10 @@ keywords = ["helpers", "utilities", "string"]
 categories = ["algorithms"]
 
 [features]
-default = ["string"]
+default = ["array", "string"]
 # One feature per module: `default-features = false, features = ["string"]`
 # compiles only what is used.
+array = []
 string = []
 
 [dev-dependencies]
