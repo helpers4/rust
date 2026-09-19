@@ -7,8 +7,12 @@
 //! write it back.
 
 mod _line;
+mod error;
 mod get;
 mod parse;
+mod set;
 
+pub use error::InvalidKeyError;
 pub use get::get;
 pub use parse::parse;
+pub use set::set;
