@@ -9,10 +9,12 @@
 
 mod difference;
 mod intersection;
+mod symmetric_difference;
 mod unique;
 mod unique_by;
 
 pub use difference::difference;
 pub use intersection::intersection;
+pub use symmetric_difference::symmetric_difference;
 pub use unique::unique;
 pub use unique_by::unique_by;
