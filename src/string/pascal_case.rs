@@ -27,28 +27,9 @@ pub fn pascal_case(s: &str) -> String {
 }
 
 #[cfg(test)]
-mod tests {
-    use super::*;
-    use proptest::prelude::*;
+#[path = "pascal_case.test.rs"]
+mod tests;
 
-    #[test]
-    fn converts_common_formats() {
-        assert_eq!(pascal_case("hello-world"), "HelloWorld");
-        assert_eq!(pascal_case("user_name"), "UserName");
-        assert_eq!(pascal_case("camelCase"), "CamelCase");
-        assert_eq!(pascal_case("userID"), "UserId");
-    }
-
-    #[test]
-    fn empty_input_is_empty() {
-        assert_eq!(pascal_case(""), "");
-    }
-
-    proptest! {
-        // Not idempotent by design (see camel_case): only output shape is checked.
-        #[test]
-        fn has_no_separators(s in "[ -~]*") {
-            prop_assert!(pascal_case(&s).chars().all(|c| c.is_ascii_alphanumeric()));
-        }
-    }
-}
+#[cfg(test)]
+#[path = "pascal_case.spec.rs"]
+mod spec;

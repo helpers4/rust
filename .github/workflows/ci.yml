@@ -65,6 +65,7 @@ jobs:
       - name: Enforce 100% coverage
         run: >-
           cargo llvm-cov --all-features
+          --ignore-filename-regex '\.(test|spec|bench)\.rs$'
           --fail-under-lines 100
           --fail-under-functions 100
           --fail-under-regions 100
