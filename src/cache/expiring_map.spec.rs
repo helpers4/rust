@@ -52,6 +52,7 @@ proptest! {
                 }
             }
             prop_assert_eq!(real.len(), model.len());
+            prop_assert_eq!(real.is_empty(), model.is_empty());
         }
     }
 }
