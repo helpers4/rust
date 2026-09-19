@@ -76,3 +76,20 @@ fn bare_values_end_at_a_hash_preceded_by_whitespace() {
     assert_eq!(value("K=abc\t# note").as_deref(), Some("abc"));
     assert_eq!(value("K=a#b").as_deref(), Some("a#b"));
 }
+
+#[test]
+fn format_value_leaves_safe_values_bare() {
+    assert_eq!(format_value("simple-value_1"), "simple-value_1");
+    assert_eq!(format_value(""), "");
+}
+
+#[test]
+fn format_value_quotes_and_escapes_when_needed() {
+    assert_eq!(format_value("a b"), r#""a b""#);
+    assert_eq!(format_value("a#b"), r##""a#b""##);
+    assert_eq!(format_value("say \"hi\""), r#""say \"hi\"""#);
+    assert_eq!(format_value("it's"), r#""it's""#);
+    assert_eq!(format_value("a\\b"), r#""a\\b""#);
+    assert_eq!(format_value("l1\nl2\r\t"), r#""l1\nl2\r\t""#);
+    assert_eq!(format_value("\u{a0}x"), "\"\u{a0}x\"");
+}

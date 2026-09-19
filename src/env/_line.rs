@@ -77,6 +77,30 @@ fn strip_inline_comment(raw: &str) -> &str {
     }
 }
 
+/// Renders `value` so that [`parse_line`] reads it back unchanged: bare when that is safe,
+/// otherwise double quoted with escapes.
+pub(crate) fn format_value(value: &str) -> String {
+    let needs_quotes =
+        value.contains(|c: char| c.is_whitespace() || matches!(c, '"' | '\'' | '#' | '\\'));
+    if !needs_quotes {
+        return value.to_string();
+    }
+    let mut out = String::with_capacity(value.len() + 2);
+    out.push('"');
+    for c in value.chars() {
+        match c {
+            '"' => out.push_str("\\\""),
+            '\\' => out.push_str("\\\\"),
+            '\n' => out.push_str("\\n"),
+            '\r' => out.push_str("\\r"),
+            '\t' => out.push_str("\\t"),
+            other => out.push(other),
+        }
+    }
+    out.push('"');
+    out
+}
+
 #[cfg(test)]
 #[path = "_line.test.rs"]
 mod tests;
