@@ -7,6 +7,8 @@
 //! write it back.
 
 mod _line;
+mod get;
 mod parse;
 
+pub use get::get;
 pub use parse::parse;
