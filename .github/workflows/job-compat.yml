@@ -102,6 +102,9 @@ jobs:
     # Informational: dependency lower bounds are only enforced once the crate has runtime
     # dependencies of its own.
     continue-on-error: true
+    env:
+      # Takes precedence over rust-toolchain.toml, which pins `stable` (no `-Z` flags there).
+      RUSTUP_TOOLCHAIN: nightly
     steps:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
