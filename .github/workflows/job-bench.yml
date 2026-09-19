@@ -119,19 +119,56 @@ jobs:
             [ "${PIPESTATUS[0]}" -eq 0 ] || exit 1
           done
 
+      # Runner drift between the base pass and the PR pass can flag identical code (a +16% swing on
+      # an unchanged helper was seen). Each suspect is re-measured base-then-PR, back to back, and
+      # only a regression that persists is reported.
+      - name: Confirm suspected regressions
+        id: confirm
+        if: steps.changed.outputs.skip != 'true' && inputs.base-ref != ''
+        continue-on-error: true
+        run: |
+          # The benchmark name is the first token of the line that starts with `module::name`.
+          awk '/^[a-z0-9_]+::[^ ]+/ && !/^Benchmarking/ {name=$1} /Performance has regressed/ {print name}' \
+            bench-output.txt | sort -u > suspected.txt
+          : > confirmed.txt
+          : > confirm-output.txt
+          while read -r name; do
+            [ -n "$name" ] || continue
+            m=${name%%::*}
+            echo "Re-measuring $name"
+            (cd base && CARGO_TARGET_DIR="$GITHUB_WORKSPACE/target" \
+              cargo bench --bench "$m" -- "$name" --exact $CRITERION_ARGS --save-baseline confirm) >/dev/null 2>&1 || continue
+            OUT=$(cargo bench --bench "$m" -- "$name" --exact $CRITERION_ARGS --baseline-lenient confirm 2>&1) || continue
+            echo "$OUT" | tee -a confirm-output.txt
+            if echo "$OUT" | grep -q 'Performance has regressed'; then
+              echo "$name" >> confirmed.txt
+            fi
+          done < suspected.txt
+
       - name: Summarize
         id: summary
         if: always()
         run: |
           touch bench-output.txt
           TOTAL=$(grep -c 'time:' bench-output.txt || true)
-          REGRESSIONS=$(grep -c 'Performance has regressed' bench-output.txt || true)
+          if [ -f suspected.txt ]; then
+            SUSPECTED=$(wc -l < suspected.txt)
+            REGRESSIONS=$(wc -l < confirmed.txt)
+          else
+            SUSPECTED=0
+            REGRESSIONS=0
+          fi
           echo "total=$TOTAL" >> "$GITHUB_OUTPUT"
           echo "regressions=$REGRESSIONS" >> "$GITHUB_OUTPUT"
           {
             echo "### Benchmarks"
             echo
-            echo "$TOTAL measured, $REGRESSIONS regressed against the base."
+            echo "$TOTAL measured. $SUSPECTED suspected regression(s) against the base, $REGRESSIONS confirmed by a back-to-back re-measure."
+            if [ -s confirmed.txt ]; then
+              echo
+              echo "Confirmed:"
+              sed 's/^/- /' confirmed.txt
+            fi
             echo
             echo '```'
             grep -E 'time:|change:|Performance has|No change|within noise' bench-output.txt || true
@@ -155,6 +192,8 @@ jobs:
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: bench-output-${{ github.run_id }}
-          path: bench-output.txt
+          path: |
+            bench-output.txt
+            confirm-output.txt
           if-no-files-found: ignore
           retention-days: 14
