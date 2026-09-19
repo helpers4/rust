@@ -4,8 +4,8 @@
 
 use super::*;
 
-fn is_borrowed(c: Cow<'_, str>) -> bool {
-    matches!(c, Cow::Borrowed(_))
+fn is_borrowed(s: &str) -> bool {
+    matches!(escape_html(s), Cow::Borrowed(_))
 }
 
 #[test]
@@ -20,6 +20,6 @@ fn keeps_other_characters() {
 
 #[test]
 fn borrows_when_nothing_to_escape() {
-    assert!(is_borrowed(escape_html("plain é")));
-    assert!(!is_borrowed(escape_html("a&b")));
+    assert!(is_borrowed("plain é"));
+    assert!(!is_borrowed("a&b"));
 }

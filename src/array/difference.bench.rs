@@ -10,6 +10,6 @@ pub fn bench(c: &mut Criterion) {
     let items: Vec<u32> = (0..1000).map(|i| i % 97).collect();
     let other: Vec<u32> = (0..500).collect();
     c.bench_function("array::difference", |b| {
-        b.iter(|| difference(black_box(&items), black_box(&other)))
+        b.iter(|| difference(black_box(&items), black_box(&other)));
     });
 }

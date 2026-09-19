@@ -8,6 +8,6 @@ use std::hint::black_box;
 
 pub fn bench(c: &mut Criterion) {
     c.bench_function("string::dedent", |b| {
-        b.iter(|| dedent(black_box("\n    Hello\n      World\n    !\n")))
+        b.iter(|| dedent(black_box("\n    Hello\n      World\n    !\n")));
     });
 }

@@ -17,6 +17,7 @@
 /// assert_eq!(truncate("short", 8, "..."), "short");
 /// assert_eq!(truncate("Hello", 2, "..."), "..");
 /// ```
+#[must_use]
 pub fn truncate(s: &str, max_chars: usize, suffix: &str) -> String {
     if s.chars().count() <= max_chars {
         return s.to_string();

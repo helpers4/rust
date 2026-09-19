@@ -21,6 +21,7 @@ use std::borrow::Cow;
 /// assert_eq!(escape_html("It's a <test> & more"), "It&#39;s a &lt;test&gt; &amp; more");
 /// assert_eq!(escape_html("plain"), "plain");
 /// ```
+#[must_use]
 pub fn escape_html(s: &str) -> Cow<'_, str> {
     if !s.contains(['&', '<', '>', '"', '\'']) {
         return Cow::Borrowed(s);

@@ -14,6 +14,7 @@ use super::_digits::encode_with;
 /// assert_eq!(encode(&[0xde, 0xad, 0xbe, 0xef]), "deadbeef");
 /// assert_eq!(encode(&[]), "");
 /// ```
+#[must_use]
 pub fn encode(bytes: &[u8]) -> String {
     encode_with(bytes, false)
 }

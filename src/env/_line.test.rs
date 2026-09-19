@@ -86,7 +86,7 @@ fn format_value_leaves_safe_values_bare() {
 #[test]
 fn format_value_quotes_and_escapes_when_needed() {
     assert_eq!(format_value("a b"), r#""a b""#);
-    assert_eq!(format_value("a#b"), r##""a#b""##);
+    assert_eq!(format_value("a#b"), r#""a#b""#);
     assert_eq!(format_value("say \"hi\""), r#""say \"hi\"""#);
     assert_eq!(format_value("it's"), r#""it's""#);
     assert_eq!(format_value("a\\b"), r#""a\\b""#);

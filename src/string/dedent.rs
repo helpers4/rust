@@ -17,6 +17,7 @@
 /// assert_eq!(dedent("\n    Hello\n      World\n"), "Hello\n  World");
 /// assert_eq!(dedent("  a\n  b"), "a\nb");
 /// ```
+#[must_use]
 pub fn dedent(s: &str) -> String {
     let mut lines: Vec<&str> = s.split('\n').collect();
     if lines.len() > 1 && lines[0].trim().is_empty() {

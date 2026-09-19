@@ -8,6 +8,6 @@ use std::hint::black_box;
 
 pub fn bench(c: &mut Criterion) {
     c.bench_function("string::capitalize", |b| {
-        b.iter(|| capitalize(black_box("hello world")))
+        b.iter(|| capitalize(black_box("hello world")));
     });
 }

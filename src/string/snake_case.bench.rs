@@ -8,6 +8,6 @@ use std::hint::black_box;
 
 pub fn bench(c: &mut Criterion) {
     c.bench_function("string::snake_case", |b| {
-        b.iter(|| snake_case(black_box("someHTTPServerName here")))
+        b.iter(|| snake_case(black_box("someHTTPServerName here")));
     });
 }
