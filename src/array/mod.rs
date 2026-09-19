@@ -8,9 +8,11 @@
 //! helpers require `Eq + Hash`.
 
 mod difference;
+mod intersection;
 mod unique;
 mod unique_by;
 
 pub use difference::difference;
+pub use intersection::intersection;
 pub use unique::unique;
 pub use unique_by::unique_by;
