@@ -8,8 +8,12 @@
 //! whitespace and strip `0x` prefixes before calling it.
 
 mod _digits;
+mod decode;
 mod encode;
 mod encode_upper;
+mod error;
 
+pub use decode::decode;
 pub use encode::encode;
 pub use encode_upper::encode_upper;
+pub use error::DecodeError;
