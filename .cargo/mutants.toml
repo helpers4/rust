@@ -1,0 +1,12 @@
+# cargo-mutants configuration.
+# Mutants are only generated in the implementation files: test, property-test and benchmark
+# files are never mutated (their `mod tests;` declarations are #[cfg(test)]).
+examine_globs = ["src/**/*.rs"]
+exclude_globs = ["src/**/*.test.rs", "src/**/*.spec.rs", "src/**/*.bench.rs"]
+# Property tests are slow under mutation: bound each mutant's run.
+timeout_multiplier = 3.0
+minimum_test_timeout = 60
+
+# Equivalent mutants (the mutated program behaves identically, so no test can catch them):
+# `(high << 4) | low` — the two nibbles never overlap, so `|` and `^` give the same byte.
+exclude_re = ["replace \\| with \\^ in decode_into"]
