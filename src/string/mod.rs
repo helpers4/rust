@@ -4,6 +4,9 @@
 
 //! String manipulation and formatting helpers.
 
+mod _words;
+mod camel_case;
 mod capitalize;
 
+pub use camel_case::camel_case;
 pub use capitalize::capitalize;
