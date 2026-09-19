@@ -54,9 +54,13 @@ A release is a normal PR followed by one manual workflow run.
 ### One-time setup (maintainer)
 
 - crates.io account with a verified e-mail and 2FA.
-- GitHub environment `crates-io` in this repository, with the secret `CARGO_REGISTRY_TOKEN` (a
-  crates.io API token with the `publish-new` and `publish-update` scopes) and, ideally, the
-  maintainer as required reviewer so nothing is published without a click.
+- The secret `CARGO_REGISTRY_TOKEN`: a crates.io API token with the `publish-new` and
+  `publish-update` scopes, restricted to the crate pattern `helpers4` and a short expiry. It can
+  be a repository secret, a `crates-io` environment secret, or an organization secret **restricted
+  to this repository** (never "all repositories").
+- Recommended: the GitHub environment `crates-io` (repository *Settings → Environments*) with the
+  maintainer as required reviewer, so nothing is published without an approval. Without it the
+  release still works, but the token is readable by every workflow of the repository.
 - **First publish only** uses that token (`auth: token`): crates.io trusted publishing can only be
   configured for a crate that already exists.
 - **Then** on crates.io, in the crate's settings, add a Trusted Publisher (repository
