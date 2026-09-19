@@ -8,7 +8,7 @@ name: Release
 # it sees the version is already on crates.io and only finishes the remaining steps.
 #
 # Authentication (input `auth`):
-#   token              the environment secret CARGO_REGISTRY_TOKEN. Required for the very first
+#   token              the secret CARGO_REGISTRY_TOKEN. Required for the very first
 #                      publish of a crate: crates.io trusted publishing can only be configured
 #                      for a crate that already exists.
 #   trusted-publishing short-lived token from the GitHub OIDC identity, no secret to store. Switch
@@ -121,8 +121,10 @@ jobs:
   publish:
     needs: [guard, lint, tests, compat, docs, security]
     runs-on: ubuntu-latest
-    # A protected environment lets a maintainer require approval before anything is published, and
-    # keeps CARGO_REGISTRY_TOKEN out of every other job.
+    # Optional protection: configure required reviewers on the `crates-io` environment (repository
+    # Settings -> Environments) so nothing is published without an approval. The environment is
+    # created on first use; CARGO_REGISTRY_TOKEN may live at the repository, environment or
+    # organization level (restricted to this repository).
     environment: crates-io
     permissions:
       contents: write # tag + GitHub release
@@ -162,7 +164,7 @@ jobs:
           CARGO_REGISTRY_TOKEN: ${{ inputs.auth == 'trusted-publishing' && steps.auth.outputs.token || secrets.CARGO_REGISTRY_TOKEN }}
         run: |
           if [ -z "$CARGO_REGISTRY_TOKEN" ]; then
-            echo "::error::No crates.io credential. For 'token', add the CARGO_REGISTRY_TOKEN secret to the crates-io environment."
+            echo "::error::No crates.io credential. For 'token', make the CARGO_REGISTRY_TOKEN secret available to this repository (repository, crates-io environment, or an organization secret restricted to helpers4/rust)."
             exit 1
           fi
           cargo publish --locked
