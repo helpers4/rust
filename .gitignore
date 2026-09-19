@@ -1,3 +1,6 @@
 /target
 /coverage
 /mutants.out*
+
+# VS Code local history
+/.history
