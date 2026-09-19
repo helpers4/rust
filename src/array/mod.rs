@@ -7,6 +7,7 @@
 //! Inputs are borrowed slices and results are new `Vec`s: nothing is mutated. Membership-based
 //! helpers require `Eq + Hash`.
 
+mod count_by;
 mod difference;
 mod equals_unordered;
 mod intersection;
@@ -15,6 +16,7 @@ mod symmetric_difference;
 mod unique;
 mod unique_by;
 
+pub use count_by::count_by;
 pub use difference::difference;
 pub use equals_unordered::equals_unordered;
 pub use intersection::intersection;
