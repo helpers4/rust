@@ -1,0 +1,144 @@
+name: Job - Mutation Testing
+
+# Informational, never blocks. cargo-mutants changes the code (flips operators, replaces function
+# bodies, ...) and checks that the tests notice. On a pull request only the lines touched by the
+# diff are mutated; a shard k/n splits a full run across jobs.
+
+on:
+  workflow_call:
+    inputs:
+      base-ref:
+        required: false
+        type: string
+        default: ""
+        description: "Base branch of the PR: mutate only what the diff touches."
+      shard:
+        required: false
+        type: string
+        default: ""
+        description: "'k/n' to run one shard of a full run (0-based k)."
+      artifact-name:
+        required: false
+        type: string
+        default: mutants
+    outputs:
+      status:
+        description: "success, failure or skipped"
+        value: ${{ jobs.mutation.outputs.status }}
+      caught:
+        value: ${{ jobs.mutation.outputs.caught }}
+      missed:
+        value: ${{ jobs.mutation.outputs.missed }}
+      timeout:
+        value: ${{ jobs.mutation.outputs.timeout }}
+      unviable:
+        value: ${{ jobs.mutation.outputs.unviable }}
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: never
+
+jobs:
+  mutation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    outputs:
+      status: ${{ steps.status.outputs.status }}
+      caught: ${{ steps.counts.outputs.caught }}
+      missed: ${{ steps.counts.outputs.missed }}
+      timeout: ${{ steps.counts.outputs.timeout }}
+      unviable: ${{ steps.counts.outputs.unviable }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@6bed0761d98439e5a578e2877258200ad565ba87
+        with:
+          toolchain: stable
+
+      - name: Cache
+        uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6
+
+      - name: Install cargo-mutants
+        uses: taiki-e/install-action@9114bf4d891761788c546334fd37538eae1bf8b3
+        with:
+          tool: cargo-mutants
+
+      - name: Select what to mutate
+        id: select
+        env:
+          BASE_REF: ${{ inputs.base-ref }}
+          SHARD: ${{ inputs.shard }}
+        run: |
+          ARGS="-j2"
+          if [ -n "$SHARD" ]; then
+            ARGS="$ARGS --shard $SHARD"
+          elif [ -n "$BASE_REF" ]; then
+            git diff "origin/$BASE_REF...HEAD" -- 'src/**/*.rs' > pr.diff
+            if [ ! -s pr.diff ]; then
+              echo "skip=true" >> "$GITHUB_OUTPUT"
+              echo "No source change to mutate."
+              exit 0
+            fi
+            ARGS="$ARGS --in-diff pr.diff"
+          fi
+          echo "skip=false" >> "$GITHUB_OUTPUT"
+          echo "args=$ARGS" >> "$GITHUB_OUTPUT"
+          echo "cargo mutants $ARGS"
+
+      - name: Run cargo-mutants
+        id: mutants
+        if: steps.select.outputs.skip != 'true'
+        continue-on-error: true
+        run: cargo mutants ${{ steps.select.outputs.args }}
+
+      - name: Count outcomes
+        id: counts
+        if: always()
+        run: |
+          F=mutants.out/outcomes.json
+          if [ -f "$F" ]; then
+            for k in caught missed timeout unviable; do
+              echo "$k=$(jq ".$k // 0" "$F")" >> "$GITHUB_OUTPUT"
+            done
+            {
+              echo "### Mutation testing"
+              echo
+              echo "caught $(jq .caught $F) · missed $(jq .missed $F) · timeout $(jq .timeout $F) · unviable $(jq .unviable $F)"
+              if [ -s mutants.out/missed.txt ]; then
+                echo
+                echo "Missed mutants (a test should fail for each):"
+                echo '```'
+                cat mutants.out/missed.txt
+                echo '```'
+              fi
+            } >> "$GITHUB_STEP_SUMMARY"
+          else
+            for k in caught missed timeout unviable; do echo "$k=0" >> "$GITHUB_OUTPUT"; done
+          fi
+
+      - name: Set status
+        id: status
+        if: always()
+        run: |
+          if [ "${{ steps.select.outputs.skip }}" == "true" ]; then
+            echo "status=skipped" >> "$GITHUB_OUTPUT"
+          elif [ "${{ steps.mutants.outcome }}" == "success" ]; then
+            echo "status=success" >> "$GITHUB_OUTPUT"
+          else
+            echo "status=failure" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Upload the mutants report
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: ${{ inputs.artifact-name }}
+          path: mutants.out/
+          if-no-files-found: ignore
+          retention-days: 14

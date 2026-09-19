@@ -1,0 +1,158 @@
+name: Job - Benchmarks
+
+# Informational, never blocks. On a pull request only the modules touched by the diff are
+# benchmarked, and each is compared against the base branch built and measured on the same
+# runner (criterion baselines), so noise between runners does not leak into the comparison.
+
+on:
+  workflow_call:
+    inputs:
+      base-ref:
+        required: false
+        type: string
+        default: ""
+        description: "Base branch of the PR (e.g. 'main'). When set, only benches affected by the diff run, compared against that branch. When empty, every bench runs."
+    outputs:
+      status:
+        description: "success, failure or skipped"
+        value: ${{ jobs.bench.outputs.status }}
+      total:
+        description: "Number of benchmarks measured"
+        value: ${{ jobs.bench.outputs.total }}
+      regressions:
+        description: "Number of benchmarks criterion reports as regressed against the base"
+        value: ${{ jobs.bench.outputs.regressions }}
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: never
+  # Short but real sampling: `--quick` cannot save or compare baselines.
+  CRITERION_ARGS: --warm-up-time 0.5 --measurement-time 1 --sample-size 20 --noplot
+
+jobs:
+  bench:
+    runs-on: ubuntu-latest
+    outputs:
+      status: ${{ steps.status.outputs.status }}
+      total: ${{ steps.summary.outputs.total }}
+      regressions: ${{ steps.summary.outputs.regressions }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@6bed0761d98439e5a578e2877258200ad565ba87
+        with:
+          toolchain: stable
+
+      - name: Cache
+        uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6
+
+      - name: Detect the benchmarks to run
+        id: changed
+        env:
+          BASE_REF: ${{ inputs.base-ref }}
+        run: |
+          ALL=$(find benches -maxdepth 1 -name '*.rs' -exec basename {} .rs \; | sort)
+          if [ -z "$BASE_REF" ]; then
+            MODULES="$ALL"
+          else
+            CHANGED=$(git diff --name-only "origin/$BASE_REF...HEAD")
+            echo "Changed files:"; echo "$CHANGED"
+            # Cargo.toml, the lockfile, benches' shared code or this workflow: everything moves.
+            if echo "$CHANGED" | grep -qE '^(Cargo\.(toml|lock)|\.github/workflows/job-bench\.yml|\.cargo/)'; then
+              MODULES="$ALL"
+            else
+              MODULES=$( (echo "$CHANGED" | sed -nE 's#^src/([^/]+)/.*#\1#p; s#^benches/([^/]+)\.rs$#\1#p') | sort -u)
+              # keep only modules that actually have a benchmark target
+              MODULES=$(comm -12 <(echo "$MODULES") <(echo "$ALL"))
+            fi
+          fi
+          if [ -z "$MODULES" ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "No benchmark affected."
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+            echo "modules=$(echo $MODULES | tr '\n' ' ')" >> "$GITHUB_OUTPUT"
+            echo "Benchmarks to run: $MODULES"
+          fi
+
+      - name: Checkout the base branch
+        if: steps.changed.outputs.skip != 'true' && inputs.base-ref != ''
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ inputs.base-ref }}
+          path: base
+
+      - name: Measure the base branch
+        if: steps.changed.outputs.skip != 'true' && inputs.base-ref != ''
+        continue-on-error: true
+        env:
+          CARGO_TARGET_DIR: ${{ github.workspace }}/target
+        run: |
+          cd base
+          for m in ${{ steps.changed.outputs.modules }}; do
+            # A module new in this PR has no baseline on the base branch.
+            [ -f "benches/$m.rs" ] || continue
+            cargo bench --bench "$m" -- $CRITERION_ARGS --save-baseline base
+          done
+
+      - name: Run the benchmarks
+        id: bench
+        if: steps.changed.outputs.skip != 'true'
+        continue-on-error: true
+        run: |
+          : > bench-output.txt
+          for m in ${{ steps.changed.outputs.modules }}; do
+            if [ -n "${{ inputs.base-ref }}" ]; then
+              # Benchmarks with no baseline yet fall back to saving one instead of failing.
+              cargo bench --bench "$m" -- $CRITERION_ARGS --baseline-lenient base 2>&1 | tee -a bench-output.txt
+            else
+              cargo bench --bench "$m" -- $CRITERION_ARGS 2>&1 | tee -a bench-output.txt
+            fi
+            [ "${PIPESTATUS[0]}" -eq 0 ] || exit 1
+          done
+
+      - name: Summarize
+        id: summary
+        if: always()
+        run: |
+          touch bench-output.txt
+          TOTAL=$(grep -c 'time:' bench-output.txt || true)
+          REGRESSIONS=$(grep -c 'Performance has regressed' bench-output.txt || true)
+          echo "total=$TOTAL" >> "$GITHUB_OUTPUT"
+          echo "regressions=$REGRESSIONS" >> "$GITHUB_OUTPUT"
+          {
+            echo "### Benchmarks"
+            echo
+            echo "$TOTAL measured, $REGRESSIONS regressed against the base."
+            echo
+            echo '```'
+            grep -E 'time:|change:|Performance has|No change|within noise' bench-output.txt || true
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Set status
+        id: status
+        if: always()
+        run: |
+          if [ "${{ steps.changed.outputs.skip }}" == "true" ]; then
+            echo "status=skipped" >> "$GITHUB_OUTPUT"
+          elif [ "${{ steps.bench.outcome }}" == "success" ]; then
+            echo "status=success" >> "$GITHUB_OUTPUT"
+          else
+            echo "status=failure" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Upload the raw output
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: bench-output-${{ github.run_id }}
+          path: bench-output.txt
+          if-no-files-found: ignore
+          retention-days: 14

@@ -1,0 +1,74 @@
+name: Mutation Dashboard
+
+# Full mutation run on main, split into shards, merged into one score. Informational: a low score
+# never fails the workflow, it just shows where the tests are weakest.
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "**.md"
+      - "llms.txt"
+      - "LICENSE"
+      - ".github/ISSUE_TEMPLATE/**"
+  schedule:
+    - cron: "0 3 * * 1" # Every Monday at 03:00 UTC
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  shard:
+    if: >-
+      !startsWith(github.event.head_commit.message, 'chore(release):')
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3]
+    uses: ./.github/workflows/job-mutation.yml
+    with:
+      shard: ${{ matrix.shard }}/4
+      artifact-name: mutants-shard-${{ matrix.shard }}
+
+  aggregate:
+    needs: shard
+    if: always() && !cancelled()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download the shard reports
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          pattern: mutants-shard-*
+          path: shards
+
+      - name: Merge the shards
+        run: |
+          shopt -s nullglob
+          FILES=(shards/*/outcomes.json)
+          if [ ${#FILES[@]} -eq 0 ]; then
+            echo "No shard report found." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          for k in caught missed timeout unviable total_mutants; do
+            eval "$k=$(jq -s "map(.$k // 0) | add" "${FILES[@]}")"
+          done
+          TESTED=$((caught + missed + timeout))
+          SCORE=$([ "$TESTED" -gt 0 ] && echo "scale=1; 100 * $caught / $TESTED" | bc || echo 0)
+          {
+            echo "### Mutation score: ${SCORE}%"
+            echo
+            echo "$total_mutants mutants · caught $caught · missed $missed · timeout $timeout · unviable $unviable"
+            echo
+            echo "Score = caught / (caught + missed + timeout); unviable mutants (that do not compile) are not counted."
+            for f in shards/*/missed.txt; do
+              [ -s "$f" ] || continue
+              echo
+              echo "Missed mutants in $(basename "$(dirname "$f")"):"
+              echo '```'; cat "$f"; echo '```'
+            done
+          } >> "$GITHUB_STEP_SUMMARY"

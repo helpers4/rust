@@ -7,6 +7,7 @@ entry-point workflows that call reusable `job-*.yml` building blocks (`workflow_
 | --- | --- | --- |
 | `pr-validation.yml` | `pull_request` | Build, tests + coverage, compatibility, lint, docs, security and conventional commits on every PR, plus one sticky status comment |
 | `main-validation.yml` | `push` to `main` | The same suite post-merge, uploading coverage to Codecov |
+| `mutation-dashboard.yml` | `push` to `main`, weekly, manual | Full [cargo-mutants](https://mutants.rs/) run in 4 shards, merged into one score in the job summary |
 | `auto-assign.yml` | issues, PRs | Assigns the maintainer |
 
 ## Reusable jobs
@@ -18,6 +19,8 @@ entry-point workflows that call reusable `job-*.yml` building blocks (`workflow_
 | `job-compat.yml` | OS (Linux, macOS, Windows) × toolchain (stable, beta, MSRV 1.85); every Cargo feature combination (`cargo hack`); `wasm32-unknown-unknown` and `wasm32-wasip1`; minimal dependency versions (informational) |
 | `job-docs.yml` | `cargo doc` with warnings denied (broken intra-doc links) and every doctest |
 | `job-security.yml` | `cargo deny`: RustSec advisories, yanked crates, licenses, bans, sources |
+| `job-mutation.yml` | cargo-mutants, informational: only the lines a PR touches (`--in-diff`), or one shard of a full run. Configured in `.cargo/mutants.toml` |
+| `job-bench.yml` | criterion, informational: only the benches a PR affects, compared against the base branch measured on the same runner; every bench on `main` |
 | `job-build.yml` | Release build with every feature, benchmarks compile, `cargo package` |
 
 Third-party actions are pinned by commit SHA. Workflows default to `contents: read`.
