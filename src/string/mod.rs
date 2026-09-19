@@ -7,6 +7,7 @@
 mod _words;
 mod camel_case;
 mod capitalize;
+mod dedent;
 mod kebab_case;
 mod pascal_case;
 mod slugify;
@@ -15,6 +16,7 @@ mod truncate;
 
 pub use camel_case::camel_case;
 pub use capitalize::capitalize;
+pub use dedent::dedent;
 pub use kebab_case::kebab_case;
 pub use pascal_case::pascal_case;
 pub use slugify::slugify;
