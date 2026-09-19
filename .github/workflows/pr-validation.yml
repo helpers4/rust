@@ -116,8 +116,11 @@ jobs:
             const compatIcon = compat === 'success' ? '✅' : compat === 'skipped' ? '⏭️' : '❌';
 
             const mutationStatus = "${{ needs.mutation.outputs.status || 'unknown' }}";
+            const mutantCount = ${{ needs.mutation.outputs.caught || 0 }} + ${{ needs.mutation.outputs.missed || 0 }} + ${{ needs.mutation.outputs.timeout || 0 }} + ${{ needs.mutation.outputs.unviable || 0 }};
             const mutationLine = (mutationStatus === 'skipped' || mutationStatus === 'unknown')
               ? '> ⏭️ **Mutation testing**: skipped (no source change)'
+              : mutantCount === 0
+              ? '> ✅ **Mutation testing** — no mutant in this diff (only attributes, docs or tests changed)'
               : `> ${mutationStatus === 'success' ? '✅' : '⚠️'} **Mutation testing** — caught ${{ needs.mutation.outputs.caught || 0 }} · missed ${{ needs.mutation.outputs.missed || 0 }} · timeout ${{ needs.mutation.outputs.timeout || 0 }} · unviable ${{ needs.mutation.outputs.unviable || 0 }}`;
 
             const benchStatus = "${{ needs.bench.outputs.status || 'unknown' }}";
