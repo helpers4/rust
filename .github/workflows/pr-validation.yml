@@ -39,6 +39,18 @@ jobs:
   security:
     uses: ./.github/workflows/job-security.yml
 
+  # Informational: neither of these blocks the PR.
+  mutation:
+    uses: ./.github/workflows/job-mutation.yml
+    with:
+      base-ref: ${{ github.base_ref }}
+      artifact-name: mutants-${{ github.run_id }}
+
+  bench:
+    uses: ./.github/workflows/job-bench.yml
+    with:
+      base-ref: ${{ github.base_ref }}
+
   conventional-commits:
     runs-on: ubuntu-latest
     permissions:
@@ -67,7 +79,7 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
-    needs: [build, test, compat, lint, docs, security, conventional-commits]
+    needs: [build, test, compat, lint, docs, security, conventional-commits, mutation, bench]
     if: always() && github.event.pull_request.head.repo.full_name == github.repository
     steps:
       - name: Build extra sections
@@ -103,6 +115,17 @@ jobs:
             const compat = "${{ needs.compat.result }}";
             const compatIcon = compat === 'success' ? '✅' : compat === 'skipped' ? '⏭️' : '❌';
 
+            const mutationStatus = "${{ needs.mutation.outputs.status || 'unknown' }}";
+            const mutationLine = (mutationStatus === 'skipped' || mutationStatus === 'unknown')
+              ? '> ⏭️ **Mutation testing**: skipped (no source change)'
+              : `> ${mutationStatus === 'success' ? '✅' : '⚠️'} **Mutation testing** — caught ${{ needs.mutation.outputs.caught || 0 }} · missed ${{ needs.mutation.outputs.missed || 0 }} · timeout ${{ needs.mutation.outputs.timeout || 0 }} · unviable ${{ needs.mutation.outputs.unviable || 0 }}`;
+
+            const benchStatus = "${{ needs.bench.outputs.status || 'unknown' }}";
+            const regressions = parseInt("${{ needs.bench.outputs.regressions || '0' }}");
+            const benchLine = (benchStatus === 'skipped' || benchStatus === 'unknown')
+              ? '> ⏭️ **Benchmarks**: skipped (no benchmark affected)'
+              : `> ${benchStatus === 'success' && regressions === 0 ? '✅' : '⚠️'} **Benchmarks: ${{ needs.bench.outputs.total || 0 }} measured** — ${regressions === 0 ? 'no regression against the base' : regressions + ' regressed against the base'}`;
+
             const markdown = `### 📊 Code Coverage
 
             > ${status(avg)} **Overall Coverage: ${avg}%** ${avg >= 100 ? '— Target reached! 🎯' : '— Target: 100%'}
@@ -119,10 +142,27 @@ jobs:
 
             ---
 
+            ### 🧬 Mutation Testing
+
+            ${mutationLine}
+
+            > 🧬 *Informational only, does not block the PR* — [cargo-mutants](https://mutants.rs/), scoped to the lines this PR touches
+
+            ---
+
+            ### ⏱️ Benchmarks
+
+            ${benchLine}
+
+            > ⏱️ *Informational only, does not block the PR* — criterion, compared with the base branch on the same runner
+
+            ---
+
             <details>
             <summary>ℹ️ <b>About this report</b></summary>
 
             - 🎯 **Coverage target**: 100% of lines, functions and regions, measured by cargo-llvm-cov (test files excluded)
+            - 🧬 **Mutation testing** and ⏱️ **benchmarks** are informational and never block the PR
             - 🔄 This comment updates automatically with each push
 
             </details>`;

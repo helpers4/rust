@@ -38,3 +38,7 @@ jobs:
 
   security:
     uses: ./.github/workflows/job-security.yml
+
+  # Informational: measures every benchmark, never blocks.
+  bench:
+    uses: ./.github/workflows/job-bench.yml
