@@ -23,6 +23,9 @@ pub mod env;
 #[cfg(feature = "hex")]
 pub mod hex;
 
+#[cfg(feature = "http")]
+pub mod http;
+
 #[cfg(feature = "net")]
 pub mod net;
 
