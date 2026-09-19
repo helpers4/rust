@@ -41,9 +41,9 @@ cargo deny check
 
 - `unsafe` forbidden (`#![forbid(unsafe_code)]`); no `unwrap()`/`expect()` outside tests
 - Rustdoc on every public item, with a runnable `# Examples` block (doctests are the smoke
-  tests) and a `# Since` section
-  - Not yet released → `next` (replaced at release time)
-  - Existing version → **never change** (records the first published version)
+  tests). No version annotation in the code: "since which version" is computed at release time
+  by diffing the public API against the previous release (`cargo public-api diff`) into
+  `api-since.json`, which the docs site and `llms.txt` consume — never write it by hand
 - 100% coverage: lines, functions, regions — no exceptions. `*.test.rs`, `*.spec.rs` and
   `*.bench.rs` are excluded from the measurement, not held to it. Property tests (proptest,
   `*.spec.rs`) cover invariants, not branches
