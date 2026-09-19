@@ -28,8 +28,10 @@ permissions:
 
 env:
   CARGO_TERM_COLOR: never
-  # Short but real sampling: `--quick` cannot save or compare baselines.
-  CRITERION_ARGS: --warm-up-time 0.5 --measurement-time 1 --sample-size 20 --noplot
+  # Short but real sampling: `--quick` cannot save or compare baselines. Shared runners are noisy:
+  # with criterion's default 2% noise threshold, identical code reports "regressed" for +1.5% to
+  # +5% swings, so only a change beyond 10% (p < 0.01) counts.
+  CRITERION_ARGS: --warm-up-time 1 --measurement-time 2 --sample-size 30 --noplot --noise-threshold 0.10 --significance-level 0.01
 
 jobs:
   bench:
