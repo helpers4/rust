@@ -8,7 +8,9 @@ mod _words;
 mod camel_case;
 mod capitalize;
 mod pascal_case;
+mod snake_case;
 
 pub use camel_case::camel_case;
 pub use capitalize::capitalize;
 pub use pascal_case::pascal_case;
+pub use snake_case::snake_case;
