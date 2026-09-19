@@ -8,5 +8,7 @@
 //! helpers require `Eq + Hash`.
 
 mod unique;
+mod unique_by;
 
 pub use unique::unique;
+pub use unique_by::unique_by;
