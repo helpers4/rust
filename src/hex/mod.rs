@@ -9,12 +9,14 @@
 
 mod _digits;
 mod decode;
+mod decode_array;
 mod decode_to_slice;
 mod encode;
 mod encode_upper;
 mod error;
 
 pub use decode::decode;
+pub use decode_array::decode_array;
 pub use decode_to_slice::decode_to_slice;
 pub use encode::encode;
 pub use encode_upper::encode_upper;
