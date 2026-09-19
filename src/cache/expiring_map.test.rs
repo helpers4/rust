@@ -18,6 +18,8 @@ fn a_new_map_is_empty() {
 fn entries_are_live_until_their_expiry() {
     let mut map = Map::new();
     assert_eq!(map.insert(1, 10, 100, 0), None);
+    assert!(!map.is_empty());
+    assert_eq!(map.len(), 1);
     assert_eq!(map.get(&1, 0), Some(&10));
     assert_eq!(map.get(&1, 99), Some(&10));
     assert_eq!(map.get(&1, 100), None);
@@ -102,6 +104,7 @@ fn an_entry_that_expires_at_once_is_swept_by_the_next_write() {
 fn clear_forgets_everything() {
     let mut map = Map::new();
     map.insert(1, 10, 100, 0);
+    assert!(!map.is_empty());
     map.clear();
     assert!(map.is_empty());
     assert!(map.insert_if_absent(1, 10, 100, 0));
