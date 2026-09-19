@@ -9,5 +9,7 @@
 
 mod _digits;
 mod encode;
+mod encode_upper;
 
 pub use encode::encode;
+pub use encode_upper::encode_upper;
