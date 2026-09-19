@@ -17,6 +17,7 @@ use super::_words::words;
 /// assert_eq!(snake_case("Hello World"), "hello_world");
 /// assert_eq!(snake_case(""), "");
 /// ```
+#[must_use]
 pub fn snake_case(s: &str) -> String {
     words(s).join("_")
 }

@@ -13,6 +13,7 @@ use super::_digits::encode_with;
 ///
 /// assert_eq!(encode_upper(&[0xde, 0xad, 0xbe, 0xef]), "DEADBEEF");
 /// ```
+#[must_use]
 pub fn encode_upper(bytes: &[u8]) -> String {
     encode_with(bytes, true)
 }

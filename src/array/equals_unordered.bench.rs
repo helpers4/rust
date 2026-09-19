@@ -11,6 +11,6 @@ pub fn bench(c: &mut Criterion) {
     let mut shuffled = items.clone();
     shuffled.reverse();
     c.bench_function("array::equals_unordered", |b| {
-        b.iter(|| equals_unordered(black_box(&items), black_box(&shuffled)))
+        b.iter(|| equals_unordered(black_box(&items), black_box(&shuffled)));
     });
 }

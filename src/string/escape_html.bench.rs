@@ -8,9 +8,9 @@ use std::hint::black_box;
 
 pub fn bench(c: &mut Criterion) {
     c.bench_function("string::escape_html/clean", |b| {
-        b.iter(|| escape_html(black_box("nothing to escape here")))
+        b.iter(|| escape_html(black_box("nothing to escape here")));
     });
     c.bench_function("string::escape_html/dirty", |b| {
-        b.iter(|| escape_html(black_box("<a href=\"x\">Tom & Jerry's</a>")))
+        b.iter(|| escape_html(black_box("<a href=\"x\">Tom & Jerry's</a>")));
     });
 }

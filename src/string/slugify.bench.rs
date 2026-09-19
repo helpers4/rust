@@ -8,6 +8,6 @@ use std::hint::black_box;
 
 pub fn bench(c: &mut Criterion) {
     c.bench_function("string::slugify", |b| {
-        b.iter(|| slugify(black_box("  It's a Fine Day -- isn't it?  ")))
+        b.iter(|| slugify(black_box("  It's a Fine Day -- isn't it?  ")));
     });
 }

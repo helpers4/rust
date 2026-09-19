@@ -16,6 +16,7 @@ use super::_line::parse_line;
 ///
 /// assert_eq!(remove("A=1\nB=2\nA=3\n", "A"), "B=2\n");
 /// ```
+#[must_use]
 pub fn remove(content: &str, key: &str) -> String {
     content
         .split_inclusive('\n')

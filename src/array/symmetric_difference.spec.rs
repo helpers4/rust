@@ -8,11 +8,11 @@ use proptest::prelude::*;
 proptest! {
     #[test]
     fn is_symmetric_as_a_set(a in prop::collection::vec(0i8..8, 0..20), b in prop::collection::vec(0i8..8, 0..20)) {
-        let mut ab = symmetric_difference(&a, &b);
-        let mut ba = symmetric_difference(&b, &a);
-        ab.sort_unstable();
-        ba.sort_unstable();
-        prop_assert_eq!(ab, ba);
+        let mut a_then_b = symmetric_difference(&a, &b);
+        let mut b_then_a = symmetric_difference(&b, &a);
+        a_then_b.sort_unstable();
+        b_then_a.sort_unstable();
+        prop_assert_eq!(a_then_b, b_then_a);
     }
 
     #[test]

@@ -8,6 +8,6 @@ use std::hint::black_box;
 
 pub fn bench(c: &mut Criterion) {
     c.bench_function("string::camel_case", |b| {
-        b.iter(|| camel_case(black_box("some_HTTPServer-name here")))
+        b.iter(|| camel_case(black_box("some_HTTPServer-name here")));
     });
 }

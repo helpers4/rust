@@ -21,6 +21,7 @@ use super::capitalize::capitalize;
 /// assert_eq!(camel_case("userID"), "userId");
 /// assert_eq!(camel_case(""), "");
 /// ```
+#[must_use]
 pub fn camel_case(s: &str) -> String {
     let mut iter = words(s).into_iter();
     let mut out = iter.next().unwrap_or_default();
