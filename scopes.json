@@ -5,6 +5,7 @@
   "coherency",
   "deps",
   "env",
+  "hex",
   "license",
   "release",
   "scorecard",
