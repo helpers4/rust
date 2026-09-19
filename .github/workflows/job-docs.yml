@@ -1,0 +1,35 @@
+name: Job - Docs
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+  RUSTFLAGS: -D warnings
+  RUSTDOCFLAGS: -D warnings
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@6bed0761d98439e5a578e2877258200ad565ba87
+        with:
+          toolchain: stable
+
+      - name: Cache
+        uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6
+
+      # RUSTDOCFLAGS=-D warnings turns broken intra-doc links and bare URLs into errors.
+      - name: Build the documentation
+        run: cargo doc --no-deps --all-features
+
+      # Every rustdoc example is a smoke test of the public API.
+      - name: Run the documentation examples
+        run: cargo test --all-features --doc

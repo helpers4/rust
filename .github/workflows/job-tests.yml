@@ -1,0 +1,96 @@
+name: Job - Tests
+
+on:
+  workflow_call:
+    inputs:
+      upload-codecov:
+        required: false
+        type: boolean
+        default: false
+    secrets:
+      codecov-token:
+        required: false
+    outputs:
+      coverage-lines:
+        description: "Lines coverage percentage"
+        value: ${{ jobs.tests.outputs.lines }}
+      coverage-functions:
+        description: "Functions coverage percentage"
+        value: ${{ jobs.tests.outputs.functions }}
+      coverage-regions:
+        description: "Regions coverage percentage"
+        value: ${{ jobs.tests.outputs.regions }}
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+  RUSTFLAGS: -D warnings
+  RUSTDOCFLAGS: -D warnings
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    outputs:
+      lines: ${{ steps.metrics.outputs.lines }}
+      functions: ${{ steps.metrics.outputs.functions }}
+      regions: ${{ steps.metrics.outputs.regions }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@6bed0761d98439e5a578e2877258200ad565ba87
+        with:
+          toolchain: stable
+          components: llvm-tools-preview
+
+      - name: Cache
+        uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6
+
+      - name: Install cargo-llvm-cov
+        uses: taiki-e/install-action@9114bf4d891761788c546334fd37538eae1bf8b3
+        with:
+          tool: cargo-llvm-cov
+
+      # Unit + property tests, measured. `*.test.rs`, `*.spec.rs` and `*.bench.rs` are excluded
+      # from the measurement, not held to it; every implementation file must be at 100%.
+      - name: Run tests with coverage (100% required)
+        run: >-
+          cargo llvm-cov --all-features
+          --ignore-filename-regex '\.(test|spec|bench)\.rs$'
+          --json --summary-only --output-path coverage-summary.json
+          --fail-under-lines 100
+          --fail-under-functions 100
+          --fail-under-regions 100
+
+      - name: Extract coverage metrics
+        id: metrics
+        if: always()
+        run: |
+          if [ ! -f coverage-summary.json ]; then
+            echo "Coverage summary not found"
+            exit 0
+          fi
+          TOTAL=$(jq '.data[0].totals' coverage-summary.json)
+          {
+            echo "lines=$(echo "$TOTAL" | jq '.lines.percent // 0')"
+            echo "functions=$(echo "$TOTAL" | jq '.functions.percent // 0')"
+            echo "regions=$(echo "$TOTAL" | jq '.regions.percent // 0')"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Export lcov
+        if: inputs.upload-codecov
+        run: >-
+          cargo llvm-cov report
+          --ignore-filename-regex '\.(test|spec|bench)\.rs$'
+          --lcov --output-path lcov.info
+
+      - name: Upload coverage to Codecov
+        if: inputs.upload-codecov
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f
+        with:
+          files: lcov.info
+          token: ${{ secrets.codecov-token }}
+          fail_ci_if_error: false

@@ -1,0 +1,145 @@
+name: Pull Request Validation
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths-ignore:
+      - "**.md"
+      - "llms.txt"
+      - "LICENSE"
+      - ".github/ISSUE_TEMPLATE/**"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    uses: ./.github/workflows/job-build.yml
+    with:
+      upload-artifact: true
+      artifact-name: crate-${{ github.run_id }}
+
+  test:
+    uses: ./.github/workflows/job-tests.yml
+
+  compat:
+    uses: ./.github/workflows/job-compat.yml
+
+  lint:
+    uses: ./.github/workflows/job-lint.yml
+
+  docs:
+    uses: ./.github/workflows/job-docs.yml
+
+  security:
+    uses: ./.github/workflows/job-security.yml
+
+  conventional-commits:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+
+      # scopes.json is the single source of truth for commit scopes.
+      - name: Read the allowed scopes
+        id: scopes
+        run: echo "scopes=$(jq -r 'join("|")' scopes.json)" >> "$GITHUB_OUTPUT"
+
+      - name: Check conventional commits
+        uses: helpers4/action/conventional-commits@397ddbfecdab62efa1416012576b165abf2d7ee4
+        with:
+          checkout: "false"
+          scopes: ${{ steps.scopes.outputs.scopes }}
+          pr-comment: "error"
+
+  pr-comment:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    needs: [build, test, compat, lint, docs, security, conventional-commits]
+    if: always() && github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+      - name: Build extra sections
+        id: extra
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3
+        with:
+          script: |
+            const coverage = {
+              'Lines': "${{ needs.test.outputs.coverage-lines || '0' }}",
+              'Functions': "${{ needs.test.outputs.coverage-functions || '0' }}",
+              'Regions': "${{ needs.test.outputs.coverage-regions || '0' }}",
+            };
+
+            const status = (value) => {
+              const num = parseFloat(value);
+              if (num >= 100) return '✅';
+              if (num >= 90) return '🟢';
+              if (num >= 80) return '🟡';
+              if (num >= 60) return '🟠';
+              return '🔴';
+            };
+
+            const bar = (value) => {
+              const filled = Math.floor(parseFloat(value) / 5);
+              return '`' + '▓'.repeat(filled) + '░'.repeat(20 - filled) + '`';
+            };
+
+            const avg = (Object.values(coverage).reduce((a, b) => a + parseFloat(b), 0) / 3).toFixed(1);
+            const rows = Object.entries(coverage)
+              .map(([metric, value]) => `| ${status(value)} | **${metric}** | ${bar(value)} | **${value}%** |`)
+              .join('\n');
+
+            const compat = "${{ needs.compat.result }}";
+            const compatIcon = compat === 'success' ? '✅' : compat === 'skipped' ? '⏭️' : '❌';
+
+            const markdown = `### 📊 Code Coverage
+
+            > ${status(avg)} **Overall Coverage: ${avg}%** ${avg >= 100 ? '— Target reached! 🎯' : '— Target: 100%'}
+
+            | | Metric | Progress | Coverage |
+            |:---:|--------|:--------:|:--------:|
+            ${rows}
+
+            ---
+
+            ### 🌐 Compatibility
+
+            > ${compatIcon} **OS × toolchain (stable, beta, MSRV 1.85) · feature powerset · wasm32**
+
+            ---
+
+            <details>
+            <summary>ℹ️ <b>About this report</b></summary>
+
+            - 🎯 **Coverage target**: 100% of lines, functions and regions, measured by cargo-llvm-cov (test files excluded)
+            - 🔄 This comment updates automatically with each push
+
+            </details>`;
+
+            core.setOutput('markdown', markdown);
+
+      - name: Update PR comment
+        uses: helpers4/action/pr-status-comment@215739f023134ab5ed2158607074084ec530a830
+        with:
+          jobs: |
+            {
+              "🏗️ Build": "${{ needs.build.result }}",
+              "🧪 Tests": "${{ needs.test.result }}",
+              "🌐 Compatibility": "${{ needs.compat.result }}",
+              "📝 Lint": "${{ needs.lint.result }}",
+              "📚 Docs": "${{ needs.docs.result }}",
+              "🔐 Security Audit": "${{ needs.security.result }}",
+              "🧾 Conventional Commits": "${{ needs.conventional-commits.result }}"
+            }
+          extra-markdown: ${{ steps.extra.outputs.markdown }}
