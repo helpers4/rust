@@ -51,22 +51,19 @@ A release is a normal PR followed by one manual workflow run.
 3. **Resume**: if a run published but failed afterwards, run it again. It detects that the version
    is already on crates.io and only finishes the tag and the release.
 
-### One-time setup (maintainer)
+### Authentication
 
-- crates.io account with a verified e-mail and 2FA.
-- The secret `CARGO_REGISTRY_TOKEN`: a crates.io API token with the `publish-new` and
-  `publish-update` scopes, restricted to the crate pattern `helpers4` and a short expiry. It can
-  be a repository secret, a `crates-io` environment secret, or an organization secret **restricted
-  to this repository** (never "all repositories").
-- Recommended: the GitHub environment `crates-io` (repository *Settings → Environments*) with the
-  maintainer as required reviewer, so nothing is published without an approval. Without it the
-  release still works, but the token is readable by every workflow of the repository.
-- **First publish only** needs that token: crates.io trusted publishing can only be configured for
-  a crate that already exists. The workflow picks the credential by itself — trusted publishing
-  when it is configured, the token otherwise — so there is nothing to choose when running it.
-- **Then** on crates.io, in the crate's settings, add a Trusted Publisher (repository
-  `helpers4/rust`, workflow `release.yml`, environment `crates-io`). From the next release the
-  workflow uses it, and the `CARGO_REGISTRY_TOKEN` secret can be deleted.
+Publishing uses crates.io **trusted publishing**: the run mints a short-lived token from its GitHub
+OIDC identity, so there is no API token or secret to store or rotate. It is configured once, in
+the crate's settings on crates.io (*Trusted Publishing*): repository `helpers4/rust`, workflow
+`release.yml`, environment `crates-io`. The job's `environment: crates-io` must match it.
+
+Recommended: give that GitHub environment (repository *Settings → Environments*) the maintainer as
+required reviewer, so nothing is published without an approval.
+
+A brand-new crate cannot use trusted publishing for its very first publish (crates.io can only
+configure it for a crate that already exists): that one needs a temporary API token, used from a
+local `cargo publish` or a throw-away secret, then revoked. `helpers4` went through that with 0.0.1.
 
 The website is not notified yet: it needs a Rust docs generator and an `on-rust-release` workflow
 first (tracked in the project board card *Website: generate Rust docs*).
