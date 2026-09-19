@@ -7,8 +7,10 @@
 //! Inputs are borrowed slices and results are new `Vec`s: nothing is mutated. Membership-based
 //! helpers require `Eq + Hash`.
 
+mod difference;
 mod unique;
 mod unique_by;
 
+pub use difference::difference;
 pub use unique::unique;
 pub use unique_by::unique_by;
