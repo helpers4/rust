@@ -10,6 +10,7 @@
 mod count_by;
 mod difference;
 mod equals_unordered;
+mod group_by;
 mod intersection;
 mod intersects;
 mod symmetric_difference;
@@ -19,6 +20,7 @@ mod unique_by;
 pub use count_by::count_by;
 pub use difference::difference;
 pub use equals_unordered::equals_unordered;
+pub use group_by::group_by;
 pub use intersection::intersection;
 pub use intersects::intersects;
 pub use symmetric_difference::symmetric_difference;
