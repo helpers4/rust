@@ -16,6 +16,7 @@
 - array — slice helpers not in `std`: `unique`, `unique_by`, `difference`, `intersection`,
   `symmetric_difference`, `intersects`, `equals_unordered`, `count_by`, `group_by`,
   `cartesian_product`
+- cache — in-memory stores with expiry and an injected clock: `ExpiringMap`, `ExpiringSet`
 - env — dotenv content helpers (pure text, no I/O): `parse`, `get`, `set`, `remove`
 - hex — hexadecimal encoding/decoding with typed errors: `encode`, `encode_upper`, `decode`,
   `decode_to_slice`, `decode_array`
