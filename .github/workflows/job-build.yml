@@ -1,0 +1,56 @@
+name: Job - Build
+
+on:
+  workflow_call:
+    inputs:
+      upload-artifact:
+        required: false
+        type: boolean
+        default: false
+      artifact-name:
+        required: false
+        type: string
+        default: build
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+  RUSTFLAGS: -D warnings
+  RUSTDOCFLAGS: -D warnings
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@6bed0761d98439e5a578e2877258200ad565ba87
+        with:
+          toolchain: stable
+
+      - name: Cache
+        uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6
+
+      - name: Build (release, every feature)
+        run: cargo build --release --all-features
+
+      - name: Benchmarks compile
+        run: cargo bench --all-features --no-run
+
+      # Packages the crate exactly as it would be published and builds it from the tarball.
+      - name: Package
+        run: |
+          cargo package --locked
+          cargo package --list --locked
+
+      - name: Upload the packaged crate
+        if: inputs.upload-artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: ${{ inputs.artifact-name }}
+          path: target/package/*.crate
+          retention-days: 7
