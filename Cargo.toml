@@ -14,10 +14,11 @@ categories = ["algorithms"]
 include = ["/src/**", "/benches/**", "/Cargo.toml", "/LICENSE", "/README.md", "/SECURITY.md", "/CHANGELOG.md", "/llms.txt"]
 
 [features]
-default = ["array", "env", "hex", "net", "string"]
+default = ["array", "cache", "env", "hex", "net", "string"]
 # One feature per module: `default-features = false, features = ["string"]`
 # compiles only what is used.
 array = []
+cache = []
 env = []
 hex = []
 net = []
