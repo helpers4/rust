@@ -17,10 +17,6 @@
 /// assert_eq!(slugify("  It's  a --- test "), "its-a-test");
 /// assert_eq!(slugify("!!!"), "");
 /// ```
-///
-/// # Since
-///
-/// next
 pub fn slugify(s: &str) -> String {
     let mut out = String::with_capacity(s.len());
     let mut pending_hyphen = false;

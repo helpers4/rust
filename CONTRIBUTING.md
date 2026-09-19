@@ -5,8 +5,8 @@ Read [AGENTS.md](AGENTS.md) first: it holds the layout, rules and the checks CI 
 ## Adding a helper
 
 1. Pick the module (`src/<module>/`); check the standard library does not already cover it.
-2. Create `src/<module>/<name>.rs` with the license header, rustdoc (`# Examples`, `# Since` →
-   `next`) and the implementation, then its sibling files: `<name>.test.rs` (unit tests),
+2. Create `src/<module>/<name>.rs` with the license header, rustdoc (with a runnable `# Examples`
+   block) and the implementation, then its sibling files: `<name>.test.rs` (unit tests),
    `<name>.spec.rs` (proptest) and optionally `<name>.bench.rs`. See the layout in AGENTS.md.
 3. Re-export it from `src/<module>/mod.rs`.
 4. If there is a benchmark, add it to `benches/<module>.rs` and to its `criterion_group!`.
