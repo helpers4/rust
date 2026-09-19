@@ -7,12 +7,9 @@ name: Release
 # Resumable: if a run published to crates.io but failed afterwards (tag, release), run it again —
 # it sees the version is already on crates.io and only finishes the remaining steps.
 #
-# Authentication is automatic: trusted publishing (a short-lived token from the GitHub OIDC
-# identity, no secret to store) is tried first; when it is not configured for the crate the secret
-# CARGO_REGISTRY_TOKEN is used. The very first publish of a crate has to use the token, because
-# crates.io trusted publishing can only be configured for a crate that already exists. Once it is
-# configured (repository helpers4/rust, workflow release.yml, environment crates-io) the token
-# secret can be deleted.
+# Authentication is crates.io trusted publishing: a short-lived token minted from the GitHub OIDC
+# identity of this run, so no secret is stored. The Trusted Publisher is configured on crates.io
+# for the crate (repository helpers4/rust, workflow release.yml, environment crates-io).
 
 on:
   workflow_dispatch:
@@ -114,10 +111,8 @@ jobs:
   publish:
     needs: [guard, lint, tests, compat, docs, security]
     runs-on: ubuntu-latest
-    # Optional protection: configure required reviewers on the `crates-io` environment (repository
-    # Settings -> Environments) so nothing is published without an approval. The environment is
-    # created on first use; CARGO_REGISTRY_TOKEN may live at the repository, environment or
-    # organization level (restricted to this repository).
+    # The name must match the Trusted Publisher configured on crates.io. It can also carry required
+    # reviewers (repository Settings -> Environments) so nothing is published without an approval.
     environment: crates-io
     permissions:
       contents: write # tag + GitHub release
@@ -146,29 +141,16 @@ jobs:
         if: inputs.dry-run
         run: cargo publish --dry-run --locked
 
-      # Only succeeds once a Trusted Publisher is configured for the crate; before that (the first
-      # publish) it fails harmlessly and the next step falls back to the token secret.
-      - name: Try trusted publishing
+      - name: Authenticate to crates.io (trusted publishing)
         id: auth
         if: ${{ !inputs.dry-run && needs.guard.outputs.published != 'true' }}
-        continue-on-error: true
         uses: rust-lang/crates-io-auth-action@c6f97d42243bad5fab37ca0427f495c86d5b1a18
 
       - name: Publish to crates.io
         if: ${{ !inputs.dry-run && needs.guard.outputs.published != 'true' }}
         env:
-          CARGO_REGISTRY_TOKEN: ${{ steps.auth.outputs.token || secrets.CARGO_REGISTRY_TOKEN }}
-        run: |
-          if [ -z "$CARGO_REGISTRY_TOKEN" ]; then
-            echo "::error::No crates.io credential: configure trusted publishing for the crate, or make the CARGO_REGISTRY_TOKEN secret available to this repository (repository, crates-io environment, or an organization secret restricted to helpers4/rust)."
-            exit 1
-          fi
-          if [ "${{ steps.auth.outcome }}" = "success" ]; then
-            echo "Authenticated with trusted publishing."
-          else
-            echo "Trusted publishing is not available yet: using the CARGO_REGISTRY_TOKEN secret."
-          fi
-          cargo publish --locked
+          CARGO_REGISTRY_TOKEN: ${{ steps.auth.outputs.token }}
+        run: cargo publish --locked
 
       - name: Wait for crates.io to serve the new version
         if: ${{ !inputs.dry-run }}
