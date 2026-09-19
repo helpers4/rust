@@ -13,7 +13,8 @@
 
 ## Modules
 
-- string — string manipulation: `capitalize`
+- string — string manipulation: `capitalize`, `camel_case`, `pascal_case`, `snake_case`,
+  `kebab_case`, `slugify`, `truncate`, `dedent`, `escape_html`
 
 ## Docs
 
