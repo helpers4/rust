@@ -17,10 +17,6 @@ use super::_words::words;
 /// assert_eq!(kebab_case("user_name"), "user-name");
 /// assert_eq!(kebab_case(""), "");
 /// ```
-///
-/// # Since
-///
-/// next
 pub fn kebab_case(s: &str) -> String {
     words(s).join("-")
 }

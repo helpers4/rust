@@ -18,10 +18,6 @@ use super::capitalize::capitalize;
 /// assert_eq!(pascal_case("user_name"), "UserName");
 /// assert_eq!(pascal_case(""), "");
 /// ```
-///
-/// # Since
-///
-/// next
 pub fn pascal_case(s: &str) -> String {
     words(s).iter().map(|word| capitalize(word)).collect()
 }

@@ -15,10 +15,6 @@
 /// assert_eq!(capitalize("hello world"), "Hello world");
 /// assert_eq!(capitalize(""), "");
 /// ```
-///
-/// # Since
-///
-/// next
 pub fn capitalize(s: &str) -> String {
     let mut chars = s.chars();
     match chars.next() {
