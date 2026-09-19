@@ -1,6 +1,6 @@
 [package]
 name = "helpers4"
-version = "0.0.0"
+version = "0.0.1"
 edition = "2024"
 rust-version = "1.85"
 license = "LGPL-3.0-or-later"
@@ -11,7 +11,7 @@ description = "General-purpose Rust helpers, one crate, one feature per module (
 keywords = ["helpers", "utilities", "string"]
 categories = ["algorithms"]
 # Ship the sources, benchmarks and the human/AI entry points; keep CI and tooling config out.
-include = ["src/**", "benches/**", "Cargo.toml", "LICENSE", "README.md", "SECURITY.md", "llms.txt"]
+include = ["src/**", "benches/**", "Cargo.toml", "LICENSE", "README.md", "SECURITY.md", "CHANGELOG.md", "llms.txt"]
 
 [features]
 default = ["array", "env", "hex", "string"]
