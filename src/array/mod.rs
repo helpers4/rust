@@ -7,6 +7,7 @@
 //! Inputs are borrowed slices and results are new `Vec`s: nothing is mutated. Membership-based
 //! helpers require `Eq + Hash`.
 
+mod cartesian_product;
 mod count_by;
 mod difference;
 mod equals_unordered;
@@ -17,6 +18,7 @@ mod symmetric_difference;
 mod unique;
 mod unique_by;
 
+pub use cartesian_product::cartesian_product;
 pub use count_by::count_by;
 pub use difference::difference;
 pub use equals_unordered::equals_unordered;
