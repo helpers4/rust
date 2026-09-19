@@ -43,7 +43,7 @@ A release is a normal PR followed by one manual workflow run.
 1. **Prepare**: a PR `chore(release): 🔖 X.Y.Z` that bumps `version` in `Cargo.toml` (and
    `Cargo.lock`) and adds the changelog section (`git cliff --tag vX.Y.Z -o CHANGELOG.md`).
    Merge it.
-2. **Run** *Actions → Release → Run workflow* on `main`. `dry-run` first if in doubt. The workflow
+2. **Run** *Actions → Release → Run workflow* on `main` (tick `dry-run` first if in doubt). The workflow
    checks the version and its changelog section, re-runs lint, tests, compatibility, docs and
    security on that exact commit, then (in the `crates-io` environment) publishes, waits until
    crates.io serves the version, attests the `.crate` (SLSA provenance), and creates the tag and
@@ -61,11 +61,12 @@ A release is a normal PR followed by one manual workflow run.
 - Recommended: the GitHub environment `crates-io` (repository *Settings → Environments*) with the
   maintainer as required reviewer, so nothing is published without an approval. Without it the
   release still works, but the token is readable by every workflow of the repository.
-- **First publish only** uses that token (`auth: token`): crates.io trusted publishing can only be
-  configured for a crate that already exists.
+- **First publish only** needs that token: crates.io trusted publishing can only be configured for
+  a crate that already exists. The workflow picks the credential by itself — trusted publishing
+  when it is configured, the token otherwise — so there is nothing to choose when running it.
 - **Then** on crates.io, in the crate's settings, add a Trusted Publisher (repository
-  `helpers4/rust`, workflow `release.yml`, environment `crates-io`), run the next release with
-  `auth: trusted-publishing`, and delete the token secret.
+  `helpers4/rust`, workflow `release.yml`, environment `crates-io`). From the next release the
+  workflow uses it, and the `CARGO_REGISTRY_TOKEN` secret can be deleted.
 
 The website is not notified yet: it needs a Rust docs generator and an `on-rust-release` workflow
 first (tracked in the project board card *Website: generate Rust docs*).
