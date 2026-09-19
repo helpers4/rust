@@ -47,6 +47,8 @@ cargo deny check
 - 100% coverage: lines, functions, regions — no exceptions. `*.test.rs`, `*.spec.rs` and
   `*.bench.rs` are excluded from the measurement, not held to it. Property tests (proptest,
   `*.spec.rs`) cover invariants, not branches
+- Generic helpers: coverage counts every instantiation (`decode_array::<3>`, `::<32>`, …) on its
+  own, so drive each type/const used in tests through both the success and the error path
 - Zero third-party dependencies by default. A module needing one gets its own Cargo feature
   and the dependency is `optional = true`
 - One Cargo feature per module (`default` enables all). New module ⇒ new feature, gated
