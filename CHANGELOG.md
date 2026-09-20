@@ -5,6 +5,38 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.2] - 2026-09-20
+
+### 🚀 Features
+- **cache**: add ExpiringMap
+- **http**: add bearer_token
+- **net**: add is_valid_hostname and HostnameError
+- **net**: add is_public_ip
+- **time**: add unix_now_millis
+- **time**: add unix_now and ClockError
+
+### 🐛 Bug Fixes
+- **net**: reject hostnames whose last label is a number
+
+### 🔧 Miscellaneous
+- ignore the VS Code local history
+
+### ♻️ Refactoring
+- **hex**: name the hex parameter `hex` instead of `s`
+- **net**: make the CIDR prefix precondition explicit
+
+### 📝 Documentation
+- **net**: spell out what is_public_ip guarantees and what it cannot know
+- document the ExpiringMap capacity bound and the unix_now_millis saturation
+
+### ✅ Tests
+- **cache**: check that a non-empty map is not empty
+- benchmark is_public_ip and ExpiringMap
+
+### 👷 CI/CD
+- exclude the equivalent ExpiringMap sweep-guard mutant
+- publish with trusted publishing only
+
 ## [0.0.1] - 2026-09-19
 
 ### 🚀 Features
@@ -47,6 +79,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### 📝 Documentation
 - **agents**: describe the CI checks and the reusable workflows
 - **agents**: note that coverage counts each generic instantiation
+- **release**: accept an org-level token and make the environment optional
 - **string**: drop the Since marker in favor of a computed api-since.json
 - **string**: list the string helpers in llms.txt
 
@@ -56,9 +89,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **string**: benchmark the case, slug, escape and dedent helpers
 
 ### 📦 Build
+- anchor the published file patterns to the crate root
 - publish only sources, benchmarks and entry-point docs
 
 ### 👷 CI/CD
+- simplify the release inputs
+- drop the website notification from the release workflow
+- add the crates.io release workflow
 - confirm suspected benchmark regressions before reporting them
 - say so when a diff generates no mutant
 - raise the benchmark noise threshold to avoid false regressions
@@ -66,4 +103,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - configure cargo-mutants
 - run the minimal-versions job on nightly despite rust-toolchain.toml
 - split CI into reusable jobs with PR and main validation
+
+[0.0.2]: https://github.com/helpers4/rust/compare/v0.0.1...v0.0.2
 
