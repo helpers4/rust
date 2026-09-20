@@ -31,6 +31,10 @@ fn display_describes_each_variant() {
         HostnameError::HyphenEdge.to_string(),
         "hostname label starts or ends with a hyphen"
     );
+    assert_eq!(
+        HostnameError::NumericLastLabel.to_string(),
+        "hostname ends in a number, which URL parsers read as an IPv4 address"
+    );
 }
 
 #[test]

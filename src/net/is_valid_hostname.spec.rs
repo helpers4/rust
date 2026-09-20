@@ -7,10 +7,23 @@ use proptest::prelude::*;
 
 proptest! {
     #[test]
-    fn well_formed_labels_are_always_accepted(
-        labels in prop::collection::vec("[a-z0-9]([a-z0-9-]{0,10}[a-z0-9])?", 1..5),
+    fn well_formed_names_with_an_alphabetic_last_label_are_accepted(
+        labels in prop::collection::vec("[a-z0-9]([a-z0-9-]{0,10}[a-z0-9])?", 0..4),
+        last in "[a-z]{1,10}",
     ) {
-        prop_assert_eq!(is_valid_hostname(&labels.join(".")), Ok(()));
+        let name = labels.iter().chain(std::iter::once(&last)).cloned().collect::<Vec<_>>().join(".");
+        prop_assert_eq!(is_valid_hostname(&name), Ok(()));
+    }
+
+    #[test]
+    fn a_decimal_last_label_is_always_rejected(
+        prefix in "([a-z]{1,5}\\.){0,3}",
+        number in "[0-9]{1,10}",
+    ) {
+        prop_assert_eq!(
+            is_valid_hostname(&format!("{prefix}{number}")),
+            Err(HostnameError::NumericLastLabel)
+        );
     }
 
     #[test]

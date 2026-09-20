@@ -25,6 +25,9 @@ pub enum HostnameError {
     },
     /// A label starts or ends with a hyphen.
     HyphenEdge,
+    /// The last label is a number (`127.1`, `2130706433`, `0x7f`): URL parsers read such a name as
+    /// an IPv4 address, not as a hostname.
+    NumericLastLabel,
 }
 
 impl fmt::Display for HostnameError {
@@ -38,6 +41,12 @@ impl fmt::Display for HostnameError {
                 write!(f, "invalid hostname character {found:?} at byte {index}")
             }
             Self::HyphenEdge => write!(f, "hostname label starts or ends with a hyphen"),
+            Self::NumericLastLabel => {
+                write!(
+                    f,
+                    "hostname ends in a number, which URL parsers read as an IPv4 address"
+                )
+            }
         }
     }
 }
