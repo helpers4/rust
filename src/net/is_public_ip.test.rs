@@ -93,6 +93,8 @@ fn ipv6_non_public_addresses_are_refused() {
     }
 }
 
+// Everything in 2000::/3 that the special-purpose registry does not exclude is accepted, including
+// space IANA holds in reserve (3ffe::/16 is the returned 6bone block): see the rustdoc.
 #[test]
 fn ipv6_global_unicast_is_public() {
     for s in [
