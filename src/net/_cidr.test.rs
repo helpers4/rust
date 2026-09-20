@@ -43,3 +43,18 @@ fn v6_prefix_zero_matches_everything_and_128_only_the_host() {
     assert!(v6_in("::1".parse().unwrap(), 1, 128));
     assert!(!v6_in("::2".parse().unwrap(), 1, 128));
 }
+
+// Release builds skip the assertion, so these only run with debug assertions.
+#[cfg(debug_assertions)]
+#[test]
+#[should_panic(expected = "IPv4 prefix length out of range")]
+fn v4_prefix_above_32_is_a_bug() {
+    v4_in(Ipv4Addr::LOCALHOST, [0, 0, 0, 0], 33);
+}
+
+#[cfg(debug_assertions)]
+#[test]
+#[should_panic(expected = "IPv6 prefix length out of range")]
+fn v6_prefix_above_128_is_a_bug() {
+    v6_in(Ipv6Addr::LOCALHOST, 0, 129);
+}
