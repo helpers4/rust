@@ -9,6 +9,8 @@ use super::error::ClockError;
 
 /// The current time as milliseconds since the Unix epoch.
 ///
+/// The value saturates at `u64::MAX`, which is some 584 million years away.
+///
 /// # Errors
 ///
 /// [`ClockError`] when the system clock is set before 1970 (see [`unix_now`](super::unix_now)).
