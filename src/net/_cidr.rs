@@ -6,14 +6,17 @@
 
 use std::net::{Ipv4Addr, Ipv6Addr};
 
-/// Whether `ip` is inside `base/prefix` (`prefix` in `0..=32`).
+/// Whether `ip` is inside `base/prefix`. `prefix` must be in `0..=32`: a larger one would wrap the
+/// shift and report every address as inside the block, so it is a bug caught by a debug assertion.
 pub(crate) fn v4_in(ip: Ipv4Addr, base: [u8; 4], prefix: u32) -> bool {
+    debug_assert!(prefix <= 32, "IPv4 prefix length out of range: {prefix}");
     let mask = u32::MAX.checked_shl(32 - prefix).unwrap_or(0);
     u32::from(ip) & mask == u32::from(Ipv4Addr::from(base)) & mask
 }
 
-/// Whether `ip` is inside `base/prefix` (`prefix` in `0..=128`).
+/// Whether `ip` is inside `base/prefix`. `prefix` must be in `0..=128` (see [`v4_in`]).
 pub(crate) fn v6_in(ip: Ipv6Addr, base: u128, prefix: u32) -> bool {
+    debug_assert!(prefix <= 128, "IPv6 prefix length out of range: {prefix}");
     let mask = u128::MAX.checked_shl(128 - prefix).unwrap_or(0);
     u128::from(ip) & mask == base & mask
 }
