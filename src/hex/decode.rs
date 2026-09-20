@@ -24,12 +24,12 @@ use super::error::DecodeError;
 /// assert!(decode("abc").is_err());
 /// # Ok::<(), helpers4::hex::DecodeError>(())
 /// ```
-pub fn decode(s: &str) -> Result<Vec<u8>, DecodeError> {
-    if s.len() % 2 != 0 {
+pub fn decode(hex: &str) -> Result<Vec<u8>, DecodeError> {
+    if hex.len() % 2 != 0 {
         return Err(DecodeError::OddLength);
     }
-    let mut out = vec![0u8; s.len() / 2];
-    decode_into(s, &mut out)?;
+    let mut out = vec![0u8; hex.len() / 2];
+    decode_into(hex, &mut out)?;
     Ok(out)
 }
 

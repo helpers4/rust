@@ -24,17 +24,17 @@ use super::error::DecodeError;
 /// assert_eq!(buf, [0xbe, 0xef]);
 /// # Ok::<(), helpers4::hex::DecodeError>(())
 /// ```
-pub fn decode_to_slice(s: &str, out: &mut [u8]) -> Result<(), DecodeError> {
-    if s.len() % 2 != 0 {
+pub fn decode_to_slice(hex: &str, out: &mut [u8]) -> Result<(), DecodeError> {
+    if hex.len() % 2 != 0 {
         return Err(DecodeError::OddLength);
     }
-    if s.len() != out.len() * 2 {
+    if hex.len() != out.len() * 2 {
         return Err(DecodeError::InvalidLength {
             expected: out.len() * 2,
-            actual: s.len(),
+            actual: hex.len(),
         });
     }
-    decode_into(s, out)
+    decode_into(hex, out)
 }
 
 #[cfg(test)]

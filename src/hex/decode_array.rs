@@ -22,9 +22,9 @@ use super::error::DecodeError;
 /// assert!(decode_array::<4>("dead").is_err());
 /// # Ok::<(), helpers4::hex::DecodeError>(())
 /// ```
-pub fn decode_array<const N: usize>(s: &str) -> Result<[u8; N], DecodeError> {
+pub fn decode_array<const N: usize>(hex: &str) -> Result<[u8; N], DecodeError> {
     let mut out = [0u8; N];
-    decode_to_slice(s, &mut out)?;
+    decode_to_slice(hex, &mut out)?;
     Ok(out)
 }
 
