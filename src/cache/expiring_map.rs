@@ -15,7 +15,12 @@ use std::hash::Hash;
 /// store keyed by token id, a cache of pending challenges, ...).
 ///
 /// The sweep is skipped in constant time while nothing can have expired yet, and is a single pass
-/// otherwise. `len` counts entries still stored, expired or not, until the next write sweeps them.
+/// otherwise. `len` counts entries still stored, expired or not, until the next write sweeps them:
+/// call [`evict_expired`](Self::evict_expired) first when comparing it to a threshold.
+///
+/// There is **no capacity bound**. If the keys come from untrusted input and their lifetimes are
+/// long, the number of live entries is only limited by the insert rate times the lifetime: bound
+/// it yourself (reject or rate-limit inserts) when that matters.
 ///
 /// # Examples
 ///
