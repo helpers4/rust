@@ -94,3 +94,42 @@ fn hyphens_are_only_allowed_inside_a_label() {
     );
     assert_eq!(is_valid_hostname("a--b.example"), Ok(()));
 }
+
+#[test]
+fn a_numeric_last_label_is_rejected() {
+    for s in [
+        "2130706433",
+        "127.0.0.1",
+        "127.1",
+        "0x7f.1",
+        "0177.0.0.1",
+        "0x7f000001",
+        "0xdeadbeef",
+        "0x",
+        "0X1F",
+        "example.123",
+        "example.123.",
+        "1",
+    ] {
+        assert_eq!(
+            is_valid_hostname(s),
+            Err(HostnameError::NumericLastLabel),
+            "{s}"
+        );
+    }
+}
+
+#[test]
+fn numeric_labels_elsewhere_and_near_misses_are_accepted() {
+    for s in [
+        "123.example",
+        "0x7f.example",
+        "example.0xg",
+        "example.1a",
+        "a1",
+        "0xg",
+        "example.0x1g",
+    ] {
+        assert_eq!(is_valid_hostname(s), Ok(()), "{s}");
+    }
+}
