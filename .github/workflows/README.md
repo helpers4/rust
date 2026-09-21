@@ -65,5 +65,11 @@ A brand-new crate cannot use trusted publishing for its very first publish (crat
 configure it for a crate that already exists): that one needs a temporary API token, used from a
 local `cargo publish` or a throw-away secret, then revoked. `helpers4` went through that with 0.0.1.
 
-The website is not notified yet: it needs a Rust docs generator and an `on-rust-release` workflow
-first (tracked in the project board card *Website: generate Rust docs*).
+### Website
+
+Once the release is published, the `trigger-website-docs` job dispatches a `rust-release` event to
+`helpers4/website`, whose `on-rust-release.yml` checks this repository out at the release tag and
+regenerates the Rust documentation from it. The job is best-effort (a failure never fails the
+release) and needs the GitHub App credentials `TRIGGANATOR_ID` / `TRIGGANATOR_KEY`, with
+`PUSHINATOR_ID` / `PUSHINATOR_KEY` as a fallback identity, to be available to this repository.
+If it fails, run *On Rust Release* on the website by hand with the version.

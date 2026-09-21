@@ -203,3 +203,28 @@ jobs:
               echo "Release: https://github.com/${{ github.repository }}/releases/tag/v${{ needs.guard.outputs.version }}"
             fi
           } >> "$GITHUB_STEP_SUMMARY"
+
+  # Tells the website to regenerate its Rust docs from this release's tag (helpers4/website,
+  # on-rust-release.yml checks the tag out and reads it). Best-effort: a failure here never fails
+  # the release; run "On Rust Release" on the website by hand with the version instead. It needs the
+  # tag, so it runs once `publish` (which creates it) is done.
+  trigger-website-docs:
+    needs: [guard, publish]
+    if: ${{ !inputs.dry-run }}
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    concurrency:
+      group: trigger-website-docs-${{ needs.guard.outputs.version }}
+      cancel-in-progress: false
+    steps:
+      - name: Trigger the website docs update
+        uses: helpers4/action/dispatch-with-fallback@c66ddc3b4c9c46c4c3f4b9a8c87e16bb188321bd
+        with:
+          target-owner: helpers4
+          target-repo: website
+          event-type: rust-release
+          payload: '{"version": "${{ needs.guard.outputs.version }}"}'
+          app-id: ${{ vars.TRIGGANATOR_ID }}
+          app-private-key: ${{ secrets.TRIGGANATOR_KEY }}
+          fallback-app-id: ${{ vars.PUSHINATOR_ID }}
+          fallback-app-private-key: ${{ secrets.PUSHINATOR_KEY }}
