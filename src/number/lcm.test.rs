@@ -19,6 +19,7 @@ fn finds_the_least_common_multiple() {
 fn zero_gives_zero() {
     assert_eq!(lcm(0, 5), Some(0));
     assert_eq!(lcm(5, 0), Some(0));
+    assert_eq!(lcm(0, 0), Some(0));
 }
 
 #[test]
