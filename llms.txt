@@ -15,7 +15,7 @@
 
 - array — slice helpers not in `std`: `unique`, `unique_by`, `difference`, `intersection`,
   `symmetric_difference`, `intersects`, `equals_unordered`, `count_by`, `group_by`,
-  `cartesian_product`
+  `key_by`, `duplicates`, `interleave`, `cartesian_product`
 - cache — in-memory stores with expiry and an injected clock: `ExpiringMap`, `ExpiringSet`
 - env — dotenv content helpers (pure text, no I/O): `parse`, `get`, `set`, `remove`
 - hex — hexadecimal encoding/decoding with typed errors: `encode`, `encode_upper`, `decode`,
@@ -23,8 +23,10 @@
 - http — HTTP header value helpers: `bearer_token` (RFC 7235 / 6750)
 - net — network address and hostname checks: `is_public_ip` (SSRF guard, IANA registry),
   `is_valid_hostname`, `HostnameError`
-- string — string manipulation: `capitalize`, `camel_case`, `pascal_case`, `snake_case`,
-  `kebab_case`, `slugify`, `truncate`, `dedent`, `escape_html`
+- number — numeric helpers: `lerp`, `round_to`, `mean`, `median`, `percentage`, `gcd`, `lcm`
+- string — string manipulation: `capitalize`, `title_case`, `camel_case`, `pascal_case`,
+  `snake_case`, `kebab_case`, `constant_case`, `slugify`, `truncate`, `squish`, `indent`,
+  `dedent`, `escape_html`, `unescape_html`
 - time — the system clock as unix time: `unix_now`, `unix_now_millis`, `ClockError`
 
 ## Docs
