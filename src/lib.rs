@@ -29,6 +29,9 @@ pub mod http;
 #[cfg(feature = "net")]
 pub mod net;
 
+#[cfg(feature = "number")]
+pub mod number;
+
 #[cfg(feature = "string")]
 pub mod string;
 
