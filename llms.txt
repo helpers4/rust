@@ -17,10 +17,12 @@
   `symmetric_difference`, `intersects`, `equals_unordered`, `count_by`, `group_by`,
   `key_by`, `duplicates`, `interleave`, `cartesian_product`
 - cache — in-memory stores with expiry and an injected clock: `ExpiringMap`, `ExpiringSet`
+- duration — human-readable durations (`1h30m`): `parse`, `format`, `ParseDurationError`
 - env — dotenv content helpers (pure text, no I/O): `parse`, `get`, `set`, `remove`
 - hex — hexadecimal encoding/decoding with typed errors: `encode`, `encode_upper`, `decode`,
   `decode_to_slice`, `decode_array`
 - http — HTTP header value helpers: `bearer_token` (RFC 7235 / 6750)
+- map — `HashMap` helpers: `pick`, `omit`, `map_values`
 - net — network address and hostname checks: `is_public_ip` (SSRF guard, IANA registry),
   `is_valid_hostname`, `HostnameError`
 - number — numeric helpers: `lerp`, `round_to`, `mean`, `median`, `percentage`, `gcd`, `lcm`
