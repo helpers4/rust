@@ -11,7 +11,8 @@ proptest! {
         let out = map_values(&map, |v| i64::from(*v) + 1);
         prop_assert_eq!(out.len(), map.len());
         for (k, v) in &map {
-            prop_assert_eq!(out.get(k), Some(&(i64::from(*v) + 1)));
+            let expected = i64::from(*v) + 1;
+            prop_assert_eq!(out.get(k), Some(&expected));
         }
     }
 }
