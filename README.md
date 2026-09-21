@@ -13,6 +13,8 @@
   <img src="https://img.shields.io/crates/msrv/helpers4?label=MSRV" alt="minimum supported Rust version" />
   <img src="https://img.shields.io/badge/unsafe-forbidden-blue" alt="unsafe code forbidden" />
   <a href="CONTRIBUTING.md"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs welcome" /></a>
+  <br>
+  <a href="https://codecov.io/gh/helpers4/rust"><img src="https://codecov.io/gh/helpers4/rust/graph/badge.svg?token=3np3gHErgz" alt="code coverage" /></a>
 </p>
 
 ---
