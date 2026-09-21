@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.4] - 2026-09-21
+
+### 🚀 Features
+- **duration**: add the duration module: parse, format and ParseDurationError
+- **map**: add the map module: pick, omit and map_values
+
+### 📝 Documentation
+- **agents**: list the duration and map modules in llms.txt
+
 ## [0.0.3] - 2026-09-21
 
 ### 🚀 Features
@@ -19,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - add the pre-1.0 notice to the README and fix its install section
 
 ### ✅ Tests
+- **number**: exclude the mutants that only hang
 - **number**: cover lcm(0, 0)
 
 ### 👷 CI/CD
@@ -124,6 +134,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - run the minimal-versions job on nightly despite rust-toolchain.toml
 - split CI into reusable jobs with PR and main validation
 
+[0.0.4]: https://github.com/helpers4/rust/compare/v0.0.3...v0.0.4
 [0.0.3]: https://github.com/helpers4/rust/compare/v0.0.2...v0.0.3
 [0.0.2]: https://github.com/helpers4/rust/compare/v0.0.1...v0.0.2
 

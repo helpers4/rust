@@ -41,6 +41,8 @@ One module per category, each behind a Cargo feature of the same name (all enabl
 | [`string`](https://helpers4.dev/rust/modules/string/) | case conversion, slugs, truncation, indentation, whitespace, HTML escaping |
 | [`array`](https://helpers4.dev/rust/modules/array/) | unique, difference, intersection, grouping, counting, duplicates, interleaving |
 | [`number`](https://helpers4.dev/rust/modules/number/) | interpolation, rounding, mean, median, percentages, gcd and lcm |
+| [`map`](https://helpers4.dev/rust/modules/map/) | picking, omitting and transforming the entries of a `HashMap` |
+| [`duration`](https://helpers4.dev/rust/modules/duration/) | parsing and formatting durations as `1h30m` |
 | [`cache`](https://helpers4.dev/rust/modules/cache/) | maps and sets whose entries expire, with the clock passed in |
 | [`env`](https://helpers4.dev/rust/modules/env/) | reading and editing `.env` files as text |
 | [`hex`](https://helpers4.dev/rust/modules/hex/) | hexadecimal encoding and decoding with typed errors |
@@ -48,8 +50,7 @@ One module per category, each behind a Cargo feature of the same name (all enabl
 | [`http`](https://helpers4.dev/rust/modules/http/) | extracting a bearer token from an `Authorization` header |
 | [`time`](https://helpers4.dev/rust/modules/time/) | the system clock as unix time, without a silent `0` |
 
-More are planned (random values and identifiers, validation, iterators, maps and sets,
-durations, …): see the [roadmap](https://github.com/orgs/helpers4/projects/1).
+More are planned (random values and identifiers, validation, iterators, sets, …): see the [roadmap](https://github.com/orgs/helpers4/projects/1).
 
 ## Quick start
 
