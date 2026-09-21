@@ -12,7 +12,14 @@ minimum_test_timeout = 60
 #
 # `ExpiringMap::evict_expired` skips the sweep while `now` is below the earliest expiry. Making the
 # guard always true only sweeps needlessly: the result is identical, so no test can observe it.
+#
+# Mutants that make a loop run forever: the tests cannot fail, they can only hang until the
+# timeout, which costs a minute each and makes cargo-mutants exit non-zero. `% -> /` in the Euclid
+# loop of `gcd` never reaches a zero remainder; `decode_entity -> Some((_, 0))` makes
+# `unescape_html` consume nothing forever. A hang is detected, so these are not a test gap.
 exclude_re = [
   "replace \\| with \\^ in decode_into",
   "replace match guard now >= earliest with true in .*evict_expired",
+  "replace % with / in gcd",
+  "replace decode_entity -> .* with Some\\(\\(Default::default\\(\\), 0\\)\\)",
 ]
