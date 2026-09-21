@@ -17,6 +17,9 @@ pub mod array;
 #[cfg(feature = "cache")]
 pub mod cache;
 
+#[cfg(feature = "duration")]
+pub mod duration;
+
 #[cfg(feature = "env")]
 pub mod env;
 
@@ -25,6 +28,9 @@ pub mod hex;
 
 #[cfg(feature = "http")]
 pub mod http;
+
+#[cfg(feature = "map")]
+pub mod map;
 
 #[cfg(feature = "net")]
 pub mod net;
