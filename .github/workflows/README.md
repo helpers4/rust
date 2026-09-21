@@ -8,6 +8,7 @@ entry-point workflows that call reusable `job-*.yml` building blocks (`workflow_
 | `pr-validation.yml` | `pull_request` | Build, tests + coverage, compatibility, lint, docs, security and conventional commits on every PR, plus one sticky status comment |
 | `main-validation.yml` | `push` to `main` | The same suite post-merge, uploading coverage to Codecov |
 | `mutation-dashboard.yml` | `push` to `main`, weekly, manual | Full [cargo-mutants](https://mutants.rs/) run in 4 shards, merged into one score in the job summary |
+| `scorecard.yml` | weekly, manual | [OpenSSF Scorecard](https://securityscorecards.dev/viewer/?uri=github.com/helpers4/rust) analysis, published (the site shows the score) and uploaded to code scanning |
 | `release.yml` | manual (`workflow_dispatch`) | Publishes the version in `Cargo.toml` to crates.io, then tags it and creates the GitHub release |
 | `auto-assign.yml` | issues, PRs | Assigns the maintainer |
 
