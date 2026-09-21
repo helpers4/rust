@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### 📝 Documentation
 - **ai**: list the new helpers in llms.txt
+- rewrite the README and point the homepage to helpers4.dev/rust
 - add the pre-1.0 notice to the README and fix its install section
 
 ### 👷 CI/CD
