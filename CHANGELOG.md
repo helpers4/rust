@@ -7,7 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.0.3] - 2026-09-21
 
+### 🚀 Features
+- **array**: add key_by, duplicates and interleave
+- **number**: add the number module: lerp, round_to, mean, median, percentage, gcd, lcm
+- **string**: add title_case, constant_case, squish, indent and unescape_html
+
 ### 📝 Documentation
+- **ai**: list the new helpers in llms.txt
 - add the pre-1.0 notice to the README and fix its install section
 
 ### 👷 CI/CD
