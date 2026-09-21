@@ -13,9 +13,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **string**: add title_case, constant_case, squish, indent and unescape_html
 
 ### 📝 Documentation
-- **ai**: list the new helpers in llms.txt
+- **agents**: list the new helpers in llms.txt
+- add the Codecov badge to the README
 - rewrite the README and point the homepage to helpers4.dev/rust
 - add the pre-1.0 notice to the README and fix its install section
+
+### ✅ Tests
+- **number**: cover lcm(0, 0)
 
 ### 👷 CI/CD
 - add the OpenSSF Scorecard workflow
