@@ -40,7 +40,7 @@ and [docs.rs](https://docs.rs/helpers4).
 
 ## Status
 
-Pre-release (`0.0.2`). See the [roadmap](https://github.com/orgs/helpers4/projects/1) and
+Pre-release (`0.0.3`). See the [roadmap](https://github.com/orgs/helpers4/projects/1) and
 [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
