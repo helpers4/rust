@@ -1,14 +1,21 @@
 # helpers4 — Rust
 
-General-purpose Rust helpers: **one crate, one module per category** (`string`, `array`, …),
+General-purpose Rust helpers: **one crate, one module per category** (`string`, `array`, `hex`, …),
 each behind its own Cargo feature.
 
-```toml
-[dependencies]
-helpers4 = "0"                                                        # every module
-# or only what you use:
-helpers4 = { version = "0", default-features = false, features = ["string"] }
+> **Pre-1.0 (`0.x`).** While the crate is at version 0, how the helpers are split into modules —
+> and therefore into Cargo features — may change between releases, and the code-quality and
+> security checks will keep improving. Pin the exact version and read the
+> [changelog](CHANGELOG.md) before upgrading.
+
+## Install
+
+```sh
+cargo add helpers4                                              # every module
+cargo add helpers4 --no-default-features --features string,hex  # only what you use
 ```
+
+## Use
 
 ```rust
 use helpers4::string::capitalize;
@@ -16,8 +23,13 @@ use helpers4::string::capitalize;
 assert_eq!(capitalize("hello"), "Hello");
 ```
 
-Helper names can repeat across modules (`array::compact`, `object::compact`); always go
-through the module path.
+Names can repeat across modules, so always go through the module path
+(`helpers4::string::capitalize`) and never glob-import a module.
+
+## Documentation
+
+Every helper, with its signature, parameters, errors and examples: <https://helpers4.dev/rust/>
+and [docs.rs](https://docs.rs/helpers4).
 
 ## Quality bar
 
@@ -28,8 +40,8 @@ through the module path.
 
 ## Status
 
-Pre-release (`0.0.2`). Sister project of [helpers4/typescript](https://github.com/helpers4/typescript).
-See the [roadmap](https://github.com/orgs/helpers4/projects/1) and [CONTRIBUTING.md](CONTRIBUTING.md).
+Pre-release (`0.0.2`). See the [roadmap](https://github.com/orgs/helpers4/projects/1) and
+[CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
