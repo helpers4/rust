@@ -8,6 +8,7 @@ entry-point workflows that call reusable `job-*.yml` building blocks (`workflow_
 | `pr-validation.yml` | `pull_request` | Build, tests + coverage, compatibility, lint, docs, security and conventional commits on every PR, plus one sticky status comment |
 | `main-validation.yml` | `push` to `main` | The same suite post-merge, uploading coverage to Codecov |
 | `mutation-dashboard.yml` | `push` to `main`, weekly, manual | Full [cargo-mutants](https://mutants.rs/) run in 4 shards, merged into one score in the job summary |
+| `compat-full.yml` | weekly, manual | Every Cargo feature combination (`cargo hack --feature-powerset`, unbounded), in 8 shards — the PR path only checks pairs (`--depth 2`), see `job-compat.yml` |
 | `scorecard.yml` | weekly, manual | [OpenSSF Scorecard](https://securityscorecards.dev/viewer/?uri=github.com/helpers4/rust) analysis, published (the site shows the score) and uploaded to code scanning |
 | `release.yml` | manual (`workflow_dispatch`) | Publishes the version in `Cargo.toml` to crates.io, then tags it and creates the GitHub release |
 | `auto-assign.yml` | issues, PRs | Assigns the maintainer |
@@ -18,7 +19,8 @@ entry-point workflows that call reusable `job-*.yml` building blocks (`workflow_
 | --- | --- |
 | `job-lint.yml` | `cargo fmt`, `clippy -D warnings` (strict `[lints]` table), `typos`, `cargo machete` |
 | `job-tests.yml` | Unit + property tests under `cargo llvm-cov`: **100%** lines, functions and regions (`*.test.rs`, `*.spec.rs`, `*.bench.rs` excluded); exposes the metrics |
-| `job-compat.yml` | OS (Linux, macOS, Windows) × toolchain (stable, beta, MSRV 1.85); every Cargo feature combination (`cargo hack`); `wasm32-unknown-unknown` and `wasm32-wasip1`; minimal dependency versions (informational) |
+| `job-compat.yml` | OS (Linux, macOS, Windows) × toolchain (stable, beta, MSRV 1.85); every pair of Cargo features (`cargo hack --depth 2`; the full powerset is `compat-full.yml`); `wasm32-unknown-unknown` and `wasm32-wasip1`; minimal dependency versions (informational) |
+| `job-compat-full.yml` | One shard (`k/n`) of the full feature powerset for `compat-full.yml` |
 | `job-docs.yml` | `cargo doc` with warnings denied (broken intra-doc links) and every doctest |
 | `job-security.yml` | `cargo deny`: RustSec advisories, yanked crates, licenses, bans, sources |
 | `job-mutation.yml` | cargo-mutants, informational: only the lines a PR touches (`--in-diff`), or one shard of a full run. Configured in `.cargo/mutants.toml` |

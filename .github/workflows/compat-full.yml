@@ -1,0 +1,28 @@
+name: Compatibility (full powerset)
+
+# Every combination of Cargo features (not just every pair, see job-compat.yml on the pull
+# request path), sharded across parallel jobs so the O(2^features) cost stays a few minutes of
+# wall time instead of one ~15-minute block. Weekly and on demand, not on every push: this is a
+# deeper safety net on top of the pull request checks, not something that needs to be instant.
+#
+# Sharding buys headroom, not a fix for the underlying exponential growth — halving the runtime
+# by doubling SHARD_COUNT only lasts until the next Cargo feature or two. Revisit if this keeps
+# creeping up (see the "compat CI is getting slow" backlog card).
+
+on:
+  schedule:
+    - cron: "0 4 * * 1" # Every Monday at 04:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  powerset:
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4, 5, 6, 7, 8]
+    uses: ./.github/workflows/job-compat-full.yml
+    with:
+      partition: ${{ matrix.shard }}/8
