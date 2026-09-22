@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.5] - 2026-09-22
+
+### 🚀 Features
+- **iter**: add the iter module: chunk, min_max and first_duplicate
+- **validate**: add the validate module: is_valid_email, is_uuid and is_slug
+
+### 📝 Documentation
+- **agents**: list the iter and validate modules in llms.txt
+- add the Scorecard badge and the iter/validate modules to the README
+- add # Arguments and # Returns to every helper's rustdoc
+
+### ✅ Tests
+- **iter**: exclude two equivalent mutants in min_max
+
 ## [0.0.4] - 2026-09-21
 
 ### 🚀 Features
@@ -13,6 +27,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### 📝 Documentation
 - **agents**: list the duration and map modules in llms.txt
+
+### ✅ Tests
+- **map**: bind the expected value so the test compiles on Rust 1.85
 
 ## [0.0.3] - 2026-09-21
 
@@ -134,6 +151,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - run the minimal-versions job on nightly despite rust-toolchain.toml
 - split CI into reusable jobs with PR and main validation
 
+[0.0.5]: https://github.com/helpers4/rust/compare/v0.0.4...v0.0.5
 [0.0.4]: https://github.com/helpers4/rust/compare/v0.0.3...v0.0.4
 [0.0.3]: https://github.com/helpers4/rust/compare/v0.0.2...v0.0.3
 [0.0.2]: https://github.com/helpers4/rust/compare/v0.0.1...v0.0.2
