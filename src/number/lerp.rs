@@ -7,6 +7,12 @@
 /// `t` is not clamped, so values outside `0..=1` extrapolate. Written as
 /// `from * (1 - t) + to * t`, it is exact at both ends.
 ///
+/// # Arguments
+///
+/// - `from` - The value at `t = 0`.
+/// - `to` - The value at `t = 1`.
+/// - `t` - How far to interpolate between `from` and `to`.
+///
 /// # Examples
 ///
 /// ```

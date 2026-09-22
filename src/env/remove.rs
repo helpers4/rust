@@ -9,6 +9,11 @@ use super::_line::parse_line;
 /// Comments, blank lines and other variables are left untouched. Removing a key that is not
 /// assigned returns the content unchanged.
 ///
+/// # Arguments
+///
+/// - `content` - The dotenv text to edit.
+/// - `key` - The variable name to remove every assignment of.
+///
 /// # Examples
 ///
 /// ```

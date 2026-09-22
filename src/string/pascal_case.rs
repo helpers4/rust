@@ -9,6 +9,10 @@ use super::capitalize::capitalize;
 ///
 /// Splits words the same way as [`camel_case`](super::camel_case).
 ///
+/// # Arguments
+///
+/// - `s` - The text to convert.
+///
 /// # Examples
 ///
 /// ```

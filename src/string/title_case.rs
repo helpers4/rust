@@ -8,6 +8,10 @@
 /// `well-known` becomes `Well-known`. Use [`pascal_case`](super::pascal_case) to also drop the
 /// separators.
 ///
+/// # Arguments
+///
+/// - `s` - The text to convert.
+///
 /// # Examples
 ///
 /// ```

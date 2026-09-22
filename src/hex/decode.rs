@@ -10,6 +10,10 @@ use super::error::DecodeError;
 /// The string must be made of digit pairs only: surrounding whitespace, a `0x` prefix or
 /// separators are errors, so trim or strip them first.
 ///
+/// # Arguments
+///
+/// - `hex` - The hexadecimal string to decode.
+///
 /// # Errors
 ///
 /// [`DecodeError::OddLength`] for an odd number of characters, [`DecodeError::InvalidChar`] for

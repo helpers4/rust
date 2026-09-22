@@ -15,6 +15,10 @@ const MAX_ENTITY_LEN: usize = 10;
 /// a numeric reference that is not a valid character, is left as it is. Returns the input
 /// borrowed, without allocating, when it contains no `&`.
 ///
+/// # Arguments
+///
+/// - `s` - The text to decode.
+///
 /// # Examples
 ///
 /// ```

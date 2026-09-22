@@ -11,6 +11,10 @@
 ///
 /// Only the syntax is checked: whether the token is valid is up to the caller.
 ///
+/// # Arguments
+///
+/// - `header` - The value of an `Authorization` header.
+///
 /// # Examples
 ///
 /// ```

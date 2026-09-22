@@ -7,6 +7,10 @@
 /// Unicode-aware: a character whose uppercase form is several characters
 /// (`ß` -> `SS`) is expanded accordingly.
 ///
+/// # Arguments
+///
+/// - `s` - The text to capitalize.
+///
 /// # Examples
 ///
 /// ```

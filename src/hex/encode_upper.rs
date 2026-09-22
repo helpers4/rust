@@ -6,6 +6,10 @@ use super::_digits::encode_with;
 
 /// Encodes `bytes` as uppercase hexadecimal.
 ///
+/// # Arguments
+///
+/// - `bytes` - The bytes to encode.
+///
 /// # Examples
 ///
 /// ```

@@ -5,6 +5,11 @@
 /// Alternates the elements of `a` and `b`, starting with `a`; the leftover of the longer slice
 /// goes at the end.
 ///
+/// # Arguments
+///
+/// - `a` - The slice to take the first, third, … elements from.
+/// - `b` - The slice to take the second, fourth, … elements from.
+///
 /// # Examples
 ///
 /// ```

@@ -7,6 +7,10 @@
 /// For an even number of values it is the midpoint of the two middle ones. The input is not
 /// modified.
 ///
+/// # Arguments
+///
+/// - `values` - The values to find the median of.
+///
 /// # Examples
 ///
 /// ```

@@ -12,6 +12,10 @@ use std::time::Duration;
 /// repeat or come in any order. A bare number, a fraction, a sign or an unknown unit is an error
 /// with the byte offset where it was found. It is the inverse of [`format`](super::format).
 ///
+/// # Arguments
+///
+/// - `input` - The human-written duration, such as `"1h30m"`.
+///
 /// # Errors
 ///
 /// Returns a [`ParseDurationError`] when the input is empty, has something other than a number

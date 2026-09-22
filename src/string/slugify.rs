@@ -8,6 +8,10 @@
 /// every other run of characters becomes a single hyphen; leading and trailing hyphens are
 /// never produced. Diacritics are **not** stripped: `"café"` stays `"café"`.
 ///
+/// # Arguments
+///
+/// - `s` - The text to convert.
+///
 /// # Examples
 ///
 /// ```

@@ -7,6 +7,11 @@ use std::hash::Hash;
 
 /// Counts the elements of `items` per key returned by `key`.
 ///
+/// # Arguments
+///
+/// - `items` - The elements to count.
+/// - `key` - Returns the key to count each element under.
+///
 /// # Examples
 ///
 /// ```

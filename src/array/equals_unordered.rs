@@ -10,6 +10,11 @@ use std::hash::Hash;
 /// Use it for collections where order is meaningless (tags, ids). For positional equality,
 /// compare the slices with `==`.
 ///
+/// # Arguments
+///
+/// - `a` - The first slice.
+/// - `b` - The second slice.
+///
 /// # Examples
 ///
 /// ```

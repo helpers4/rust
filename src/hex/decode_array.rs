@@ -7,6 +7,10 @@ use super::error::DecodeError;
 
 /// Decodes a hexadecimal string into a fixed-size array, e.g. a 32-byte key from 64 hex digits.
 ///
+/// # Arguments
+///
+/// - `hex` - The hexadecimal string to decode; must encode exactly `N` bytes.
+///
 /// # Errors
 ///
 /// Same as [`decode_to_slice`](super::decode_to_slice): the string must have exactly `2 * N`

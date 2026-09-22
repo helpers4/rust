@@ -11,6 +11,10 @@ use super::_line::parse_line;
 /// comment), `"double quoted"` values with `\n \r \t \" \\` escapes and `'single quoted'`
 /// literals. Values are single-line. A key assigned twice appears twice.
 ///
+/// # Arguments
+///
+/// - `content` - The dotenv text to parse.
+///
 /// # Examples
 ///
 /// ```

@@ -10,6 +10,10 @@ use std::time::Duration;
 /// zero duration is `"0s"`. Anything below one millisecond is dropped (truncated, not rounded).
 /// [`parse`](super::parse) reads the result back.
 ///
+/// # Arguments
+///
+/// - `duration` - The duration to format.
+///
 /// # Examples
 ///
 /// ```

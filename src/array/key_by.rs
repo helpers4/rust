@@ -10,6 +10,11 @@ use std::hash::Hash;
 /// When several elements share a key, the last one wins. Use [`group_by`](super::group_by) to keep
 /// them all.
 ///
+/// # Arguments
+///
+/// - `items` - The elements to index.
+/// - `key` - Returns the key to index each element under.
+///
 /// # Examples
 ///
 /// ```

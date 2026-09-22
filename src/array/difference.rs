@@ -9,6 +9,11 @@ use std::hash::Hash;
 ///
 /// Duplicates in `a` are kept: only membership in `b` decides whether an element stays.
 ///
+/// # Arguments
+///
+/// - `a` - The elements to keep from.
+/// - `b` - The elements to remove.
+///
 /// # Examples
 ///
 /// ```

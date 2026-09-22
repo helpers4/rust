@@ -8,6 +8,11 @@
 /// introduced. Lines are split on `'\n'` only, and a trailing newline is preserved. It is the
 /// inverse of [`dedent`](super::dedent) for text indented with a fixed prefix.
 ///
+/// # Arguments
+///
+/// - `s` - The text to indent.
+/// - `prefix` - The text to prepend to every non-blank line.
+///
 /// # Examples
 ///
 /// ```

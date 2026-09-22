@@ -6,6 +6,11 @@
 ///
 /// The result is not clamped: a `part` larger than `total` gives more than 100.
 ///
+/// # Arguments
+///
+/// - `part` - The quantity to express as a percentage.
+/// - `total` - The whole that `part` is a share of.
+///
 /// # Examples
 ///
 /// ```
