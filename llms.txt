@@ -22,6 +22,7 @@
 - hex — hexadecimal encoding/decoding with typed errors: `encode`, `encode_upper`, `decode`,
   `decode_to_slice`, `decode_array`
 - http — HTTP header value helpers: `bearer_token` (RFC 7235 / 6750)
+- iter — helpers for any `Iterator`: `chunk`, `min_max`, `first_duplicate`
 - map — `HashMap` helpers: `pick`, `omit`, `map_values`
 - net — network address and hostname checks: `is_public_ip` (SSRF guard, IANA registry),
   `is_valid_hostname`, `HostnameError`
@@ -29,6 +30,7 @@
 - string — string manipulation: `capitalize`, `title_case`, `camel_case`, `pascal_case`,
   `snake_case`, `kebab_case`, `constant_case`, `slugify`, `truncate`, `squish`, `indent`,
   `dedent`, `escape_html`, `unescape_html`
+- validate — shape checks: `is_valid_email`, `is_uuid`, `is_slug`
 - time — the system clock as unix time: `unix_now`, `unix_now_millis`, `ClockError`
 
 ## Docs
