@@ -29,6 +29,9 @@ pub mod hex;
 #[cfg(feature = "http")]
 pub mod http;
 
+#[cfg(feature = "iter")]
+pub mod iter;
+
 #[cfg(feature = "map")]
 pub mod map;
 
@@ -37,6 +40,9 @@ pub mod net;
 
 #[cfg(feature = "number")]
 pub mod number;
+
+#[cfg(feature = "validate")]
+pub mod validate;
 
 #[cfg(feature = "string")]
 pub mod string;
