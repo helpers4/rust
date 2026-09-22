@@ -18,6 +18,11 @@ impl InvalidKeyError {
     }
 
     /// The rejected name.
+    ///
+    /// # Returns
+    ///
+    /// The rejected variable name.
+    ///
     #[must_use]
     pub fn key(&self) -> &str {
         &self.key

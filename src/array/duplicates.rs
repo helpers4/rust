@@ -10,6 +10,10 @@ use std::hash::Hash;
 ///
 /// The counterpart of [`unique`](super::unique): what `unique` keeps, this reports as repeated.
 ///
+/// # Arguments
+///
+/// - `items` - The elements to scan.
+///
 /// # Examples
 ///
 /// ```

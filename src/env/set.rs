@@ -12,6 +12,12 @@ use super::error::InvalidKeyError;
 /// variables) is left untouched, and the replaced line keeps its line ending. `value` is quoted
 /// and escaped only when needed, so [`get`](super::get) reads it back exactly.
 ///
+/// # Arguments
+///
+/// - `content` - The dotenv text to edit.
+/// - `key` - The variable name to set.
+/// - `value` - The value to assign to `key`.
+///
 /// # Errors
 ///
 /// Returns [`InvalidKeyError`] when `key` is not `[A-Za-z_][A-Za-z0-9_]*`.

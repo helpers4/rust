@@ -10,6 +10,11 @@ use std::hash::Hash;
 /// The result is the elements of `a` missing from `b` (in `a`'s order), followed by the elements
 /// of `b` missing from `a` (in `b`'s order). Duplicates are kept.
 ///
+/// # Arguments
+///
+/// - `a` - The first slice.
+/// - `b` - The second slice.
+///
 /// # Examples
 ///
 /// ```

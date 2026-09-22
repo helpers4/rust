@@ -10,6 +10,11 @@ use std::hash::Hash;
 /// Within each group, elements keep their original order. The order of the groups themselves is
 /// unspecified (`HashMap`).
 ///
+/// # Arguments
+///
+/// - `items` - The elements to group.
+/// - `key` - Returns the key to group each element under.
+///
 /// # Examples
 ///
 /// ```

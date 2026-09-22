@@ -9,6 +9,10 @@ use std::borrow::Cow;
 /// Returns the input borrowed, without allocating, when there is nothing to escape. Use it to
 /// embed untrusted text in HTML text nodes or quoted attribute values.
 ///
+/// # Arguments
+///
+/// - `s` - The text to escape.
+///
 /// # Examples
 ///
 /// ```

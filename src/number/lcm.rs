@@ -8,6 +8,11 @@ use super::gcd;
 ///
 /// `lcm(0, n)` is `0`.
 ///
+/// # Arguments
+///
+/// - `a` - The first number.
+/// - `b` - The second number.
+///
 /// # Examples
 ///
 /// ```

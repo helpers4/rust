@@ -6,6 +6,11 @@
 ///
 /// For more than two inputs, nest the calls.
 ///
+/// # Arguments
+///
+/// - `a` - The first slice.
+/// - `b` - The second slice.
+///
 /// # Examples
 ///
 /// ```

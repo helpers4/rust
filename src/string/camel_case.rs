@@ -11,6 +11,10 @@ use super::capitalize::capitalize;
 /// of capitals is an acronym, so only its last letter starts the next word (`userID` becomes
 /// `userId`).
 ///
+/// # Arguments
+///
+/// - `s` - The text to convert.
+///
 /// # Examples
 ///
 /// ```

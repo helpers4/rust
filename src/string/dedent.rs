@@ -9,6 +9,10 @@
 /// indentation leaking into the value. Indentation is counted in whitespace characters, and
 /// lines are split on `'\n'` only (a `'\r'` stays on its line).
 ///
+/// # Arguments
+///
+/// - `s` - The text to strip the shared indentation from.
+///
 /// # Examples
 ///
 /// ```

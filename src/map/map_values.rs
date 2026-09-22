@@ -7,6 +7,11 @@ use std::hash::{BuildHasher, Hash};
 
 /// Returns a new map with the same keys and each value replaced by `f(value)`.
 ///
+/// # Arguments
+///
+/// - `map` - The map to transform.
+/// - `f` - Computes the new value from each old value.
+///
 /// # Examples
 ///
 /// ```

@@ -8,6 +8,12 @@
 /// grapheme clusters. If the suffix alone does not fit, the first `max_chars` characters of the
 /// suffix are returned.
 ///
+/// # Arguments
+///
+/// - `s` - The text to shorten.
+/// - `max_chars` - The maximum length of the result, suffix included.
+/// - `suffix` - Appended when `s` was cut.
+///
 /// # Examples
 ///
 /// ```

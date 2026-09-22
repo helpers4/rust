@@ -9,6 +9,11 @@ use super::_line::parse_line;
 /// When a key is assigned more than once the last assignment wins, like a shell sourcing the
 /// file. See [`parse`](super::parse) for the accepted syntax.
 ///
+/// # Arguments
+///
+/// - `content` - The dotenv text to read.
+/// - `key` - The variable name to look up.
+///
 /// # Examples
 ///
 /// ```

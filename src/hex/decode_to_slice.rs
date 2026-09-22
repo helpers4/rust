@@ -9,6 +9,11 @@ use super::error::DecodeError;
 ///
 /// Nothing is allocated; on error `out` may be partially written.
 ///
+/// # Arguments
+///
+/// - `hex` - The hexadecimal string to decode.
+/// - `out` - The buffer to decode into; must be exactly half of `hex`'s length.
+///
 /// # Errors
 ///
 /// [`DecodeError::OddLength`], [`DecodeError::InvalidLength`] when the string does not match

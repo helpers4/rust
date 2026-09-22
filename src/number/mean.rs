@@ -6,6 +6,10 @@
 ///
 /// `NaN` and infinities propagate as usual for `f64`.
 ///
+/// # Arguments
+///
+/// - `values` - The values to average.
+///
 /// # Examples
 ///
 /// ```

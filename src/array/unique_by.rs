@@ -7,6 +7,11 @@ use std::hash::Hash;
 
 /// Removes elements whose `key` was already seen, keeping the first of each key in order.
 ///
+/// # Arguments
+///
+/// - `items` - The elements to deduplicate.
+/// - `key` - Returns the key that decides which elements are duplicates.
+///
 /// # Examples
 ///
 /// ```

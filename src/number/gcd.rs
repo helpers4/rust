@@ -4,6 +4,11 @@
 
 /// Greatest common divisor of `a` and `b`; `gcd(0, 0)` is `0`.
 ///
+/// # Arguments
+///
+/// - `a` - The first number.
+/// - `b` - The second number.
+///
 /// # Examples
 ///
 /// ```

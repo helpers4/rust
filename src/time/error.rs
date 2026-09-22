@@ -20,6 +20,11 @@ impl ClockError {
     }
 
     /// How far before the epoch the clock is.
+    ///
+    /// # Returns
+    ///
+    /// How far in the past the system clock reported, relative to the Unix epoch.
+    ///
     #[must_use]
     pub fn behind(&self) -> Duration {
         self.behind

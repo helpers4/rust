@@ -9,6 +9,11 @@
 /// `1.00499999999999989…`, so `round_to(1.005, 2)` is `1.0`. `NaN`, infinities, and values too
 /// large to scale are returned unchanged.
 ///
+/// # Arguments
+///
+/// - `value` - The number to round.
+/// - `decimals` - How many decimal places to keep.
+///
 /// # Examples
 ///
 /// ```

@@ -47,6 +47,10 @@ use super::_cidr::{v4_in, v6_in};
 /// - **Provider-specific addresses inside a public range.** A registry cannot say that, for
 ///   example, Azure's wire server `168.63.129.16` is internal: it is reported public.
 ///
+/// # Arguments
+///
+/// - `ip` - The address to check.
+///
 /// # Examples
 ///
 /// ```

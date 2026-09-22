@@ -19,6 +19,10 @@ use super::error::HostnameError;
 /// check the address you will actually connect to with
 /// [`is_public_ip`](super::is_public_ip).
 ///
+/// # Arguments
+///
+/// - `hostname` - The hostname to validate.
+///
 /// # Errors
 ///
 /// A [`HostnameError`] naming the first rule that fails.

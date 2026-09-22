@@ -6,6 +6,10 @@
 ///
 /// Tabs and line breaks count as whitespace, so a multi-line text becomes one line.
 ///
+/// # Arguments
+///
+/// - `s` - The text to normalize.
+///
 /// # Examples
 ///
 /// ```

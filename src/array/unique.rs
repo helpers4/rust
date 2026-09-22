@@ -7,6 +7,10 @@ use std::hash::Hash;
 
 /// Removes duplicate values, keeping the first occurrence of each and the original order.
 ///
+/// # Arguments
+///
+/// - `items` - The elements to deduplicate.
+///
 /// # Examples
 ///
 /// ```

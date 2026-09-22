@@ -9,6 +9,11 @@ use std::hash::{BuildHasher, Hash};
 ///
 /// Keys that are not in `map` are ignored.
 ///
+/// # Arguments
+///
+/// - `map` - The map to filter.
+/// - `keys` - The keys to keep.
+///
 /// # Examples
 ///
 /// ```

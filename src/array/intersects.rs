@@ -7,6 +7,11 @@ use std::hash::Hash;
 
 /// Returns `true` when `a` and `b` share at least one element.
 ///
+/// # Arguments
+///
+/// - `a` - The first slice.
+/// - `b` - The second slice.
+///
 /// # Examples
 ///
 /// ```
