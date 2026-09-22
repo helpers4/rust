@@ -10,6 +10,7 @@
   <a href="https://docs.rs/helpers4"><img src="https://img.shields.io/docsrs/helpers4?label=docs.rs" alt="docs.rs" /></a>
   <br>
   <a href="LICENSE"><img src="https://img.shields.io/crates/l/helpers4?color=blue" alt="license" /></a>
+  <a href="https://scorecard.dev/viewer/?uri=github.com/helpers4/rust"><img src="https://api.securityscorecards.dev/projects/github.com/helpers4/rust/badge" alt="OpenSSF Scorecard" /></a>
   <img src="https://img.shields.io/crates/msrv/helpers4?label=MSRV" alt="minimum supported Rust version" />
   <img src="https://img.shields.io/badge/unsafe-forbidden-blue" alt="unsafe code forbidden" />
   <a href="CONTRIBUTING.md"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs welcome" /></a>
@@ -42,6 +43,7 @@ One module per category, each behind a Cargo feature of the same name (all enabl
 | [`array`](https://helpers4.dev/rust/modules/array/) | unique, difference, intersection, grouping, counting, duplicates, interleaving |
 | [`number`](https://helpers4.dev/rust/modules/number/) | interpolation, rounding, mean, median, percentages, gcd and lcm |
 | [`map`](https://helpers4.dev/rust/modules/map/) | picking, omitting and transforming the entries of a `HashMap` |
+| [`iter`](https://helpers4.dev/rust/modules/iter/) | chunking, one-pass min/max, first duplicate — for any `Iterator` |
 | [`duration`](https://helpers4.dev/rust/modules/duration/) | parsing and formatting durations as `1h30m` |
 | [`cache`](https://helpers4.dev/rust/modules/cache/) | maps and sets whose entries expire, with the clock passed in |
 | [`env`](https://helpers4.dev/rust/modules/env/) | reading and editing `.env` files as text |
@@ -49,8 +51,9 @@ One module per category, each behind a Cargo feature of the same name (all enabl
 | [`net`](https://helpers4.dev/rust/modules/net/) | is this IP address public (an SSRF guard), is this a valid hostname |
 | [`http`](https://helpers4.dev/rust/modules/http/) | extracting a bearer token from an `Authorization` header |
 | [`time`](https://helpers4.dev/rust/modules/time/) | the system clock as unix time, without a silent `0` |
+| [`validate`](https://helpers4.dev/rust/modules/validate/) | shape checks: email, UUID, slug |
 
-More are planned (random values and identifiers, validation, iterators, sets, …): see the [roadmap](https://github.com/orgs/helpers4/projects/1).
+More are planned (random values and identifiers, sets, …): see the [roadmap](https://github.com/orgs/helpers4/projects/1).
 
 ## Quick start
 
