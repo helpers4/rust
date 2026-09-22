@@ -9,6 +9,7 @@
   "env",
   "hex",
   "http",
+  "iter",
   "license",
   "map",
   "net",
@@ -18,5 +19,6 @@
   "security",
   "shared",
   "string",
-  "time"
+  "time",
+  "validate"
 ]
