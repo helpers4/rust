@@ -17,9 +17,14 @@ minimum_test_timeout = 60
 # timeout, which costs a minute each and makes cargo-mutants exit non-zero. `% -> /` in the Euclid
 # loop of `gcd` never reaches a zero remainder; `decode_entity -> Some((_, 0))` makes
 # `unescape_html` consume nothing forever. A hang is detected, so these are not a test gap.
+#
+# `min_max` only ever replaces `min`/`max` with a value equal to it (`item == min`/`item == max`),
+# so making the comparison non-strict (`<=`/`>=`) reassigns the same value and changes nothing.
 exclude_re = [
   "replace \\| with \\^ in decode_into",
   "replace match guard now >= earliest with true in .*evict_expired",
   "replace % with / in gcd",
   "replace decode_entity -> .* with Some\\(\\(Default::default\\(\\), 0\\)\\)",
+  "replace < with <= in min_max",
+  "replace > with >= in min_max",
 ]
