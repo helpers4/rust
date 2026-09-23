@@ -32,14 +32,12 @@
 /// ```
 pub fn retry<T, E>(attempts: u32, mut operation: impl FnMut(u32) -> Result<T, E>) -> Result<T, E> {
     let attempts = attempts.max(1);
-    let mut attempt = 1;
-    loop {
-        match operation(attempt) {
-            Ok(value) => return Ok(value),
-            Err(error) if attempt >= attempts => return Err(error),
-            Err(_) => attempt += 1,
+    for attempt in 1..attempts {
+        if let Ok(value) = operation(attempt) {
+            return Ok(value);
         }
     }
+    operation(attempts)
 }
 
 #[cfg(test)]

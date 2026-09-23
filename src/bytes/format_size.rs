@@ -35,17 +35,14 @@ pub fn format_size(bytes: u64) -> String {
         return format!("{bytes} B");
     }
     let bytes = u128::from(bytes);
-    // A u64 is below 1024^7, so `index` stops at 6 (EiB) without needing a bound, and at that
-    // unit `tenths` is at most 160, so it never rounds up to a unit that does not exist.
-    let mut index = 1;
-    let mut unit = 1024u128;
-    while bytes >= unit * 1024 {
-        unit *= 1024;
-        index += 1;
-    }
+    // Every 10 bits of magnitude is one unit (1024 = 2^10). A u64 has at most 64 bits, so `index`
+    // is at most 6 (EiB), and at that unit `tenths` is at most 160: it never rounds up to a unit
+    // that does not exist.
+    let mut index = usize::try_from(bytes.ilog2() / 10).unwrap_or(0);
+    let mut unit = 1u128 << (10 * index);
     let mut tenths = (bytes * 10 + unit / 2) / unit;
     if tenths >= 10_240 {
-        unit *= 1024;
+        unit <<= 10;
         index += 1;
         tenths = (bytes * 10 + unit / 2) / unit;
     }
