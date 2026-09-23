@@ -61,10 +61,13 @@ cargo package --locked                                     # what would be publi
 - Same helper name in two modules is fine and intentional (`array::compact` vs
   `object::compact`): callers import through the module path, never glob-import modules
 - Check the standard library first — do not add a helper that duplicates it
+  (`docs/native-alternatives.json` lists what `std` covers, per module)
 - Breaking changes: use the real Conventional Commits `BREAKING CHANGE:` footer (own
   paragraph, literal uppercase token) — `git-cliff` (see `cliff.toml`) only detects that
 
-**Docs for AI:** keep `llms.txt` current — when a module is added, list it there.
+**Docs for AI:** keep `llms.txt` current — when a module is added, list it there. Skills for agents
+are in `.claude/skills/`: `add-helper` (contribute a helper to this crate) and `replace-with-helpers4`
+(find code in another project that a helper replaces).
 
 **License header (all source files):**
 
