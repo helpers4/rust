@@ -26,5 +26,6 @@
   "shared",
   "string",
   "time",
+  "url",
   "validate"
 ]
