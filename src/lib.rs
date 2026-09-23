@@ -65,6 +65,9 @@ pub mod net;
 #[cfg(feature = "number")]
 pub mod number;
 
+#[cfg(feature = "secret")]
+pub mod secret;
+
 #[cfg(feature = "set")]
 pub mod set;
 
