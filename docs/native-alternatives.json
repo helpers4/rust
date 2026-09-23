@@ -1,0 +1,752 @@
+{
+  "array": [
+    {
+      "name": "chunk",
+      "libraries": ["itertools", "lodash", "radashi"],
+      "native": "<[T]>::chunks(n) / chunks_exact(n)",
+      "since": "Rust 1.0 / 1.31",
+      "example": "for pair in [1, 2, 3, 4, 5].chunks(2) { /* [1, 2], [3, 4], [5] */ }",
+      "notes": "Borrows a slice. helpers4 iter::chunk takes any iterator and owns the items."
+    },
+    {
+      "name": "windows / pairwise",
+      "libraries": ["itertools"],
+      "native": "<[T]>::windows(n)",
+      "since": "Rust 1.0",
+      "example": "[1, 2, 3].windows(2)  // [1, 2], [2, 3]"
+    },
+    {
+      "name": "chunk_by / group consecutive",
+      "libraries": ["itertools"],
+      "native": "<[T]>::chunk_by(pred)",
+      "since": "Rust 1.77",
+      "example": "[1, 1, 2, 3, 3].chunk_by(|a, b| a == b)",
+      "notes": "Groups consecutive equal runs only. helpers4 array::group_by groups by key anywhere."
+    },
+    {
+      "name": "uniq / dedup (consecutive)",
+      "libraries": ["itertools", "lodash"],
+      "native": "Vec::dedup() / dedup_by_key()",
+      "since": "Rust 1.0 / 1.16",
+      "example": "let mut v = vec![1, 1, 2]; v.dedup();",
+      "notes": "Removes consecutive duplicates in place. helpers4 array::unique removes all duplicates, keeping order."
+    },
+    {
+      "name": "flatten",
+      "libraries": ["itertools", "lodash"],
+      "native": "Iterator::flatten() / flat_map()",
+      "since": "Rust 1.29",
+      "example": "vec![vec![1], vec![2, 3]].into_iter().flatten()"
+    },
+    {
+      "name": "concat / join",
+      "libraries": ["itertools", "lodash"],
+      "native": "<[V]>::concat() / <[S]>::join(sep)",
+      "since": "Rust 1.0 / 1.3",
+      "example": "[[1, 2], [3]].concat()  // [1, 2, 3]\n[\"a\", \"b\"].join(\"-\")"
+    },
+    {
+      "name": "partition",
+      "libraries": ["itertools", "lodash"],
+      "native": "Iterator::partition(pred)",
+      "since": "Rust 1.0",
+      "example": "let (even, odd): (Vec<_>, Vec<_>) = (1..=6).partition(|n| n % 2 == 0);"
+    },
+    {
+      "name": "find / find_index",
+      "libraries": ["lodash", "itertools"],
+      "native": "Iterator::find() / position() / find_map()",
+      "since": "Rust 1.0",
+      "example": "items.iter().position(|x| *x > 5)"
+    },
+    {
+      "name": "includes / contains",
+      "libraries": ["lodash"],
+      "native": "<[T]>::contains(&x) / Iterator::any()",
+      "since": "Rust 1.0",
+      "example": "[1, 2, 3].contains(&2)"
+    },
+    {
+      "name": "first / last",
+      "libraries": ["lodash"],
+      "native": "<[T]>::first() / last() / split_first() / split_last()",
+      "since": "Rust 1.0 / 1.5",
+      "example": "items.first()  // Option<&T>"
+    },
+    {
+      "name": "reverse",
+      "libraries": ["lodash"],
+      "native": "<[T]>::reverse() / Iterator::rev()",
+      "since": "Rust 1.0",
+      "example": "items.iter().rev()"
+    },
+    {
+      "name": "rotate",
+      "libraries": ["lodash"],
+      "native": "<[T]>::rotate_left(n) / rotate_right(n)",
+      "since": "Rust 1.26",
+      "example": "items.rotate_left(1)"
+    },
+    {
+      "name": "sort_by / sort_by_key",
+      "libraries": ["lodash", "itertools"],
+      "native": "<[T]>::sort_by_key() / sort_unstable_by() / sort_by(|a, b| a.total_cmp(b))",
+      "since": "Rust 1.0 / 1.62 (total_cmp)",
+      "example": "people.sort_by_key(|p| p.age)"
+    },
+    {
+      "name": "is_sorted",
+      "libraries": ["itertools"],
+      "native": "<[T]>::is_sorted() / Iterator::is_sorted()",
+      "since": "Rust 1.82",
+      "example": "[1, 2, 2, 3].is_sorted()"
+    },
+    {
+      "name": "filter in place",
+      "libraries": ["lodash"],
+      "native": "Vec::retain(pred)",
+      "since": "Rust 1.0",
+      "example": "v.retain(|x| *x > 0)"
+    },
+    {
+      "name": "from_fn / range with map",
+      "libraries": ["lodash"],
+      "native": "std::array::from_fn / std::iter::from_fn / repeat_n",
+      "since": "Rust 1.63 / 1.34 / 1.82",
+      "example": "let squares: [usize; 4] = std::array::from_fn(|i| i * i);"
+    },
+    {
+      "name": "zip / unzip",
+      "libraries": ["itertools", "lodash"],
+      "native": "Iterator::zip() / unzip()",
+      "since": "Rust 1.0",
+      "example": "a.iter().zip(b.iter())"
+    },
+    {
+      "name": "min / max (by key)",
+      "libraries": ["itertools", "lodash"],
+      "native": "Iterator::min() / max() / min_by_key() / max_by()",
+      "since": "Rust 1.0",
+      "example": "words.iter().max_by_key(|w| w.len())",
+      "notes": "Floats: max_by(|a, b| a.total_cmp(b)). Both min and max in one pass: helpers4 iter::min_max."
+    },
+    {
+      "name": "sum / product / reduce / fold",
+      "libraries": ["lodash", "itertools"],
+      "native": "Iterator::sum() / product() / fold() / reduce()",
+      "since": "Rust 1.0 / 1.51 (reduce)",
+      "example": "(1..=4).sum::<i32>()"
+    },
+    {
+      "name": "cartesian product / combinations",
+      "libraries": ["itertools"],
+      "native": null,
+      "since": null,
+      "example": null,
+      "notes": "Not in std. helpers4 array::cartesian_product covers the two-slice case."
+    }
+  ],
+  "string": [
+    {
+      "name": "trim / trim_start / trim_end",
+      "libraries": ["lodash"],
+      "native": "str::trim() / trim_start() / trim_end() / trim_matches(pat)",
+      "since": "Rust 1.0",
+      "example": "\"  hi \".trim()"
+    },
+    {
+      "name": "split / split_once / rsplit_once",
+      "libraries": ["lodash"],
+      "native": "str::split(pat) / split_once(pat) / rsplit_once(pat) / splitn(n, pat)",
+      "since": "Rust 1.0 / 1.52",
+      "example": "\"key=value\".split_once('=')  // Some((\"key\", \"value\"))"
+    },
+    {
+      "name": "starts_with / ends_with / strip_prefix",
+      "libraries": ["lodash"],
+      "native": "str::starts_with() / ends_with() / strip_prefix() / strip_suffix()",
+      "since": "Rust 1.0 / 1.45",
+      "example": "\"Bearer abc\".strip_prefix(\"Bearer \")",
+      "notes": "For an Authorization header, http::bearer_token also handles the case-insensitive scheme."
+    },
+    {
+      "name": "repeat",
+      "libraries": ["lodash"],
+      "native": "str::repeat(n)",
+      "since": "Rust 1.16",
+      "example": "\"ab\".repeat(3)"
+    },
+    {
+      "name": "pad_start / pad_end",
+      "libraries": ["lodash"],
+      "native": "format!(\"{s:>8}\") / format!(\"{s:<8}\") / format!(\"{n:0>4}\")",
+      "since": "Rust 1.0",
+      "example": "format!(\"{:0>4}\", 7)  // \"0007\"",
+      "notes": "Width counts chars, not display columns."
+    },
+    {
+      "name": "upper / lower case",
+      "libraries": ["lodash"],
+      "native": "str::to_uppercase() / to_lowercase() / to_ascii_uppercase()",
+      "since": "Rust 1.0",
+      "example": "\"straße\".to_uppercase()  // \"STRASSE\""
+    },
+    {
+      "name": "case-insensitive equality",
+      "libraries": ["lodash"],
+      "native": "str::eq_ignore_ascii_case()",
+      "since": "Rust 1.23",
+      "example": "\"Bearer\".eq_ignore_ascii_case(\"bearer\")",
+      "notes": "ASCII only."
+    },
+    {
+      "name": "lines / words",
+      "libraries": ["lodash"],
+      "native": "str::lines() / split_whitespace()",
+      "since": "Rust 1.0",
+      "example": "text.split_whitespace()",
+      "notes": "helpers4 string::squish collapses whitespace into one space."
+    },
+    {
+      "name": "replace",
+      "libraries": ["lodash"],
+      "native": "str::replace(from, to) / replacen(from, to, n)",
+      "since": "Rust 1.0",
+      "example": "\"a-b\".replace('-', \"_\")"
+    },
+    {
+      "name": "escape for debug output",
+      "libraries": ["lodash"],
+      "native": "str::escape_debug() / escape_default() / {:?}",
+      "since": "Rust 1.34",
+      "example": "format!(\"{:?}\", \"a\\nb\")",
+      "notes": "Not HTML escaping: see helpers4 string::escape_html."
+    },
+    {
+      "name": "parse a number",
+      "libraries": ["lodash"],
+      "native": "str::parse::<T>() / T::from_str_radix(s, radix)",
+      "since": "Rust 1.0",
+      "example": "u8::from_str_radix(\"ff\", 16)"
+    },
+    {
+      "name": "camelCase / snake_case / kebab-case",
+      "libraries": ["heck", "convert_case", "lodash"],
+      "native": null,
+      "since": null,
+      "example": null,
+      "notes": "Not in std. helpers4 string::camel_case, snake_case, kebab_case, pascal_case, constant_case."
+    }
+  ],
+  "map": [
+    {
+      "name": "group by / count by",
+      "libraries": ["itertools", "lodash"],
+      "native": "HashMap::entry(key).or_default() / or_insert_with()",
+      "since": "Rust 1.0 / 1.28",
+      "example": "*counts.entry(word).or_insert(0) += 1"
+    },
+    {
+      "name": "construct from pairs",
+      "libraries": ["maplit"],
+      "native": "HashMap::from([(k, v), ...]) / iter.collect::<HashMap<_, _>>()",
+      "since": "Rust 1.56",
+      "example": "HashMap::from([(\"a\", 1), (\"b\", 2)])"
+    },
+    {
+      "name": "filter entries in place",
+      "libraries": ["lodash"],
+      "native": "HashMap::retain(|k, v| ...)",
+      "since": "Rust 1.18",
+      "example": "map.retain(|_, v| *v > 0)",
+      "notes": "Mutates. helpers4 map::pick and omit build a new map from a list of keys."
+    },
+    {
+      "name": "merge / assign",
+      "libraries": ["lodash"],
+      "native": "HashMap::extend(other)",
+      "since": "Rust 1.0",
+      "example": "a.extend(b)  // b's entries win"
+    },
+    {
+      "name": "sorted keys / ordered map",
+      "libraries": ["indexmap"],
+      "native": "BTreeMap (sorted by key)",
+      "since": "Rust 1.0",
+      "example": "let ordered: BTreeMap<_, _> = map.into_iter().collect();"
+    }
+  ],
+  "set": [
+    {
+      "name": "union / intersection / difference / symmetric difference",
+      "libraries": ["lodash"],
+      "native": "HashSet::union() / intersection() / difference() / symmetric_difference()",
+      "since": "Rust 1.0",
+      "example": "a.intersection(&b).cloned().collect::<HashSet<_>>()",
+      "notes": "Two sets, lazy iterators. helpers4 set::union_all and intersection_all take any number."
+    },
+    {
+      "name": "subset / superset / disjoint",
+      "libraries": ["lodash"],
+      "native": "HashSet::is_subset() / is_superset() / is_disjoint()",
+      "since": "Rust 1.0",
+      "example": "a.is_subset(&b)"
+    },
+    {
+      "name": "unique values",
+      "libraries": ["itertools", "lodash"],
+      "native": "iter.collect::<HashSet<_>>()",
+      "since": "Rust 1.0",
+      "example": "let unique: HashSet<_> = items.into_iter().collect();",
+      "notes": "Loses order. helpers4 array::unique keeps first-seen order."
+    }
+  ],
+  "number": [
+    {
+      "name": "clamp",
+      "libraries": ["lodash", "num"],
+      "native": "Ord::clamp(min, max) / f64::clamp(min, max)",
+      "since": "Rust 1.50",
+      "example": "n.clamp(0, 100)"
+    },
+    {
+      "name": "abs difference",
+      "libraries": ["num"],
+      "native": "<int>::abs_diff(other)",
+      "since": "Rust 1.60",
+      "example": "3u32.abs_diff(10)  // 7"
+    },
+    {
+      "name": "modulo (floored)",
+      "libraries": ["lodash"],
+      "native": "<int>::rem_euclid(n) / div_euclid(n)",
+      "since": "Rust 1.38",
+      "example": "(-1i32).rem_euclid(7)  // 6"
+    },
+    {
+      "name": "integer square root / log",
+      "libraries": ["num"],
+      "native": "<uint>::isqrt() / ilog2() / ilog10() / ilog(base)",
+      "since": "Rust 1.84 / 1.67",
+      "example": "1000u32.ilog10()  // 3"
+    },
+    {
+      "name": "ceiling division / next multiple",
+      "libraries": ["num"],
+      "native": "<uint>::div_ceil(n) / next_multiple_of(n)",
+      "since": "Rust 1.73",
+      "example": "7u32.div_ceil(2)  // 4"
+    },
+    {
+      "name": "average of two",
+      "libraries": ["num"],
+      "native": "<num>::midpoint(other)",
+      "since": "Rust 1.85 (floats and unsigned; signed integers need a newer toolchain)",
+      "example": "1.0f64.midpoint(3.0)  // 2.0",
+      "notes": "Two values only, overflow-safe. helpers4 number::mean and median take a slice."
+    },
+    {
+      "name": "checked / saturating / wrapping arithmetic",
+      "libraries": ["num"],
+      "native": "<int>::checked_add() / saturating_sub() / wrapping_mul() / overflowing_*",
+      "since": "Rust 1.0",
+      "example": "u8::MAX.checked_add(1)  // None"
+    },
+    {
+      "name": "power of two / bit tricks",
+      "libraries": ["num"],
+      "native": "<uint>::is_power_of_two() / next_power_of_two() / count_ones() / leading_zeros()",
+      "since": "Rust 1.0",
+      "example": "64u32.is_power_of_two()"
+    },
+    {
+      "name": "float comparison / ordering",
+      "libraries": ["ordered-float"],
+      "native": "f64::total_cmp() / f64::EPSILON / (a - b).abs() < eps",
+      "since": "Rust 1.62",
+      "example": "values.sort_by(|a, b| a.total_cmp(b))"
+    },
+    {
+      "name": "lerp / percentage / rounding to N decimals / gcd / lcm",
+      "libraries": ["num", "lodash"],
+      "native": null,
+      "since": null,
+      "example": null,
+      "notes": "Not in std (f64::lerp is unstable). helpers4 number::lerp, percentage, round_to, gcd, lcm."
+    }
+  ],
+  "duration": [
+    {
+      "name": "seconds / milliseconds as a duration",
+      "libraries": ["humantime", "chrono"],
+      "native": "Duration::from_secs() / from_millis() / as_secs_f64() / checked_add() / saturating_sub()",
+      "since": "Rust 1.3",
+      "example": "Duration::from_secs(90).as_secs_f64()"
+    },
+    {
+      "name": "measure elapsed time",
+      "libraries": ["chrono"],
+      "native": "Instant::now() / elapsed() / duration_since()",
+      "since": "Rust 1.8",
+      "example": "let start = Instant::now(); /* work */ start.elapsed()"
+    },
+    {
+      "name": "parse / format \"1h30m\"",
+      "libraries": ["humantime", "parse_duration"],
+      "native": null,
+      "since": null,
+      "example": null,
+      "notes": "Not in std. helpers4 duration::parse and format."
+    }
+  ],
+  "time": [
+    {
+      "name": "unix timestamp",
+      "libraries": ["chrono", "time"],
+      "native": "SystemTime::now().duration_since(UNIX_EPOCH)",
+      "since": "Rust 1.8",
+      "example": "SystemTime::now().duration_since(UNIX_EPOCH)?.as_secs()",
+      "notes": "Returns a Result (the clock can be before 1970). helpers4 time::unix_now names the error."
+    }
+  ],
+  "date": [
+    {
+      "name": "calendar dates, weekdays, date arithmetic",
+      "libraries": ["chrono", "time", "jiff"],
+      "native": null,
+      "since": null,
+      "example": null,
+      "notes": "std only has SystemTime and Duration, no calendar. helpers4 date covers plain dates (no time zones); use chrono, time or jiff for time zones and clock times."
+    }
+  ],
+  "fs": [
+    {
+      "name": "read / write a whole file",
+      "libraries": ["fs-err", "tokio"],
+      "native": "std::fs::read_to_string() / read() / write() / copy() / rename() / remove_file()",
+      "since": "Rust 1.0",
+      "example": "std::fs::write(\"out.txt\", data)?"
+    },
+    {
+      "name": "create / remove directories",
+      "libraries": ["fs_extra"],
+      "native": "std::fs::create_dir_all() / remove_dir_all() / read_dir()",
+      "since": "Rust 1.0",
+      "example": "std::fs::create_dir_all(dir)?"
+    },
+    {
+      "name": "path pieces",
+      "libraries": ["camino", "pathdiff"],
+      "native": "Path::file_name() / file_stem() / extension() / with_extension() / parent() / join() / strip_prefix() / components()",
+      "since": "Rust 1.0",
+      "example": "Path::new(\"a/b.txt\").extension()"
+    },
+    {
+      "name": "path exists",
+      "libraries": [],
+      "native": "Path::exists() / try_exists()",
+      "since": "Rust 1.5 / 1.63",
+      "example": "path.try_exists()?",
+      "notes": "exists() hides permission errors; try_exists() reports them."
+    },
+    {
+      "name": "absolute / canonical path",
+      "libraries": ["dunce", "path-absolutize"],
+      "native": "std::path::absolute() / Path::canonicalize()",
+      "since": "Rust 1.79 / 1.5",
+      "example": "std::path::absolute(\"a/../b\")",
+      "notes": "canonicalize resolves symlinks and needs the path to exist; absolute does not. Lexical cleaning: helpers4 fs::normalize."
+    },
+    {
+      "name": "recursive directory walk",
+      "libraries": ["walkdir"],
+      "native": null,
+      "since": null,
+      "example": null,
+      "notes": "Not in std. helpers4 fs::walk lists the files of a tree (no symlink following); walkdir has filters, depth and error handling per entry."
+    }
+  ],
+  "env": [
+    {
+      "name": "read environment variables",
+      "libraries": ["dotenvy"],
+      "native": "std::env::var() / var_os() / vars() / args() / current_dir() / temp_dir()",
+      "since": "Rust 1.0",
+      "example": "std::env::var(\"HOME\")",
+      "notes": "Process environment. helpers4 env works on the text of a .env file."
+    }
+  ],
+  "net": [
+    {
+      "name": "IP address classification",
+      "libraries": ["ipnet", "ipnetwork"],
+      "native": "IpAddr::is_loopback() / is_multicast() / is_unspecified() / Ipv4Addr::is_private() / is_link_local() / is_broadcast() / is_documentation() / Ipv6Addr::to_ipv4_mapped()",
+      "since": "Rust 1.12 / 1.63 (to_ipv4_mapped)",
+      "example": "ip.is_loopback()",
+      "notes": "is_global() is unstable. helpers4 net::is_public_ip combines the IANA special-purpose registries, including IPv4-mapped IPv6."
+    },
+    {
+      "name": "parse an IP address / socket address",
+      "libraries": [],
+      "native": "str::parse::<IpAddr>() / SocketAddr",
+      "since": "Rust 1.0",
+      "example": "\"127.0.0.1\".parse::<IpAddr>()"
+    }
+  ],
+  "iter": [
+    {
+      "name": "step, chain, take, skip, repeat",
+      "libraries": ["itertools"],
+      "native": "Iterator::step_by() / chain() / take() / skip() / take_while() / skip_while() / map_while() / cycle() / iter::repeat() / once() / successors()",
+      "since": "Rust 1.0 / 1.57 (map_while)",
+      "example": "(0..).step_by(5).take(3)"
+    },
+    {
+      "name": "peek / scan / inspect",
+      "libraries": ["itertools"],
+      "native": "Iterator::peekable() / scan() / inspect() / fuse()",
+      "since": "Rust 1.0",
+      "example": "let mut it = items.iter().peekable();"
+    },
+    {
+      "name": "collect into Result / Option",
+      "libraries": ["itertools"],
+      "native": "iter.collect::<Result<Vec<_>, _>>() / try_fold() / sum::<Option<_>>()",
+      "since": "Rust 1.0 / 1.27 (try_fold)",
+      "example": "strs.iter().map(|s| s.parse::<u8>()).collect::<Result<Vec<_>, _>>()"
+    },
+    {
+      "name": "fixed-size chunks of an iterator",
+      "libraries": ["itertools"],
+      "native": "Iterator::array_chunks() (unstable)",
+      "since": null,
+      "example": null,
+      "notes": "Not stable. helpers4 iter::chunk."
+    }
+  ],
+  "function": [
+    {
+      "name": "map / and_then / unwrap_or on Option and Result",
+      "libraries": ["lodash"],
+      "native": "Option::map() / and_then() / filter() / or_else() / unwrap_or_else() / is_some_and() / is_none_or() / Result::map_err() / ok()",
+      "since": "Rust 1.0 / 1.70 (is_some_and) / 1.82 (is_none_or)",
+      "example": "name.as_deref().is_some_and(|n| !n.is_empty())"
+    },
+    {
+      "name": "once / lazy initialization",
+      "libraries": ["once_cell", "lazy_static"],
+      "native": "std::sync::OnceLock / LazyLock / std::cell::OnceCell / LazyCell",
+      "since": "Rust 1.70 / 1.80",
+      "example": "static CONFIG: LazyLock<Config> = LazyLock::new(load);"
+    },
+    {
+      "name": "swap / take / replace a value",
+      "libraries": [],
+      "native": "std::mem::swap() / take() / replace()",
+      "since": "Rust 1.0",
+      "example": "let old = std::mem::take(&mut self.buffer);"
+    },
+    {
+      "name": "identity",
+      "libraries": ["lodash"],
+      "native": "std::convert::identity",
+      "since": "Rust 1.33",
+      "example": "iter.filter_map(std::convert::identity)"
+    },
+    {
+      "name": "compose / memoize / retry / rate limit",
+      "libraries": ["cached", "backoff", "governor"],
+      "native": null,
+      "since": null,
+      "example": null,
+      "notes": "Not in std. helpers4 function::compose, pipe, Memoize, retry, backoff, TokenBucket."
+    }
+  ],
+  "future": [
+    {
+      "name": "ready / pending futures, poll_fn, pinning, wakers",
+      "libraries": ["futures", "pin-utils"],
+      "native": "std::future::ready() / pending() / poll_fn() / std::pin::pin! / std::task::Wake / Waker::noop()",
+      "since": "Rust 1.48 / 1.64 / 1.68 / 1.51 / 1.85",
+      "example": "let mut fut = std::pin::pin!(async { 1 });"
+    },
+    {
+      "name": "block_on / join / select / timeout",
+      "libraries": ["futures", "tokio", "pollster"],
+      "native": null,
+      "since": null,
+      "example": null,
+      "notes": "Not in std, they need an executor. helpers4 future::block_on, join and join_all need no runtime; timers and I/O still need one (tokio, async-std, smol)."
+    }
+  ],
+  "bytes": [
+    {
+      "name": "integer to / from bytes",
+      "libraries": ["byteorder"],
+      "native": "<int>::from_be_bytes() / from_le_bytes() / to_be_bytes() / to_le_bytes()",
+      "since": "Rust 1.32",
+      "example": "u32::from_be_bytes([0, 0, 1, 0])",
+      "notes": "Takes an array. helpers4 bytes::read_u32 reads at an offset of a slice and returns None if it is too short."
+    },
+    {
+      "name": "starts_with / ends_with / contains on bytes",
+      "libraries": ["memchr", "bstr"],
+      "native": "<[u8]>::starts_with() / ends_with() / contains() / windows(n).position()",
+      "since": "Rust 1.0",
+      "example": "haystack.windows(needle.len()).position(|w| w == needle)",
+      "notes": "helpers4 bytes::find wraps the windows search."
+    },
+    {
+      "name": "ASCII checks and case",
+      "libraries": ["bstr"],
+      "native": "u8::is_ascii_*() / <[u8]>::eq_ignore_ascii_case() / to_ascii_uppercase()",
+      "since": "Rust 1.23",
+      "example": "b.is_ascii_hexdigit()"
+    },
+    {
+      "name": "hex encode / decode, XOR, constant-time equality, human sizes",
+      "libraries": ["hex", "subtle", "bytesize"],
+      "native": null,
+      "since": null,
+      "example": null,
+      "notes": "Not in std (only u8::from_str_radix and {:02x} formatting). helpers4 hex, bytes::xor, constant_time_eq, format_size, parse_size."
+    }
+  ],
+  "hex": [
+    {
+      "name": "hex of one byte / number",
+      "libraries": ["hex", "faster-hex"],
+      "native": "format!(\"{:02x}\", byte) / u8::from_str_radix(s, 16) / char::to_digit(16)",
+      "since": "Rust 1.0",
+      "example": "format!(\"{:02x}\", 255u8)",
+      "notes": "Per byte. helpers4 hex::encode and decode handle whole slices with typed errors."
+    }
+  ],
+  "url": [
+    {
+      "name": "URL parsing, percent-encoding, query strings",
+      "libraries": ["url", "percent-encoding", "form_urlencoded"],
+      "native": null,
+      "since": null,
+      "example": null,
+      "notes": "Not in std. helpers4 url is an RFC 3986 parser; the url crate implements the WHATWG algorithm (special schemes, IDNA/punycode), which helpers4 does not."
+    }
+  ],
+  "version": [
+    {
+      "name": "the crate's own version",
+      "libraries": [],
+      "native": "env!(\"CARGO_PKG_VERSION\")",
+      "since": "Rust 1.0",
+      "example": "const VERSION: &str = env!(\"CARGO_PKG_VERSION\");"
+    },
+    {
+      "name": "semantic versions and requirements",
+      "libraries": ["semver"],
+      "native": null,
+      "since": null,
+      "example": null,
+      "notes": "Not in std. helpers4 version follows Cargo's rules; the semver crate is the reference implementation."
+    }
+  ],
+  "color": [
+    {
+      "name": "colors, contrast",
+      "libraries": ["palette", "csscolorparser", "colorsys"],
+      "native": null,
+      "since": null,
+      "example": null,
+      "notes": "Not in std. helpers4 color covers sRGB parsing, HSL, blending and WCAG contrast; palette is far broader (color spaces, gamma)."
+    }
+  ],
+  "ansi": [
+    {
+      "name": "terminal colors and stripping escapes",
+      "libraries": ["anstyle", "owo-colors", "strip-ansi-escapes", "console"],
+      "native": null,
+      "since": null,
+      "example": null,
+      "notes": "Not in std. helpers4 ansi builds and strips sequences; it does not detect terminal support (see anstream / supports-color)."
+    }
+  ],
+  "markdown": [
+    {
+      "name": "escaping and generating Markdown",
+      "libraries": ["pulldown-cmark", "comrak"],
+      "native": null,
+      "since": null,
+      "example": null,
+      "notes": "Not in std. helpers4 markdown writes Markdown safely; the crates above parse and render it."
+    }
+  ],
+  "commit": [
+    {
+      "name": "Conventional Commits",
+      "libraries": ["git-conventional", "conventional_commit_parser"],
+      "native": null,
+      "since": null,
+      "example": null,
+      "notes": "Not in std. helpers4 commit parses the specification and computes the version bump."
+    }
+  ],
+  "secret": [
+    {
+      "name": "secret values and wiping memory",
+      "libraries": ["secrecy", "zeroize", "subtle"],
+      "native": null,
+      "since": null,
+      "example": null,
+      "notes": "Not in std. helpers4 secret hides values from Debug/Display and redacts text but does NOT wipe memory (that needs unsafe code): use zeroize / secrecy when that matters."
+    }
+  ],
+  "ci": [
+    {
+      "name": "CI environment detection",
+      "libraries": ["ci_info", "is_ci"],
+      "native": "std::env::var(\"CI\")",
+      "since": "Rust 1.0",
+      "example": "std::env::var(\"CI\").is_ok()",
+      "notes": "Only the generic variable. helpers4 ci::detect names the provider and detects pull requests."
+    }
+  ],
+  "license": [
+    {
+      "name": "SPDX identifiers and expressions",
+      "libraries": ["spdx", "license"],
+      "native": null,
+      "since": null,
+      "example": null,
+      "notes": "Not in std. helpers4 license knows about forty common licenses; the spdx crate embeds the whole SPDX list and exceptions."
+    }
+  ],
+  "cache": [
+    {
+      "name": "expiring / LRU cache",
+      "libraries": ["moka", "lru", "cached", "quick_cache"],
+      "native": null,
+      "since": null,
+      "example": null,
+      "notes": "Not in std. helpers4 cache::ExpiringMap is a small map with an injected clock, without a size bound; moka and lru bound the size."
+    }
+  ],
+  "validate": [
+    {
+      "name": "email / UUID / slug checks",
+      "libraries": ["validator", "email_address", "uuid"],
+      "native": null,
+      "since": null,
+      "example": null,
+      "notes": "Not in std. helpers4 validate checks the shape only, with pragmatic subsets; the crates above are stricter or generate values."
+    }
+  ],
+  "http": [
+    {
+      "name": "Authorization header parsing",
+      "libraries": ["http", "headers", "axum-extra"],
+      "native": "str::strip_prefix(\"Bearer \")",
+      "since": "Rust 1.45",
+      "example": "header.strip_prefix(\"Bearer \")",
+      "notes": "Case-sensitive scheme. helpers4 http::bearer_token follows RFC 7235 (case-insensitive scheme)."
+    }
+  ]
+}
