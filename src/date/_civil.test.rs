@@ -45,3 +45,23 @@ fn leap_days_are_counted() {
         2
     );
 }
+
+#[test]
+fn the_last_day_of_every_400_year_cycle_round_trips() {
+    // February 29th of a year divisible by 400 is day 146 096 of its cycle, the one day a
+    // 400-year correction term only counts once.
+    for year in (0..=9600).step_by(400) {
+        let leap_day = days_from_civil(year, 2, 29);
+        assert_eq!(civil_from_days(leap_day), (year, 2, 29), "{year}-02-29");
+        assert_eq!(civil_from_days(leap_day + 1), (year, 3, 1), "{year}-03-01");
+        assert_eq!(civil_from_days(leap_day - 1), (year, 2, 28), "{year}-02-28");
+    }
+}
+
+#[test]
+fn every_day_of_a_leap_century_year_round_trips() {
+    for days in days_from_civil(2000, 1, 1)..=days_from_civil(2000, 12, 31) {
+        let (year, month, day) = civil_from_days(days);
+        assert_eq!(days_from_civil(year, month, day), days);
+    }
+}
