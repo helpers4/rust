@@ -18,6 +18,13 @@ minimum_test_timeout = 60
 # loop of `gcd` never reaches a zero remainder; `decode_entity -> Some((_, 0))` makes
 # `unescape_html` consume nothing forever. A hang is detected, so these are not a test gap.
 #
+# `Hsl::to_rgb` picks a formula per 60 degree sector; at the exact boundary between two sectors both
+# formulas give the same color, so `<` or `<=` on the boundary cannot be told apart.
+#
+# `ThreadWaker::wake` unparks the thread blocked in `block_on`: without it that thread sleeps for
+# ever, so the mutant can only end in the timeout (the test that needs another thread to wake it is
+# what catches it).
+#
 # `min_max` only ever replaces `min`/`max` with a value equal to it (`item == min`/`item == max`),
 # so making the comparison non-strict (`<=`/`>=`) reassigns the same value and changes nothing.
 exclude_re = [
@@ -27,4 +34,6 @@ exclude_re = [
   "replace decode_entity -> .* with Some\\(\\(Default::default\\(\\), 0\\)\\)",
   "replace < with <= in min_max",
   "replace > with >= in min_max",
+  "replace < with <= in Hsl::to_rgb",
+  "replace <impl Wake for ThreadWaker>::wake with \\(\\)",
 ]
