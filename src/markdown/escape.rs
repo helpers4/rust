@@ -33,11 +33,8 @@ pub fn escape(text: &str) -> String {
     let mut out = String::with_capacity(text.len() + 8);
     for line in text.split_inclusive('\n') {
         let chars: Vec<char> = line.chars().collect();
-        let mut i = 0;
-        while i < chars.len() && chars[i] == ' ' {
-            out.push(' ');
-            i += 1;
-        }
+        let mut i = chars.iter().take_while(|c| **c == ' ').count();
+        out.extend(&chars[..i]);
         if i < chars.len() {
             match chars[i] {
                 '#' | '+' | '-' | '=' => out.push('\\'),

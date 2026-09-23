@@ -35,19 +35,17 @@ pub fn percent_decode(input: &str) -> Result<Cow<'_, str>, PercentDecodeError> {
     }
     let bytes = input.as_bytes();
     let mut out = Vec::with_capacity(bytes.len());
-    let mut i = 0;
-    while i < bytes.len() {
-        if bytes[i] == b'%' {
-            let high = bytes.get(i + 1).and_then(|b| hex_value(*b));
-            let low = bytes.get(i + 2).and_then(|b| hex_value(*b));
+    let mut rest = bytes.iter().enumerate();
+    while let Some((index, &byte)) = rest.next() {
+        if byte == b'%' {
+            let high = rest.next().and_then(|(_, b)| hex_value(*b));
+            let low = rest.next().and_then(|(_, b)| hex_value(*b));
             match (high, low) {
                 (Some(high), Some(low)) => out.push(high << 4 | low),
-                _ => return Err(PercentDecodeError::InvalidEscape { index: i }),
+                _ => return Err(PercentDecodeError::InvalidEscape { index }),
             }
-            i += 3;
         } else {
-            out.push(bytes[i]);
-            i += 1;
+            out.push(byte);
         }
     }
     String::from_utf8(out)
