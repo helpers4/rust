@@ -20,6 +20,9 @@ pub mod bytes;
 #[cfg(feature = "cache")]
 pub mod cache;
 
+#[cfg(feature = "color")]
+pub mod color;
+
 #[cfg(feature = "date")]
 pub mod date;
 
