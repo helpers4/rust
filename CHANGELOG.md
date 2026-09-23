@@ -5,11 +5,54 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.6] - 2026-09-23
+
+### 🚀 Features
+- **ansi**: add the ansi module: strip, contains, visible_len, Style, Color
+- **bytes**: add the bytes module: read_u16/32/64, find, xor, constant_time_eq, format_size, parse_size
+- **ci**: add the ci module: Provider, detect, is_ci, is_pull_request, Status, overall, render_report
+- **color**: add the color module: Rgb, Hsl, ParseColorError, mix, contrast_ratio, best_text_color
+- **commit**: add the commit module: Commit, Bump, ParseCommitError, bump_for, is_valid, emoji_for
+- **date**: add the date module: Date, Weekday, DateError, is_leap_year, days_in_month
+- **fs**: add the fs module: write_atomic, read_to_string_opt, walk, normalize, is_within
+- **function**: add the function module: compose, pipe, Memoize, retry, backoff, TokenBucket
+- **future**: add the future module: block_on, now_or_never, yield_now, join, join_all
+- **license**: add the license module: lookup, normalize, Expression, Category, LicenseInfo, header
+- **markdown**: add the markdown module: escape, link, inline_code, code_block, blockquote, table, heading_slug
+- **secret**: add the secret module: Secret, redact, mask, detect, scan, TokenKind
+- **set**: add the set module: union_all, intersection_all, toggle, to_sorted_vec, jaccard, subsets
+- **url**: add the url module: Url, percent_encode/decode, parse_query, build_query, join_path
+- **version**: add the version module: Version, VersionReq, ParseVersionError, compare, satisfies
+
+### 🔧 Miscellaneous
+- **coherency**: exclude two mutants no test can catch
+- **coherency**: tell typos about the test data that looks like typos
+
+### ♻️ Refactoring
+- **bytes**: replace hand-rolled index loops so mutants cannot hang
+
+### 📝 Documentation
+- **agents**: list the new modules in llms.txt
+- list the new modules in the README
+
+### ✅ Tests
+- **bytes**: cover multi-digit fractions and drop the redundant unit guards
+- **commit**: cover type characters, ordinary footers and 400-year cycles
+- **secret**: fix a property that did not hold
+
+### 👷 CI/CD
+- cap the weekly feature powerset at depth 3
+- stop the feature powerset check from growing unbounded on every PR
+
 ## [0.0.5] - 2026-09-22
 
 ### 🚀 Features
 - **iter**: add the iter module: chunk, min_max and first_duplicate
 - **validate**: add the validate module: is_valid_email, is_uuid and is_slug
+
+### 🐛 Bug Fixes
+- **validate**: gate the whole spec file, not just the proptest block
+- **validate**: don't require string to compile validate alone
 
 ### 📝 Documentation
 - **agents**: list the iter and validate modules in llms.txt
@@ -151,6 +194,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - run the minimal-versions job on nightly despite rust-toolchain.toml
 - split CI into reusable jobs with PR and main validation
 
+[0.0.6]: https://github.com/helpers4/rust/compare/v0.0.5...v0.0.6
 [0.0.5]: https://github.com/helpers4/rust/compare/v0.0.4...v0.0.5
 [0.0.4]: https://github.com/helpers4/rust/compare/v0.0.3...v0.0.4
 [0.0.3]: https://github.com/helpers4/rust/compare/v0.0.2...v0.0.3
