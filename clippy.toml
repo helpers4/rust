@@ -2,3 +2,7 @@ allow-unwrap-in-tests = true
 allow-expect-in-tests = true
 allow-panic-in-tests = true
 allow-print-in-tests = true
+
+# Product names that clippy's doc-markdown lint would otherwise ask to put in backticks. The ".."
+# keeps clippy's own defaults (GitHub, JavaScript, ...).
+doc-valid-idents = ["AppVeyor", "CircleCI", "CodeBuild", "GitLab", "TeamCity", ".."]
