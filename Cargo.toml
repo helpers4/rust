@@ -14,7 +14,7 @@ categories = ["algorithms"]
 include = ["/src/**", "/benches/**", "/Cargo.toml", "/LICENSE", "/README.md", "/SECURITY.md", "/CHANGELOG.md", "/llms.txt"]
 
 [features]
-default = ["array", "bytes", "cache", "color", "commit", "date", "duration", "env", "fs", "function", "future", "hex", "http", "iter", "map", "markdown", "net", "number", "set", "string", "time", "url", "validate", "version"]
+default = ["array", "bytes", "cache", "color", "commit", "date", "duration", "env", "fs", "function", "future", "hex", "http", "iter", "map", "markdown", "net", "number", "secret", "set", "string", "time", "url", "validate", "version"]
 # One feature per module: `default-features = false, features = ["string"]`
 # compiles only what is used.
 array = []
@@ -35,6 +35,7 @@ map = []
 markdown = []
 net = []
 number = []
+secret = []
 set = []
 string = []
 time = []
