@@ -8,6 +8,7 @@
   "deps",
   "duration",
   "env",
+  "fs",
   "hex",
   "http",
   "iter",
