@@ -59,6 +59,9 @@ pub mod http;
 #[cfg(feature = "iter")]
 pub mod iter;
 
+#[cfg(feature = "license")]
+pub mod license;
+
 #[cfg(feature = "map")]
 pub mod map;
 
