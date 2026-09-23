@@ -13,25 +13,51 @@
 
 ## Modules
 
+- ansi — ANSI escape sequences: `strip`, `contains`, `visible_len`, `Style`, `Color`
 - array — slice helpers not in `std`: `unique`, `unique_by`, `difference`, `intersection`,
   `symmetric_difference`, `intersects`, `equals_unordered`, `count_by`, `group_by`,
   `key_by`, `duplicates`, `interleave`, `cartesian_product`
+- bytes — byte slices and sizes: `read_u16`, `read_u32`, `read_u64` (with `Endian`), `find`, `xor`,
+  `constant_time_eq`, `format_size`, `parse_size`, `ParseSizeError`
 - cache — in-memory stores with expiry and an injected clock: `ExpiringMap`, `ExpiringSet`
+- ci — CI environments and pipeline status (the environment is a lookup function): `detect`, `is_ci`,
+  `is_pull_request`, `Provider`, `Status`, `overall`, `render_report`
+- color — colors: `Rgb` (parse `#rgb`, `#rrggbb`, `rgb()`, names), `Hsl`, `mix`, `contrast_ratio` (WCAG),
+  `best_text_color`, `ParseColorError`
+- commit — Conventional Commits: `Commit` (parse), `Bump`, `bump_for`, `is_valid`, `emoji_for`,
+  `ParseCommitError`
+- date — calendar dates without time zones: `Date`, `Weekday`, `DateError`, `is_leap_year`,
+  `days_in_month`
 - duration — human-readable durations (`1h30m`): `parse`, `format`, `ParseDurationError`
 - env — dotenv content helpers (pure text, no I/O): `parse`, `get`, `set`, `remove`
+- fs — file-system helpers: `write_atomic`, `read_to_string_opt`, `walk`, `normalize` and `is_within`
+  (lexical path checks, no I/O)
+- function — functions: `compose`, `pipe`, `Memoize`, `retry`, `backoff`, `TokenBucket` (rate limiter with an
+  injected clock)
+- future — runtime-neutral futures, std only: `block_on`, `now_or_never`, `yield_now`, `join`, `join_all`
 - hex — hexadecimal encoding/decoding with typed errors: `encode`, `encode_upper`, `decode`,
   `decode_to_slice`, `decode_array`
 - http — HTTP header value helpers: `bearer_token` (RFC 7235 / 6750)
 - iter — helpers for any `Iterator`: `chunk`, `min_max`, `first_duplicate`
+- license — SPDX licenses: `lookup`, `normalize`, `Expression` (parse and evaluate `MIT OR Apache-2.0`),
+  `Category`, `LicenseInfo`, `header`, `ParseExpressionError`
 - map — `HashMap` helpers: `pick`, `omit`, `map_values`
+- markdown — writing Markdown safely: `escape`, `link`, `inline_code`, `code_block`, `blockquote`, `table`,
+  `heading_slug`
 - net — network address and hostname checks: `is_public_ip` (SSRF guard, IANA registry),
   `is_valid_hostname`, `HostnameError`
 - number — numeric helpers: `lerp`, `round_to`, `mean`, `median`, `percentage`, `gcd`, `lcm`
+- secret — keeping secrets out of logs: `Secret`, `redact`, `mask`, `detect`, `scan`, `TokenKind`, `Finding`
+- set — `HashSet` helpers: `union_all`, `intersection_all`, `toggle`, `to_sorted_vec`, `jaccard`, `subsets`
 - string — string manipulation: `capitalize`, `title_case`, `camel_case`, `pascal_case`,
   `snake_case`, `kebab_case`, `constant_case`, `slugify`, `truncate`, `squish`, `indent`,
   `dedent`, `escape_html`, `unescape_html`
-- validate — shape checks: `is_valid_email`, `is_uuid`, `is_slug`
 - time — the system clock as unix time: `unix_now`, `unix_now_millis`, `ClockError`
+- url — URLs: `Url` (RFC 3986 parse and reference resolution), `percent_encode`, `percent_decode`,
+  `parse_query`, `build_query`, `join_path`, `UrlError`
+- validate — shape checks: `is_valid_email`, `is_uuid`, `is_slug`
+- version — semantic versioning: `Version`, `VersionReq` (Cargo-style requirements), `compare`, `satisfies`,
+  `ParseVersionError`
 
 ## Docs
 
