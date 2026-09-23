@@ -29,7 +29,7 @@
 ## Overview
 
 `helpers4` is a collection of small, typed helpers for the everyday code every project ends up
-rewriting: string casing, slice operations, expiring caches, hex, network checks, and more. Each
+rewriting: string casing, slice operations, expiring caches, dates, URLs, versions, hex, network checks, and more. Each
 helper does one thing, returns a typed error instead of panicking, and ships with tests and a
 runnable example.
 
@@ -39,21 +39,36 @@ One module per category, each behind a Cargo feature of the same name (all enabl
 
 | Module | What it covers |
 | ------ | -------------- |
-| [`string`](https://helpers4.dev/rust/modules/string/) | case conversion, slugs, truncation, indentation, whitespace, HTML escaping |
+| [`ansi`](https://helpers4.dev/rust/modules/ansi/) | stripping and building ANSI escape sequences (colors, styles) |
 | [`array`](https://helpers4.dev/rust/modules/array/) | unique, difference, intersection, grouping, counting, duplicates, interleaving |
-| [`number`](https://helpers4.dev/rust/modules/number/) | interpolation, rounding, mean, median, percentages, gcd and lcm |
-| [`map`](https://helpers4.dev/rust/modules/map/) | picking, omitting and transforming the entries of a `HashMap` |
-| [`iter`](https://helpers4.dev/rust/modules/iter/) | chunking, one-pass min/max, first duplicate — for any `Iterator` |
-| [`duration`](https://helpers4.dev/rust/modules/duration/) | parsing and formatting durations as `1h30m` |
+| [`bytes`](https://helpers4.dev/rust/modules/bytes/) | integers at an offset, byte search, XOR, constant-time comparison, `1.5 KiB` sizes |
 | [`cache`](https://helpers4.dev/rust/modules/cache/) | maps and sets whose entries expire, with the clock passed in |
+| [`ci`](https://helpers4.dev/rust/modules/ci/) | which CI service is this, is it a pull request, and a Markdown status report |
+| [`color`](https://helpers4.dev/rust/modules/color/) | `#rgb`/`rgb()`/names, HSL, blending and WCAG contrast |
+| [`commit`](https://helpers4.dev/rust/modules/commit/) | Conventional Commits: parsing, breaking changes and the version bump they call for |
+| [`date`](https://helpers4.dev/rust/modules/date/) | calendar dates without time zones: ISO 8601, weekdays, day arithmetic |
+| [`duration`](https://helpers4.dev/rust/modules/duration/) | parsing and formatting durations as `1h30m` |
 | [`env`](https://helpers4.dev/rust/modules/env/) | reading and editing `.env` files as text |
+| [`fs`](https://helpers4.dev/rust/modules/fs/) | atomic writes, missing file as `None`, listing a tree, lexical path checks |
+| [`function`](https://helpers4.dev/rust/modules/function/) | composition, memoization, retrying with backoff, a token-bucket rate limiter |
+| [`future`](https://helpers4.dev/rust/modules/future/) | `block_on`, `join`, `join_all` and friends, with no async runtime |
 | [`hex`](https://helpers4.dev/rust/modules/hex/) | hexadecimal encoding and decoding with typed errors |
-| [`net`](https://helpers4.dev/rust/modules/net/) | is this IP address public (an SSRF guard), is this a valid hostname |
 | [`http`](https://helpers4.dev/rust/modules/http/) | extracting a bearer token from an `Authorization` header |
+| [`iter`](https://helpers4.dev/rust/modules/iter/) | chunking, one-pass min/max, first duplicate: for any `Iterator` |
+| [`license`](https://helpers4.dev/rust/modules/license/) | SPDX identifiers and expressions, `MIT OR Apache-2.0` checked against a policy |
+| [`map`](https://helpers4.dev/rust/modules/map/) | picking, omitting and transforming the entries of a `HashMap` |
+| [`markdown`](https://helpers4.dev/rust/modules/markdown/) | escaping, links, code blocks, quotes, tables and heading anchors |
+| [`net`](https://helpers4.dev/rust/modules/net/) | is this IP address public (an SSRF guard), is this a valid hostname |
+| [`number`](https://helpers4.dev/rust/modules/number/) | interpolation, rounding, mean, median, percentages, gcd and lcm |
+| [`secret`](https://helpers4.dev/rust/modules/secret/) | a wrapper that never prints its value, redaction, masking, token detection |
+| [`set`](https://helpers4.dev/rust/modules/set/) | union and intersection of many sets, toggling, sorted output, similarity, power set |
+| [`string`](https://helpers4.dev/rust/modules/string/) | case conversion, slugs, truncation, indentation, whitespace, HTML escaping |
 | [`time`](https://helpers4.dev/rust/modules/time/) | the system clock as unix time, without a silent `0` |
+| [`url`](https://helpers4.dev/rust/modules/url/) | an RFC 3986 parser with reference resolution, percent-encoding, query strings |
 | [`validate`](https://helpers4.dev/rust/modules/validate/) | shape checks: email, UUID, slug |
+| [`version`](https://helpers4.dev/rust/modules/version/) | semantic versions, Cargo-style requirements, comparison |
 
-More are planned (random values and identifiers, sets, …): see the [roadmap](https://github.com/orgs/helpers4/projects/1).
+More are planned (random values and identifiers, …): see the [roadmap](https://github.com/orgs/helpers4/projects/1).
 
 ## Quick start
 
