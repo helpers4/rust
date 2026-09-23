@@ -26,6 +26,9 @@ pub mod duration;
 #[cfg(feature = "env")]
 pub mod env;
 
+#[cfg(feature = "fs")]
+pub mod fs;
+
 #[cfg(feature = "hex")]
 pub mod hex;
 
