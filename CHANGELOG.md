@@ -41,6 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **secret**: fix a property that did not hold
 
 ### 👷 CI/CD
+- skip the PR mutation run when the diff is too big for the job
 - cap the weekly feature powerset at depth 3
 - stop the feature powerset check from growing unbounded on every PR
 
