@@ -64,3 +64,6 @@
 - [README.md](README.md): quick start
 - [AGENTS.md](AGENTS.md): layout, rules, checks
 - [CONTRIBUTING.md](CONTRIBUTING.md): how to add a helper or module
+- [docs/native-alternatives.json](docs/native-alternatives.json): what `std` already does, per module: check it before adding or using a helper
+- [.claude/skills/replace-with-helpers4/SKILL.md](.claude/skills/replace-with-helpers4/SKILL.md): how an AI agent finds hand-written code in a project that helpers4 replaces
+- [.claude/skills/add-helper/SKILL.md](.claude/skills/add-helper/SKILL.md): how an AI agent adds a helper to this crate
