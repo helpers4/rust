@@ -50,7 +50,8 @@ A release is a normal PR followed by one manual workflow run.
    checks the version and its changelog section, re-runs lint, tests, compatibility, docs and
    security on that exact commit, then (in the `crates-io` environment) publishes, waits until
    crates.io serves the version, attests the `.crate` (SLSA provenance), and creates the tag and
-   the GitHub release from the changelog. It never commits.
+   the GitHub release from the changelog, with the `.crate` and its Sigstore bundle
+   (`helpers4-X.Y.Z.crate.sigstore.json`) attached. It never commits.
 3. **Resume**: if a run published but failed afterwards, run it again. It detects that the version
    is already on crates.io and only finishes the tag and the release.
 
@@ -67,6 +68,21 @@ required reviewer, so nothing is published without an approval.
 A brand-new crate cannot use trusted publishing for its very first publish (crates.io can only
 configure it for a crate that already exists): that one needs a temporary API token, used from a
 local `cargo publish` or a throw-away secret, then revoked. `helpers4` went through that with 0.0.1.
+
+### Verifying a release
+
+The attestation proves that a `.crate` was built by `release.yml` of this repository, on the
+commit the release points at, and was not altered afterwards. It needs no key: the workflow signs
+with its GitHub identity (Sigstore), so there is nothing to store or rotate. To check a download:
+
+```sh
+gh attestation verify helpers4-X.Y.Z.crate --repo helpers4/rust
+```
+
+The bundle is also attached to the release as `helpers4-X.Y.Z.crate.sigstore.json`, because tools
+that only read release assets (OpenSSF Scorecard's *Signed-Releases* check) cannot see GitHub's
+attestation store. Releases published before 0.0.7 have no such file and are not backfilled: a new
+attestation for an old file would not prove it came from this workflow.
 
 ### Website
 

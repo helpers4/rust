@@ -165,10 +165,22 @@ jobs:
           exit 1
 
       - name: Attest the packaged crate
+        id: attest
         if: ${{ !inputs.dry-run }}
         uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
         with:
           subject-path: target/package/*.crate
+
+      # The attestation lives in GitHub's attestation store; a copy of its Sigstore bundle next to
+      # the .crate on the release page is what tools that only read release assets (OpenSSF
+      # Scorecard's Signed-Releases check) can see. Verify with:
+      #   gh attestation verify helpers4-X.Y.Z.crate --repo helpers4/rust
+      - name: Keep the signature bundle next to the crate
+        if: ${{ !inputs.dry-run }}
+        run: |
+          cp "${{ steps.attest.outputs.bundle-path }}" \
+            "target/package/helpers4-${{ needs.guard.outputs.version }}.crate.sigstore.json"
+          ls -l target/package/
 
       - name: Extract the release notes
         if: ${{ !inputs.dry-run }}
@@ -190,7 +202,17 @@ jobs:
             --target "$GITHUB_SHA" \
             --title "v${{ needs.guard.outputs.version }}" \
             --notes-file release-notes.md \
-            target/package/*.crate
+            target/package/*.crate \
+            target/package/*.sigstore.json
+
+      # Resuming a release whose tag exists already: make sure the signature is on it too.
+      - name: Attach the signature to the existing release
+        if: ${{ !inputs.dry-run && needs.guard.outputs.tagged == 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release upload "v${{ needs.guard.outputs.version }}" \
+            target/package/*.sigstore.json --clobber
 
       - name: Summary
         run: |
