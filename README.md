@@ -16,6 +16,7 @@
   <a href="CONTRIBUTING.md"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs welcome" /></a>
   <br>
   <a href="https://codecov.io/gh/helpers4/rust"><img src="https://codecov.io/gh/helpers4/rust/graph/badge.svg?token=3np3gHErgz" alt="code coverage" /></a>
+  <a href="https://www.bestpractices.dev/projects/14781"><img src="https://www.bestpractices.dev/projects/14781/badge" alt="OpenSSF Best Practices" /></a>
 </p>
 
 ---
