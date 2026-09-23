@@ -19,6 +19,21 @@ fn parses_a_simple_header() {
 }
 
 #[test]
+fn a_type_may_contain_hyphens_underscores_and_digits() {
+    assert_eq!(commit("my-type: x").kind(), "my-type");
+    assert_eq!(commit("my_type: x").kind(), "my_type");
+    assert_eq!(commit("v2: x").kind(), "v2");
+}
+
+#[test]
+fn an_ordinary_footer_does_not_make_a_commit_breaking() {
+    let c = commit("fix: a\n\nRefs #1\nReviewed-by: Z");
+    assert!(!c.is_breaking());
+    assert_eq!(c.bump(), Bump::Patch);
+    assert!(!commit("fix: a\n\nBREAKING: not the real token").is_breaking());
+}
+
+#[test]
 fn parses_a_scope() {
     let c = commit("feat(parser): allow trailing commas");
     assert_eq!((c.kind(), c.scope()), ("feat", Some("parser")));
