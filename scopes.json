@@ -27,5 +27,6 @@
   "string",
   "time",
   "url",
-  "validate"
+  "validate",
+  "version"
 ]

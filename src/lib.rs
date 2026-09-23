@@ -70,3 +70,6 @@ pub mod url;
 
 #[cfg(feature = "validate")]
 pub mod validate;
+
+#[cfg(feature = "version")]
+pub mod version;
