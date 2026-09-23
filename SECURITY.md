@@ -10,10 +10,10 @@
 
 | Version | Supported |
 | ------- | --------- |
-| 2.x (latest stable) | ✅ |
-| < 2.0 | ❌ |
+| Latest `0.0.x` release | ✅ |
+| Older releases | ❌ |
 
-Only the latest stable release receives security fixes.
+Only the latest release receives security fixes.
 
 ## Reporting a vulnerability
 
