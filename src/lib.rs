@@ -53,6 +53,9 @@ pub mod iter;
 #[cfg(feature = "map")]
 pub mod map;
 
+#[cfg(feature = "markdown")]
+pub mod markdown;
+
 #[cfg(feature = "net")]
 pub mod net;
 
