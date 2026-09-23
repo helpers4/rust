@@ -75,6 +75,11 @@ name = "string"
 harness = false
 required-features = ["string"]
 
+[[bench]]
+name = "number"
+harness = false
+required-features = ["number"]
+
 [lints.rust]
 unsafe_code = "forbid"
 missing_docs = "warn"
