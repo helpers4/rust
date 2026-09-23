@@ -23,6 +23,9 @@ pub mod cache;
 #[cfg(feature = "color")]
 pub mod color;
 
+#[cfg(feature = "commit")]
+pub mod commit;
+
 #[cfg(feature = "date")]
 pub mod date;
 
