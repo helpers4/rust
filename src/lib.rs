@@ -14,6 +14,9 @@
 #[cfg(feature = "array")]
 pub mod array;
 
+#[cfg(feature = "bytes")]
+pub mod bytes;
+
 #[cfg(feature = "cache")]
 pub mod cache;
 
