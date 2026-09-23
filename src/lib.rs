@@ -35,6 +35,9 @@ pub mod fs;
 #[cfg(feature = "function")]
 pub mod function;
 
+#[cfg(feature = "future")]
+pub mod future;
+
 #[cfg(feature = "hex")]
 pub mod hex;
 

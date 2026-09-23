@@ -11,6 +11,7 @@
   "env",
   "fs",
   "function",
+  "future",
   "hex",
   "http",
   "iter",
