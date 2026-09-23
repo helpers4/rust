@@ -1,0 +1,13 @@
+// This file is part of helpers4.
+// Copyright (C) 2025 baxyz
+// SPDX-License-Identifier: LGPL-3.0-or-later
+
+use criterion::Criterion;
+use helpers4::number::gcd;
+use std::hint::black_box;
+
+pub fn bench(c: &mut Criterion) {
+    c.bench_function("number::gcd", |b| {
+        b.iter(|| gcd(black_box(1_836_311_903), black_box(1_134_903_170)));
+    });
+}
