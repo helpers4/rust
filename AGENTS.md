@@ -31,8 +31,8 @@ cargo fmt --all --check
 cargo clippy --all-targets --all-features -- -D warnings   # strict [lints] table, see Cargo.toml
 typos && cargo machete                                    # spelling, unused dependencies
 cargo test --all-features
-cargo hack check --feature-powerset --no-dev-deps --depth 2 # every pair of features builds (what CI runs on a PR; the
-                                                              # full, unbounded powerset runs weekly, sharded — compat-full.yml)
+cargo hack check --feature-powerset --no-dev-deps --depth 2 # every pair of features builds (what CI runs on a PR; up to 3 at
+                                                              # a time runs weekly, sharded — compat-full.yml)
 cargo llvm-cov --all-features --ignore-filename-regex '\.(test|spec|bench)\.rs$' \
   --fail-under-lines 100 --fail-under-functions 100 --fail-under-regions 100
 RUSTDOCFLAGS='-D warnings' cargo doc --no-deps --all-features && cargo test --all-features --doc

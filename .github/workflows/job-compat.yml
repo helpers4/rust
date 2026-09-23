@@ -68,7 +68,7 @@ jobs:
       # powerset is O(2^features) and would take longer every time a module is added (8192
       # combinations already, 14m41s in CI as of 13 features); depth 2 is O(features^2) and
       # catches the same class of bug (two features that don't compile together) in a couple of
-      # minutes. The exhaustive check still runs, sharded, in compat-full.yml (weekly).
+      # minutes. Combinations of up to 3 features still run, sharded, in compat-full.yml (weekly).
       - name: Every feature combination compiles (up to 2 at a time)
         run: cargo hack check --feature-powerset --no-dev-deps --depth 2
 

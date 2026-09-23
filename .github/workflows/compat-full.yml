@@ -1,13 +1,13 @@
-name: Compatibility (full powerset)
+name: Compatibility (deep powerset)
 
-# Every combination of Cargo features (not just every pair, see job-compat.yml on the pull
-# request path), sharded across parallel jobs so the O(2^features) cost stays a few minutes of
-# wall time instead of one ~15-minute block. Weekly and on demand, not on every push: this is a
-# deeper safety net on top of the pull request checks, not something that needs to be instant.
+# Every combination of up to 3 Cargo features (the pull request path in job-compat.yml checks
+# pairs), sharded across parallel jobs. Weekly and on demand, not on every push: this is a deeper
+# safety net on top of the pull request checks, not something that needs to be instant.
 #
-# Sharding buys headroom, not a fix for the underlying exponential growth — halving the runtime
-# by doubling SHARD_COUNT only lasts until the next Cargo feature or two. Revisit if this keeps
-# creeping up (see the "compat CI is getting slow" backlog card).
+# The unbounded powerset is 2^features: 8192 combinations at 13 features took 14m41s on one
+# runner, and at 28 features it is over 268 million, which sharding cannot save. Depth 3 is about
+# features^3 / 6 (3 700 combinations at 28 features); raise the depth or the shard count only
+# with the arithmetic in hand.
 
 on:
   schedule:

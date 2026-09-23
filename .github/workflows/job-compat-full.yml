@@ -1,8 +1,10 @@
-name: Job - Compatibility (full powerset)
+name: Job - Compatibility (deep powerset)
 
-# The exhaustive counterpart of job-compat.yml's depth-2 check: every combination of Cargo
-# features, not just every pair. O(2^features), so it is sharded (a partition k/n splits the
-# combinations across jobs) and kept off the pull request path; see compat-full.yml for the
+# The deeper counterpart of job-compat.yml's depth-2 check: every combination of up to 3 Cargo
+# features, not just every pair. The unbounded powerset is 2^features (over 268 million
+# combinations at 28 features), which no amount of sharding makes feasible, so the depth is
+# capped; the count still grows as features^3, which is why it is sharded (a partition k/n splits
+# the combinations across jobs) and kept off the pull request path. See compat-full.yml for the
 # schedule and the shard count.
 
 on:
@@ -11,7 +13,7 @@ on:
       partition:
         required: true
         type: string
-        description: "'k/n' (1-based k) to run one slice of the full powerset."
+        description: "'k/n' (1-based k) to run one slice of the deep powerset."
 
 permissions:
   contents: read
@@ -43,5 +45,5 @@ jobs:
         with:
           tool: cargo-hack
 
-      - name: Every feature combination compiles (this shard)
-        run: cargo hack check --feature-powerset --no-dev-deps --partition ${{ inputs.partition }}
+      - name: Every combination of up to 3 features compiles (this shard)
+        run: cargo hack check --feature-powerset --no-dev-deps --depth 3 --partition ${{ inputs.partition }}
