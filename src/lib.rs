@@ -11,6 +11,9 @@
 #![forbid(unsafe_code)]
 #![warn(missing_docs)]
 
+#[cfg(feature = "ansi")]
+pub mod ansi;
+
 #[cfg(feature = "array")]
 pub mod array;
 
