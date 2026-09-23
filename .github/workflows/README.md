@@ -23,7 +23,7 @@ entry-point workflows that call reusable `job-*.yml` building blocks (`workflow_
 | `job-compat-full.yml` | One shard (`k/n`) of the depth-3 feature powerset for `compat-full.yml` |
 | `job-docs.yml` | `cargo doc` with warnings denied (broken intra-doc links) and every doctest |
 | `job-security.yml` | `cargo deny`: RustSec advisories, yanked crates, licenses, bans, sources |
-| `job-mutation.yml` | cargo-mutants, informational: only the lines a PR touches (`--in-diff`), or one shard of a full run. Configured in `.cargo/mutants.toml` |
+| `job-mutation.yml` | cargo-mutants, informational: only the lines a PR touches (`--in-diff`, skipped above 3 000 changed implementation lines, which the full run on `main` covers), or one shard of a full run. Configured in `.cargo/mutants.toml` |
 | `job-bench.yml` | criterion, informational: only the benches a PR affects, compared against the base branch measured on the same runner; every bench on `main` |
 | `job-build.yml` | Release build with every feature, benchmarks compile, `cargo package` |
 

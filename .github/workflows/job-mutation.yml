@@ -2,7 +2,8 @@ name: Job - Mutation Testing
 
 # Informational, never blocks. cargo-mutants changes the code (flips operators, replaces function
 # bodies, ...) and checks that the tests notice. On a pull request only the lines touched by the
-# diff are mutated; a shard k/n splits a full run across jobs.
+# diff are mutated (nothing when the diff is too big for the job's time limit: the full run on
+# main covers it); a shard k/n splits a full run across jobs.
 
 on:
   workflow_call:
@@ -74,6 +75,7 @@ jobs:
         env:
           BASE_REF: ${{ inputs.base-ref }}
           SHARD: ${{ inputs.shard }}
+          MAX_DIFF_LINES: 3000
         run: |
           ARGS="-j2"
           if [ -n "$SHARD" ]; then
@@ -83,6 +85,14 @@ jobs:
             if [ ! -s pr.diff ]; then
               echo "skip=true" >> "$GITHUB_OUTPUT"
               echo "No source change to mutate."
+              exit 0
+            fi
+            # A big diff (a release adding many modules) would need longer than the job's limit:
+            # the full run on main, in shards (mutation-dashboard.yml), covers it instead.
+            LINES=$(git diff --numstat "origin/$BASE_REF...HEAD" -- 'src/**/*.rs' ':!*.test.rs' ':!*.spec.rs' ':!*.bench.rs' | awk '{s+=$1} END {print s+0}')
+            if [ "$LINES" -gt "$MAX_DIFF_LINES" ]; then
+              echo "skip=true" >> "$GITHUB_OUTPUT"
+              echo "The diff changes $LINES implementation lines (limit $MAX_DIFF_LINES): mutation testing runs on main instead." | tee -a "$GITHUB_STEP_SUMMARY"
               exit 0
             fi
             ARGS="$ARGS --in-diff pr.diff"
