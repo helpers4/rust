@@ -48,6 +48,14 @@ fn units_ignore_case_and_whitespace() {
 }
 
 #[test]
+fn fractions_may_have_several_digits() {
+    assert_eq!(parse_size("1.25 KiB"), Ok(1280));
+    assert_eq!(parse_size("0.75 MiB"), Ok(786_432));
+    assert_eq!(parse_size("2.125 KiB"), Ok(2176));
+    assert_eq!(parse_size("1.001 kB"), Ok(1001));
+}
+
+#[test]
 fn fractions_are_rounded_down() {
     assert_eq!(parse_size("1.5 KiB"), Ok(1536));
     assert_eq!(parse_size("0.9 B"), Ok(0));
