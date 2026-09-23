@@ -1,0 +1,8 @@
+# Strings that look like typos but are test data.
+[default]
+extend-ignore-re = [
+  # Percent-encoded "café" in the url module's examples and tests.
+  "caf%C3%A9",
+  # A deliberately truncated AWS example key in the secret module's tests.
+  "AKIAIOSFODNN7EXAMPL",
+]
