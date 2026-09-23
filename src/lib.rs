@@ -41,11 +41,14 @@ pub mod net;
 #[cfg(feature = "number")]
 pub mod number;
 
-#[cfg(feature = "validate")]
-pub mod validate;
+#[cfg(feature = "set")]
+pub mod set;
 
 #[cfg(feature = "string")]
 pub mod string;
 
 #[cfg(feature = "time")]
 pub mod time;
+
+#[cfg(feature = "validate")]
+pub mod validate;
