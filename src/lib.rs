@@ -65,5 +65,8 @@ pub mod string;
 #[cfg(feature = "time")]
 pub mod time;
 
+#[cfg(feature = "url")]
+pub mod url;
+
 #[cfg(feature = "validate")]
 pub mod validate;
