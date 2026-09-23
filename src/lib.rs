@@ -32,6 +32,9 @@ pub mod env;
 #[cfg(feature = "fs")]
 pub mod fs;
 
+#[cfg(feature = "function")]
+pub mod function;
+
 #[cfg(feature = "hex")]
 pub mod hex;
 

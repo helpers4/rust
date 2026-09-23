@@ -10,6 +10,7 @@
   "duration",
   "env",
   "fs",
+  "function",
   "hex",
   "http",
   "iter",
