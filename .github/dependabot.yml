@@ -8,8 +8,18 @@ updates:
     labels:
       - "dependencies"
     groups:
-      minor-and-patch:
+      prod-dependencies:
+        dependency-type: "production"
         update-types: ["minor", "patch"]
+      prod-dependencies-major:
+        dependency-type: "production"
+        update-types: ["major"]
+      dev-dependencies:
+        dependency-type: "development"
+        update-types: ["minor", "patch"]
+      dev-dependencies-major:
+        dependency-type: "development"
+        update-types: ["major"]
 
   - package-ecosystem: "github-actions"
     directory: "/"
@@ -19,4 +29,24 @@ updates:
       - "dependencies"
     groups:
       actions:
+        patterns: ["*"]
         update-types: ["minor", "patch"]
+      actions-major:
+        patterns: ["*"]
+        update-types: ["major"]
+
+  # No devcontainer.json lives in this repo (the org workspace's is in helpers4/.dev), so this has
+  # nothing to update today; kept for parity with helpers4/typescript and in case one is added.
+  - package-ecosystem: "devcontainers"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    labels:
+      - "dependencies"
+    groups:
+      devcontainers:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
+      devcontainers-major:
+        patterns: ["*"]
+        update-types: ["major"]
