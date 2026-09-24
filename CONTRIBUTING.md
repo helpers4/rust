@@ -23,6 +23,8 @@ Open the organization workspace in VS Code and *Reopen in Container*. It ships t
   `cargo-semver-checks`
 - `git-cliff` and `cargo-public-api` (needs the nightly toolchain: `rustup toolchain install
   nightly`) if you prepare a release (see [Releasing](.github/workflows/README.md#releasing))
+- `cargo-fuzz` (also nightly) if you touch a parser and want to fuzz it locally: `fuzz/` is a
+  detached workspace, see [Fuzzing](#fuzzing)
 
 ## Project structure
 
@@ -203,6 +205,28 @@ not one-liners. CI compares benchmarks with the base branch and reports, it does
 
 A module that needs a third-party crate declares it `optional = true` and the feature enables it
 (`<module> = ["dep:crate"]`); the default build stays dependency-free.
+
+## Fuzzing
+
+`fuzz/` holds [cargo-fuzz](https://github.com/rust-fuzz/cargo-fuzz) targets for the parsers most
+exposed to untrusted input (`commit`, `duration`, `env`, `hex`, `url`, `version`). It is a
+detached workspace (its `Cargo.toml` has an empty `[workspace]` table) because the sanitizer
+instrumentation cargo-fuzz builds with is incompatible with the crate's normal build; it is not
+part of `cargo test` or the package `include` list.
+
+`fuzz.yml` runs every target for 120s daily. To add a target for a new parser or run one longer
+locally:
+
+```bash
+rustup toolchain install nightly
+cargo install --locked cargo-fuzz
+cd fuzz
+cargo +nightly fuzz run fuzz_<name> -- -max_total_time=60
+```
+
+A crash writes the failing input to `fuzz/artifacts/fuzz_<name>/`; turn it into a regression test
+in `<name>.test.rs` once fixed. The fuzz target itself only needs to assert the parser does not
+panic (a `Result::Err` on malformed input is the correct, expected outcome).
 
 ## Quality checks
 
