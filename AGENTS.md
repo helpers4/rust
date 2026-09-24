@@ -30,6 +30,7 @@ access to private items. Benches are wired from `benches/<module>.rs` with
 cargo fmt --all --check
 cargo clippy --all-targets --all-features -- -D warnings   # strict [lints] table, see Cargo.toml
 typos && cargo machete                                    # spelling, unused dependencies
+python3 scripts/coherency.py                               # features/lib.rs/scopes.json/llms.txt/benches agree
 cargo test --all-features
 cargo hack check --feature-powerset --no-dev-deps --depth 2 # every pair of features builds (what CI runs on a PR; up to 3 at
                                                               # a time runs weekly, sharded — compat-full.yml)
