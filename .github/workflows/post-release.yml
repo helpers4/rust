@@ -1,0 +1,85 @@
+name: Post Release
+
+# Runs on the exact code that was just published, not on the release-prep commit or any push:
+# mutation-dashboard.yml deliberately skips `chore(release):` commits (it would just repeat the
+# previous run on unchanged source), and main-validation.yml's Codecov upload runs on every push
+# to main, not tied to a release. This gives every tagged release its own mutation report
+# (attached to it) and its own coverage upload.
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  mutation-shard:
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3]
+    uses: ./.github/workflows/job-mutation.yml
+    with:
+      shard: ${{ matrix.shard }}/4
+      artifact-name: post-release-mutants-${{ matrix.shard }}
+
+  mutation-report:
+    needs: mutation-shard
+    if: always() && !cancelled()
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download the shard reports
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          pattern: post-release-mutants-*
+          path: shards
+
+      - name: Merge the shards into one report
+        run: |
+          shopt -s nullglob
+          FILES=(shards/*/outcomes.json)
+          if [ ${#FILES[@]} -eq 0 ]; then
+            echo "No shard report found." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          for k in caught missed timeout unviable total_mutants; do
+            eval "$k=$(jq -s "map(.$k // 0) | add" "${FILES[@]}")"
+          done
+          TESTED=$((caught + missed + timeout))
+          SCORE=$([ "$TESTED" -gt 0 ] && echo "scale=1; 100 * $caught / $TESTED" | bc || echo 0)
+          {
+            echo "### Mutation score: ${SCORE}%"
+            echo
+            echo "$total_mutants mutants · caught $caught · missed $missed · timeout $timeout · unviable $unviable"
+            echo
+            echo "Score = caught / (caught + missed + timeout); unviable mutants (that do not compile) are not counted."
+          } | tee mutation-summary.md >> "$GITHUB_STEP_SUMMARY"
+          for f in shards/*/missed.txt; do
+            [ -s "$f" ] || continue
+            echo "Missed mutants in $(basename "$(dirname "$f")"):" >> mutation-summary.md
+            echo '```' >> mutation-summary.md
+            cat "$f" >> mutation-summary.md
+            echo '```' >> mutation-summary.md
+          done
+          tar -czf mutation-report.tar.gz mutation-summary.md shards/*/outcomes.json
+
+      - name: Upload the report to the release
+        if: github.event_name == 'release'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "${{ github.ref_name }}" mutation-report.tar.gz --clobber
+
+  coverage:
+    uses: ./.github/workflows/job-tests.yml
+    with:
+      upload-codecov: true
+    secrets:
+      codecov-token: ${{ secrets.CODECOV_TOKEN }}

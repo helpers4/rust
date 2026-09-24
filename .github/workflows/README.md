@@ -12,6 +12,7 @@ entry-point workflows that call reusable `job-*.yml` building blocks (`workflow_
 | `scorecard.yml` | weekly, manual | [OpenSSF Scorecard](https://securityscorecards.dev/viewer/?uri=github.com/helpers4/rust) analysis, published (the site shows the score) and uploaded to code scanning |
 | `fuzz.yml` | daily, manual | [cargo-fuzz](https://github.com/rust-fuzz/cargo-fuzz) (`fuzz/`, a detached workspace), 120s per parser target: `commit`, `duration`, `env`, `hex`, `url`, `version`; a persistent corpus cache, crash inputs uploaded as an artifact |
 | `release.yml` | manual (`workflow_dispatch`) | Publishes the version in `Cargo.toml` to crates.io, then tags it and creates the GitHub release |
+| `post-release.yml` | `release: published`, manual | Full mutation run on the exact tagged commit, attached to the release (`mutation-dashboard.yml` skips the release-prep commit itself); coverage uploaded to Codecov |
 | `auto-assign.yml` | issues, PRs | Assigns the maintainer |
 
 ## Reusable jobs
