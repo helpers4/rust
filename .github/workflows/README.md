@@ -10,6 +10,7 @@ entry-point workflows that call reusable `job-*.yml` building blocks (`workflow_
 | `mutation-dashboard.yml` | `push` to `main`, weekly, manual | Full [cargo-mutants](https://mutants.rs/) run in 4 shards, merged into one score in the job summary |
 | `compat-full.yml` | weekly, manual | Every combination of up to 3 Cargo features (`cargo hack --feature-powerset --depth 3`), in 8 shards — the PR path only checks pairs (`--depth 2`), see `job-compat.yml` |
 | `scorecard.yml` | weekly, manual | [OpenSSF Scorecard](https://securityscorecards.dev/viewer/?uri=github.com/helpers4/rust) analysis, published (the site shows the score) and uploaded to code scanning |
+| `fuzz.yml` | daily, manual | [cargo-fuzz](https://github.com/rust-fuzz/cargo-fuzz) (`fuzz/`, a detached workspace), 120s per parser target: `commit`, `duration`, `env`, `hex`, `url`, `version`; a persistent corpus cache, crash inputs uploaded as an artifact |
 | `release.yml` | manual (`workflow_dispatch`) | Publishes the version in `Cargo.toml` to crates.io, then tags it and creates the GitHub release |
 | `auto-assign.yml` | issues, PRs | Assigns the maintainer |
 

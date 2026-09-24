@@ -1,0 +1,7 @@
+target
+corpus
+artifacts
+coverage
+# Left floating (unlike the crate's own Cargo.lock, which is committed): fuzzing should always
+# exercise current-compatible dependency versions, not a pinned snapshot.
+Cargo.lock

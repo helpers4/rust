@@ -1,0 +1,53 @@
+[package]
+name = "helpers4-fuzz"
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+# `fuzz/` lives next to the `helpers4` crate but must not be part of its build: cargo-fuzz's
+# instrumentation (sanitizers, sancov) is incompatible with a normal build. An empty `[workspace]`
+# table detaches it into its own standalone workspace (same as brig-id/core's fuzz/).
+[workspace]
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4"
+helpers4 = { path = "..", default-features = false, features = ["commit", "duration", "env", "hex", "url", "version"] }
+
+[[bin]]
+name = "fuzz_env_parse"
+path = "fuzz_targets/fuzz_env_parse.rs"
+test = false
+doc = false
+
+[[bin]]
+name = "fuzz_version_parse"
+path = "fuzz_targets/fuzz_version_parse.rs"
+test = false
+doc = false
+
+[[bin]]
+name = "fuzz_url_parse"
+path = "fuzz_targets/fuzz_url_parse.rs"
+test = false
+doc = false
+
+[[bin]]
+name = "fuzz_commit_parse"
+path = "fuzz_targets/fuzz_commit_parse.rs"
+test = false
+doc = false
+
+[[bin]]
+name = "fuzz_duration_parse"
+path = "fuzz_targets/fuzz_duration_parse.rs"
+test = false
+doc = false
+
+[[bin]]
+name = "fuzz_hex_decode"
+path = "fuzz_targets/fuzz_hex_decode.rs"
+test = false
+doc = false
