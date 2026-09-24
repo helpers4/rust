@@ -210,6 +210,7 @@ Run these before pushing; they are what CI runs (`.github/workflows/README.md` h
 cargo fmt --all --check
 cargo clippy --all-targets --all-features -- -D warnings
 typos && cargo machete
+python3 scripts/coherency.py                                  # features/lib.rs/scopes.json/llms.txt/benches agree, `# Examples` present
 cargo test --all-features
 cargo +1.85 test --all-features                              # the minimum supported version
 cargo test --no-default-features --features <module>          # the module on its own

@@ -71,6 +71,7 @@ cargo llvm-cov --all-features --ignore-filename-regex '\.(test|spec|bench)\.rs$'
   --fail-under-lines 100 --fail-under-functions 100 --fail-under-regions 100
 RUSTDOCFLAGS='-D warnings' cargo doc --no-deps --all-features
 typos && cargo machete
+python3 scripts/coherency.py                                # a new module must be wired everywhere
 cargo hack test --each-feature
 ```
 
