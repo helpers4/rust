@@ -157,6 +157,27 @@ def check_examples(mods: list[str]) -> list[str]:
     return failures
 
 
+def check_api_since(mods: list[str]) -> list[str]:
+    """Every exported item has an `api-since.json` entry. `api-since.json` only gains entries
+    when someone runs `update-api-since.py <version>` while preparing a release (the version a
+    helper ships in is not known before then), so this is **not** part of the default checks that
+    run on every PR — job-lint.yml would fail for the ordinary PR that adds a helper. It runs only
+    at release time, from `release.yml`, right before publishing (`--api-since` flag)."""
+    api_since_path = ROOT / "api-since.json"
+    if not api_since_path.is_file():
+        return ["api-since.json: file does not exist"]
+    api_since = json.loads(read(api_since_path))
+    failures = []
+    for module in mods:
+        for _stem, name in exported_items(SRC / module / "mod.rs"):
+            if f"{module}::{name}" not in api_since:
+                failures.append(
+                    f"api-since.json: no entry for `{module}::{name}` — "
+                    f"run `python3 scripts/update-api-since.py <version>` while preparing the release"
+                )
+    return failures
+
+
 def main() -> int:
     mods = modules()
     checks = [
@@ -164,6 +185,8 @@ def main() -> int:
         ("module wiring", check_module_wiring(mods)),
         ("rustdoc `# Examples`", check_examples(mods)),
     ]
+    if "--api-since" in sys.argv[1:]:
+        checks.append(("api-since.json coverage", check_api_since(mods)))
 
     total = 0
     for title, failures in checks:

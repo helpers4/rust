@@ -5,7 +5,7 @@ entry-point workflows that call reusable `job-*.yml` building blocks (`workflow_
 
 | Workflow | Trigger | Purpose |
 | --- | --- | --- |
-| `pr-validation.yml` | `pull_request` | Build, tests + coverage, compatibility, lint, docs, security and conventional commits on every PR, plus one sticky status comment |
+| `pr-validation.yml` | `pull_request` | Build, tests + coverage, compatibility, lint, docs, security, semver and conventional commits on every PR, plus one sticky status comment |
 | `main-validation.yml` | `push` to `main` | The same suite post-merge, uploading coverage to Codecov |
 | `mutation-dashboard.yml` | `push` to `main`, weekly, manual | Full [cargo-mutants](https://mutants.rs/) run in 4 shards, merged into one score in the job summary |
 | `compat-full.yml` | weekly, manual | Every combination of up to 3 Cargo features (`cargo hack --feature-powerset --depth 3`), in 8 shards — the PR path only checks pairs (`--depth 2`), see `job-compat.yml` |
@@ -17,12 +17,13 @@ entry-point workflows that call reusable `job-*.yml` building blocks (`workflow_
 
 | Job | What it checks |
 | --- | --- |
-| `job-lint.yml` | `cargo fmt`, `clippy -D warnings` (strict `[lints]` table), `typos`, `cargo machete` |
+| `job-lint.yml` | `cargo fmt`, `clippy -D warnings` (strict `[lints]` table), `typos`, `cargo machete`, `scripts/coherency.py` (features/`lib.rs`/`scopes.json`/`llms.txt`/benches agree, `# Examples` present) |
 | `job-tests.yml` | Unit + property tests under `cargo llvm-cov`: **100%** lines, functions and regions (`*.test.rs`, `*.spec.rs`, `*.bench.rs` excluded); exposes the metrics |
 | `job-compat.yml` | OS (Linux, macOS, Windows) × toolchain (stable, beta, MSRV 1.85); every pair of Cargo features (`cargo hack --depth 2`; up to 3 at a time is `compat-full.yml`); `wasm32-unknown-unknown` and `wasm32-wasip1`; minimal dependency versions (informational) |
 | `job-compat-full.yml` | One shard (`k/n`) of the depth-3 feature powerset for `compat-full.yml` |
 | `job-docs.yml` | `cargo doc` with warnings denied (broken intra-doc links) and every doctest |
 | `job-security.yml` | `cargo deny`: RustSec advisories, yanked crates, licenses, bans, sources |
+| `job-semver.yml` | `cargo-semver-checks` against the published baseline; a change that needs a major bump under strict SemVer requires a `BREAKING CHANGE:` footer in the PR |
 | `job-mutation.yml` | cargo-mutants, informational: only the lines a PR touches (`--in-diff`, skipped above 3 000 changed implementation lines, which the full run on `main` covers), or one shard of a full run. Configured in `.cargo/mutants.toml` |
 | `job-bench.yml` | criterion, informational: only the benches a PR affects, compared against the base branch measured on the same runner; every bench on `main` |
 | `job-build.yml` | Release build with every feature, benchmarks compile, `cargo package` |
@@ -44,11 +45,13 @@ rejects any other scope.
 A release is a normal PR followed by one manual workflow run.
 
 1. **Prepare**: a PR `chore(release): 🔖 X.Y.Z` that bumps `version` in `Cargo.toml` (and
-   `Cargo.lock`) and adds the changelog section (`git cliff --tag vX.Y.Z -o CHANGELOG.md`).
-   Merge it.
+   `Cargo.lock`), adds the changelog section (`git cliff --tag vX.Y.Z -o CHANGELOG.md`), and
+   updates `api-since.json` for any helper added this round (`python3 scripts/update-api-since.py
+   X.Y.Z`, needs the nightly toolchain: `rustup toolchain install nightly`). Merge it.
 2. **Run** *Actions → Release → Run workflow* on `main` (tick `dry-run` first if in doubt). The workflow
    checks the version and its changelog section, re-runs lint, tests, compatibility, docs and
-   security on that exact commit, then (in the `crates-io` environment) publishes, waits until
+   security on that exact commit, confirms every public item has an `api-since.json` entry, then
+   (in the `crates-io` environment) publishes, waits until
    crates.io serves the version, attests the `.crate` (SLSA provenance), and creates the tag and
    the GitHub release from the changelog, with the `.crate` and its Sigstore bundle
    (`helpers4-X.Y.Z.crate.sigstore.json`) attached. It never commits.

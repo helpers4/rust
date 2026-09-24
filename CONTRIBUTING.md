@@ -19,8 +19,10 @@ Open the organization workspace in VS Code and *Reopen in Container*. It ships t
 - Rust stable, and the **1.85** toolchain to check the minimum supported version:
   `rustup toolchain install 1.85`
 - The tools CI uses, all installable with `cargo install --locked <name>`:
-  `cargo-llvm-cov`, `cargo-hack`, `cargo-mutants`, `cargo-deny`, `cargo-machete`, `typos-cli`
-- `git-cliff` if you prepare a release (see [Releasing](.github/workflows/README.md#releasing))
+  `cargo-llvm-cov`, `cargo-hack`, `cargo-mutants`, `cargo-deny`, `cargo-machete`, `typos-cli`,
+  `cargo-semver-checks`
+- `git-cliff` and `cargo-public-api` (needs the nightly toolchain: `rustup toolchain install
+  nightly`) if you prepare a release (see [Releasing](.github/workflows/README.md#releasing))
 
 ## Project structure
 
@@ -219,6 +221,7 @@ cargo hack check --feature-powerset --no-dev-deps --depth 2   # every pair of fe
 cargo llvm-cov --all-features --ignore-filename-regex '\.(test|spec|bench)\.rs$' \
   --fail-under-lines 100 --fail-under-functions 100 --fail-under-regions 100
 RUSTDOCFLAGS='-D warnings' cargo doc --no-deps --all-features
+cargo semver-checks check-release --release-type minor         # a breaking change needs a `BREAKING CHANGE:` footer
 cargo mutants --file src/<module>/<name>.rs                    # optional, slow: no surviving mutant
 ```
 

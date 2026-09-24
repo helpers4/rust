@@ -39,6 +39,11 @@ jobs:
   security:
     uses: ./.github/workflows/job-security.yml
 
+  semver:
+    uses: ./.github/workflows/job-semver.yml
+    with:
+      base-ref: ${{ github.base_ref }}
+
   # Informational: neither of these blocks the PR.
   mutation:
     uses: ./.github/workflows/job-mutation.yml
@@ -79,7 +84,7 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
-    needs: [build, test, compat, lint, docs, security, conventional-commits, mutation, bench]
+    needs: [build, test, compat, lint, docs, security, semver, conventional-commits, mutation, bench]
     if: always() && github.event.pull_request.head.repo.full_name == github.repository
     steps:
       - name: Build extra sections
@@ -183,6 +188,7 @@ jobs:
               "📝 Lint": "${{ needs.lint.result }}",
               "📚 Docs": "${{ needs.docs.result }}",
               "🔐 Security Audit": "${{ needs.security.result }}",
+              "🧬 Semver": "${{ needs.semver.result }}",
               "🧾 Conventional Commits": "${{ needs.conventional-commits.result }}"
             }
           extra-markdown: ${{ steps.extra.outputs.markdown }}

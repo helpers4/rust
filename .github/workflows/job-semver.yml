@@ -1,0 +1,65 @@
+name: Job - Semver Check
+
+# Flags a public-API change that (by strict SemVer rules: any removal or incompatible signature
+# change is a break, any addition alone is not) would need a major version bump, and requires the
+# PR to say so with a real Conventional Commits `BREAKING CHANGE:` footer (CONTRIBUTING.md,
+# "Commit messages") — so the changelog and anyone diffing releases can see it, even though the
+# crate is pre-1.0 and every release stays a patch bump regardless.
+#
+# `--release-type minor` forces cargo-semver-checks to run its full lint set against the published
+# baseline even though Cargo.toml's version has not changed yet on the PR branch (without it, a
+# same-version comparison short-circuits to "no change" and nothing is actually checked).
+
+on:
+  workflow_call:
+    inputs:
+      base-ref:
+        required: false
+        type: string
+        default: ""
+        description: "Base branch of the PR; empty outside a pull request (nothing to check)."
+
+permissions:
+  contents: read
+
+jobs:
+  semver:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@6bed0761d98439e5a578e2877258200ad565ba87
+        with:
+          toolchain: stable
+
+      - name: Cache
+        uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6
+
+      - name: Install cargo-semver-checks
+        uses: taiki-e/install-action@9114bf4d891761788c546334fd37538eae1bf8b3
+        with:
+          tool: cargo-semver-checks
+
+      - name: Check the public API against the published baseline
+        id: semver
+        run: |
+          set +e
+          cargo semver-checks check-release -p helpers4 --release-type minor 2>&1 | tee semver-report.txt
+          echo "exit-code=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+
+      - name: Require a BREAKING CHANGE footer for a breaking change
+        if: steps.semver.outputs.exit-code != '0' && inputs.base-ref != ''
+        run: |
+          if git log "origin/${{ inputs.base-ref }}..HEAD" --format=%B | grep -qE '^BREAKING CHANGE:'; then
+            echo "Breaking change confirmed by a BREAKING CHANGE: footer; the changelog will show it."
+          else
+            echo "::error::cargo-semver-checks found a change that needs a major version bump under" \
+                 "strict SemVer (see semver-report.txt above), but no commit in this PR has a" \
+                 "'BREAKING CHANGE:' footer. Either add the footer (CONTRIBUTING.md, Commit messages)" \
+                 "or avoid the break."
+            exit 1
+          fi
