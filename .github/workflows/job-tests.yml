@@ -50,7 +50,7 @@ jobs:
         uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6
 
       - name: Install cargo-llvm-cov
-        uses: taiki-e/install-action@9114bf4d891761788c546334fd37538eae1bf8b3
+        uses: taiki-e/install-action@94c31af3204a9f15ab40b35ad084410b905bbc73
         with:
           tool: cargo-llvm-cov
 
@@ -89,7 +89,7 @@ jobs:
 
       - name: Upload coverage to Codecov
         if: inputs.upload-codecov
-        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f
+        uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5
         with:
           files: lcov.info
           token: ${{ secrets.codecov-token }}
