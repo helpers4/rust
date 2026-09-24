@@ -48,8 +48,11 @@ cargo package --locked                                     # what would be publi
   (denied by clippy). Pure functions are `#[must_use]`
 - Rustdoc on every public item, with a runnable `# Examples` block (doctests are the smoke
   tests). No version annotation in the code: "since which version" is computed at release time
-  by diffing the public API against the previous release (`cargo public-api diff`) into
-  `api-since.json`, which the docs site and `llms.txt` consume — never write it by hand
+  by diffing the public API against the previous release (`python3 scripts/update-api-since.py
+  X.Y.Z`, wrapping `cargo public-api diff`) into `api-since.json`, which the docs site and
+  `llms.txt` are meant to consume — never write it by hand. `scripts/coherency.py --api-since`
+  (release.yml only) checks every exported item has an entry; `cargo semver-checks` on every PR
+  (`job-semver.yml`) flags a change that would need a major bump under strict SemVer
 - 100% coverage: lines, functions, regions — no exceptions. `*.test.rs`, `*.spec.rs` and
   `*.bench.rs` are excluded from the measurement, not held to it. Property tests (proptest,
   `*.spec.rs`) cover invariants, not branches

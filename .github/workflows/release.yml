@@ -132,6 +132,11 @@ jobs:
       - name: Cache
         uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6
 
+      # Catches a release-prep PR that bumped the version but forgot
+      # `python3 scripts/update-api-since.py X.Y.Z` for a helper added this round.
+      - name: Every public item has an api-since.json entry
+        run: python3 scripts/coherency.py --api-since
+
       - name: Package
         run: |
           cargo package --locked
