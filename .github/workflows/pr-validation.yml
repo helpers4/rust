@@ -79,6 +79,28 @@ jobs:
           scopes: ${{ steps.scopes.outputs.scopes }}
           pr-comment: "error"
 
+  # The one check to set as required in the branch ruleset (Settings -> Rules -> main), instead
+  # of every individual job above — several of them (compat) fan out into a whole OS x toolchain
+  # matrix whose check names change with the matrix, which would silently go stale as a required
+  # check. This job's own name never changes.
+  required:
+    name: Required checks passed
+    runs-on: ubuntu-latest
+    if: always()
+    needs: [build, test, compat, lint, docs, security, semver, conventional-commits]
+    steps:
+      - name: Fail if any required job failed or was cancelled
+        run: |
+          if [[ "${{ contains(needs.*.result, 'failure') }}" == "true" ]]; then
+            echo "::error::At least one required job failed."
+            exit 1
+          fi
+          if [[ "${{ contains(needs.*.result, 'cancelled') }}" == "true" ]]; then
+            echo "::error::At least one required job was cancelled."
+            exit 1
+          fi
+          echo "All required jobs passed."
+
   pr-comment:
     runs-on: ubuntu-latest
     permissions:
