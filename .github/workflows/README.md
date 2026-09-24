@@ -54,8 +54,9 @@ A release is a normal PR followed by one manual workflow run.
    security on that exact commit, confirms every public item has an `api-since.json` entry, then
    (in the `crates-io` environment) publishes, waits until
    crates.io serves the version, attests the `.crate` (SLSA provenance), and creates the tag and
-   the GitHub release from the changelog, with the `.crate` and its Sigstore bundle
-   (`helpers4-X.Y.Z.crate.sigstore.json`) attached. It never commits.
+   the GitHub release from the changelog, with the `.crate`, its Sigstore bundle
+   (`helpers4-X.Y.Z.crate.sigstore.json`) and a CycloneDX SBOM (`helpers4-X.Y.Z.cdx.json`)
+   attached. It never commits.
 3. **Resume**: if a run published but failed afterwards, run it again. It detects that the version
    is already on crates.io and only finishes the tag and the release.
 

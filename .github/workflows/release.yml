@@ -187,6 +187,22 @@ jobs:
             "target/package/helpers4-${{ needs.guard.outputs.version }}.crate.sigstore.json"
           ls -l target/package/
 
+      - name: Install cargo-cyclonedx
+        if: ${{ !inputs.dry-run }}
+        uses: taiki-e/install-action@9114bf4d891761788c546334fd37538eae1bf8b3
+        with:
+          tool: cargo-cyclonedx
+
+      # Trivial while the crate has zero third-party dependencies by default (0 components), but
+      # it is the machine-readable proof of that, and it will actually list something once a
+      # module with an optional dependency is enabled at build time.
+      - name: Generate the SBOM (CycloneDX)
+        if: ${{ !inputs.dry-run }}
+        run: |
+          cargo cyclonedx --format json --all-features \
+            --override-filename "helpers4-${{ needs.guard.outputs.version }}"
+          mv "helpers4-${{ needs.guard.outputs.version }}.cdx.json" target/package/
+
       - name: Extract the release notes
         if: ${{ !inputs.dry-run }}
         run: |
@@ -208,16 +224,17 @@ jobs:
             --title "v${{ needs.guard.outputs.version }}" \
             --notes-file release-notes.md \
             target/package/*.crate \
-            target/package/*.sigstore.json
+            target/package/*.sigstore.json \
+            target/package/*.cdx.json
 
-      # Resuming a release whose tag exists already: make sure the signature is on it too.
-      - name: Attach the signature to the existing release
+      # Resuming a release whose tag exists already: make sure the signature and SBOM are on it too.
+      - name: Attach the signature and SBOM to the existing release
         if: ${{ !inputs.dry-run && needs.guard.outputs.tagged == 'true' }}
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release upload "v${{ needs.guard.outputs.version }}" \
-            target/package/*.sigstore.json --clobber
+            target/package/*.sigstore.json target/package/*.cdx.json --clobber
 
       - name: Summary
         run: |
