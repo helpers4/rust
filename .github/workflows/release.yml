@@ -200,7 +200,7 @@ jobs:
         if: ${{ !inputs.dry-run }}
         run: |
           cargo cyclonedx --format json --all-features \
-            --override-filename "helpers4-${{ needs.guard.outputs.version }}"
+            --override-filename "helpers4-${{ needs.guard.outputs.version }}.cdx"
           mv "helpers4-${{ needs.guard.outputs.version }}.cdx.json" target/package/
 
       - name: Extract the release notes
