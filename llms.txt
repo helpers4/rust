@@ -29,14 +29,16 @@
 - date — calendar dates without time zones: `Date`, `Weekday`, `DateError`, `is_leap_year`,
   `days_in_month`
 - duration — human-readable durations (`1h30m`): `parse`, `format`, `ParseDurationError`
-- env — dotenv content helpers (pure text, no I/O): `parse`, `get`, `set`, `remove`
+- env — dotenv content helpers (pure text, no I/O): `parse`, `get`, `set`, `remove`, `get_bool`,
+  `get_int`, `get_list`, `get_duration`
 - fs — file-system helpers: `write_atomic`, `read_to_string_opt`, `walk`, `normalize` and `is_within`
   (lexical path checks, no I/O)
 - function — functions: `compose`, `pipe`, `Memoize`, `retry`, `backoff`, `TokenBucket` (rate limiter with an
   injected clock)
 - future — runtime-neutral futures, std only: `block_on`, `now_or_never`, `yield_now`, `join`, `join_all`
-- hex — hexadecimal encoding/decoding with typed errors: `encode`, `encode_upper`, `decode`,
-  `decode_to_slice`, `decode_array`
+- hex — byte/text encodings with typed errors: `encode`, `encode_upper`, `decode`,
+  `decode_to_slice`, `decode_array`, `base64_encode`, `base64_decode`, `Base64DecodeError`,
+  `base32_encode`, `base32_decode`, `Base32DecodeError`
 - http — HTTP header value helpers: `bearer_token` (RFC 7235 / 6750)
 - iter — helpers for any `Iterator`: `chunk`, `min_max`, `first_duplicate`
 - license — SPDX licenses: `lookup`, `normalize`, `Expression` (parse and evaluate `MIT OR Apache-2.0`),
@@ -50,8 +52,10 @@
 - secret — keeping secrets out of logs: `Secret`, `redact`, `mask`, `detect`, `scan`, `TokenKind`, `Finding`
 - set — `HashSet` helpers: `union_all`, `intersection_all`, `toggle`, `to_sorted_vec`, `jaccard`, `subsets`
 - string — string manipulation: `capitalize`, `title_case`, `camel_case`, `pascal_case`,
-  `snake_case`, `kebab_case`, `constant_case`, `slugify`, `truncate`, `squish`, `indent`,
-  `dedent`, `escape_html`, `unescape_html`
+  `snake_case`, `kebab_case`, `constant_case`, `slugify`, `truncate`, `excerpt`, `squish`,
+  `indent`, `dedent`, `escape_html`, `unescape_html`, `escape_regex`, `words`,
+  `levenshtein_distance`, `levenshtein_similarity`, and (feature `string-diacritics`, the one
+  optional dependency in this crate: `unicode-normalization`) `remove_diacritics`
 - time — the system clock as unix time: `unix_now`, `unix_now_millis`, `ClockError`
 - url — URLs: `Url` (RFC 3986 parse and reference resolution), `percent_encode`, `percent_decode`,
   `parse_query`, `build_query`, `join_path`, `UrlError`
