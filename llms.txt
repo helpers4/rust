@@ -52,8 +52,10 @@
 - secret — keeping secrets out of logs: `Secret`, `redact`, `mask`, `detect`, `scan`, `TokenKind`, `Finding`
 - set — `HashSet` helpers: `union_all`, `intersection_all`, `toggle`, `to_sorted_vec`, `jaccard`, `subsets`
 - string — string manipulation: `capitalize`, `title_case`, `camel_case`, `pascal_case`,
-  `snake_case`, `kebab_case`, `constant_case`, `slugify`, `truncate`, `squish`, `indent`,
-  `dedent`, `escape_html`, `unescape_html`
+  `snake_case`, `kebab_case`, `constant_case`, `slugify`, `truncate`, `excerpt`, `squish`,
+  `indent`, `dedent`, `escape_html`, `unescape_html`, `escape_regex`, `words`,
+  `levenshtein_distance`, `levenshtein_similarity`, and (feature `string-diacritics`, the one
+  optional dependency in this crate: `unicode-normalization`) `remove_diacritics`
 - time — the system clock as unix time: `unix_now`, `unix_now_millis`, `ClockError`
 - url — URLs: `Url` (RFC 3986 parse and reference resolution), `percent_encode`, `percent_decode`,
   `parse_query`, `build_query`, `join_path`, `UrlError`

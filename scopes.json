@@ -31,6 +31,7 @@
   "set",
   "shared",
   "string",
+  "string-diacritics",
   "time",
   "url",
   "validate",
