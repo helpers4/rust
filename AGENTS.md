@@ -59,7 +59,9 @@ cargo package --locked                                     # what would be publi
 - Generic helpers: coverage counts every instantiation (`decode_array::<3>`, `::<32>`, …) on its
   own, so drive each type/const used in tests through both the success and the error path
 - Zero third-party dependencies by default. A module needing one gets its own Cargo feature
-  and the dependency is `optional = true`
+  and the dependency is `optional = true`. A single helper needing one the rest of its module
+  doesn't gets its own sub-feature instead (`string-diacritics` for `remove_diacritics`), not in
+  `default`, so the module itself stays dependency-free
 - One Cargo feature per module (`default` enables all). New module ⇒ new feature, gated
   `#[cfg(feature = "...")]` in `lib.rs`, and a `required-features` bench entry
 - Same helper name in two modules is fine and intentional (`array::compact` vs

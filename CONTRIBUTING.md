@@ -206,6 +206,12 @@ not one-liners. CI compares benchmarks with the base branch and reports, it does
 A module that needs a third-party crate declares it `optional = true` and the feature enables it
 (`<module> = ["dep:crate"]`); the default build stays dependency-free.
 
+A single **helper** that needs a dependency the rest of its module does not (`string`'s
+`remove_diacritics`, gated on `string-diacritics`) gets its own sub-feature instead of pulling
+the dependency into the whole module: `<module>-<name> = ["<module>", "dep:crate"]`, with
+`#[cfg(feature = "<module>-<name>")]` on both the file's `mod` declaration and its `pub use` in
+`mod.rs`. Not added to `default`.
+
 ## Fuzzing
 
 `fuzz/` holds [cargo-fuzz](https://github.com/rust-fuzz/cargo-fuzz) targets for the parsers most
