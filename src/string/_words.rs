@@ -2,39 +2,54 @@
 // Copyright (C) 2025 baxyz
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
-//! Word splitting shared by the case-conversion helpers. Not re-exported.
+//! Word splitting shared by the case-conversion helpers and the public `words` (which needs the
+//! same boundaries but the original casing, not lowercased). Not re-exported.
 
-fn flush(current: &mut String, out: &mut Vec<String>) {
-    if !current.is_empty() {
-        out.push(std::mem::take(current));
-    }
-}
-
-/// Splits `s` into lowercase words.
+/// Byte ranges of each word in `s`.
 ///
 /// A word ends at any non-alphanumeric character, before an uppercase letter that follows a
 /// lowercase letter or a digit (`userName`, `v2Beta`), and before the last capital of an
 /// acronym run (`HTMLParser` gives `html`, `parser`).
-pub(crate) fn words(s: &str) -> Vec<String> {
-    let chars: Vec<char> = s.chars().collect();
+pub(crate) fn boundaries(s: &str) -> Vec<(usize, usize)> {
+    let chars: Vec<(usize, char)> = s.char_indices().collect();
     let mut out = Vec::new();
-    let mut current = String::new();
-    for (i, &c) in chars.iter().enumerate() {
+    let mut start: Option<usize> = None;
+    for (i, &(pos, c)) in chars.iter().enumerate() {
         if !c.is_alphanumeric() {
-            flush(&mut current, &mut out);
+            if let Some(word_start) = start.take() {
+                out.push((word_start, pos));
+            }
             continue;
         }
-        if c.is_uppercase() && !current.is_empty() {
-            let prev = chars[i - 1];
-            let next_is_lower = chars.get(i + 1).is_some_and(|n| n.is_lowercase());
-            if prev.is_lowercase() || prev.is_numeric() || (prev.is_uppercase() && next_is_lower) {
-                flush(&mut current, &mut out);
+        if c.is_uppercase() {
+            if let Some(word_start) = start {
+                let prev = chars[i - 1].1;
+                let next_is_lower = chars.get(i + 1).is_some_and(|&(_, n)| n.is_lowercase());
+                if prev.is_lowercase()
+                    || prev.is_numeric()
+                    || (prev.is_uppercase() && next_is_lower)
+                {
+                    out.push((word_start, pos));
+                    start = None;
+                }
             }
         }
-        current.extend(c.to_lowercase());
+        if start.is_none() {
+            start = Some(pos);
+        }
     }
-    flush(&mut current, &mut out);
+    if let Some(word_start) = start {
+        out.push((word_start, s.len()));
+    }
     out
+}
+
+/// Splits `s` into lowercase words, using the same boundaries as [`boundaries`].
+pub(crate) fn words(s: &str) -> Vec<String> {
+    boundaries(s)
+        .into_iter()
+        .map(|(start, end)| s[start..end].to_lowercase())
+        .collect()
 }
 
 #[cfg(test)]
