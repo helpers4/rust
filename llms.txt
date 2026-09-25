@@ -35,8 +35,9 @@
 - function — functions: `compose`, `pipe`, `Memoize`, `retry`, `backoff`, `TokenBucket` (rate limiter with an
   injected clock)
 - future — runtime-neutral futures, std only: `block_on`, `now_or_never`, `yield_now`, `join`, `join_all`
-- hex — hexadecimal encoding/decoding with typed errors: `encode`, `encode_upper`, `decode`,
-  `decode_to_slice`, `decode_array`
+- hex — byte/text encodings with typed errors: `encode`, `encode_upper`, `decode`,
+  `decode_to_slice`, `decode_array`, `base64_encode`, `base64_decode`, `Base64DecodeError`,
+  `base32_encode`, `base32_decode`, `Base32DecodeError`
 - http — HTTP header value helpers: `bearer_token` (RFC 7235 / 6750)
 - iter — helpers for any `Iterator`: `chunk`, `min_max`, `first_duplicate`
 - license — SPDX licenses: `lookup`, `normalize`, `Expression` (parse and evaluate `MIT OR Apache-2.0`),
