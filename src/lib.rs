@@ -11,6 +11,10 @@
 #![forbid(unsafe_code)]
 #![warn(missing_docs)]
 
+// Crate-private, not a Cargo feature: see its own doc comment.
+#[cfg(any(feature = "duration", feature = "env"))]
+mod internal;
+
 #[cfg(feature = "ansi")]
 pub mod ansi;
 

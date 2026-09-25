@@ -3,7 +3,20 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 use super::ParseDurationError;
+use crate::internal::duration_grammar;
 use std::time::Duration;
+
+impl From<duration_grammar::Error> for ParseDurationError {
+    fn from(error: duration_grammar::Error) -> Self {
+        match error {
+            duration_grammar::Error::Empty => Self::Empty,
+            duration_grammar::Error::ExpectedNumber { index } => Self::ExpectedNumber { index },
+            duration_grammar::Error::MissingUnit { index } => Self::MissingUnit { index },
+            duration_grammar::Error::UnknownUnit { index } => Self::UnknownUnit { index },
+            duration_grammar::Error::Overflow => Self::Overflow,
+        }
+    }
+}
 
 /// Parses a human-written duration such as `"1h30m"`, `"2d"` or `"500ms"`.
 ///
@@ -34,52 +47,7 @@ use std::time::Duration;
 /// assert!(parse("90").is_err());
 /// ```
 pub fn parse(input: &str) -> Result<Duration, ParseDurationError> {
-    let bytes = input.as_bytes();
-    let mut total = Duration::ZERO;
-    let mut i = 0;
-    let mut any = false;
-    loop {
-        i = run_end(bytes, i, u8::is_ascii_whitespace);
-        if i == bytes.len() {
-            break;
-        }
-        let digits_start = i;
-        i = run_end(bytes, i, u8::is_ascii_digit);
-        if i == digits_start {
-            return Err(ParseDurationError::ExpectedNumber { index: i });
-        }
-        let amount: u64 = input[digits_start..i]
-            .parse()
-            .map_err(|_| ParseDurationError::Overflow)?;
-        let unit_start = i;
-        i = run_end(bytes, i, u8::is_ascii_alphabetic);
-        if i == unit_start {
-            return Err(ParseDurationError::MissingUnit { index: i });
-        }
-        let piece = match &input[unit_start..i] {
-            "ms" => Some(Duration::from_millis(amount)),
-            "s" => Some(Duration::from_secs(amount)),
-            "m" => amount.checked_mul(60).map(Duration::from_secs),
-            "h" => amount.checked_mul(3600).map(Duration::from_secs),
-            "d" => amount.checked_mul(86_400).map(Duration::from_secs),
-            "w" => amount.checked_mul(604_800).map(Duration::from_secs),
-            _ => return Err(ParseDurationError::UnknownUnit { index: unit_start }),
-        };
-        total = piece
-            .and_then(|piece| total.checked_add(piece))
-            .ok_or(ParseDurationError::Overflow)?;
-        any = true;
-    }
-    if any {
-        Ok(total)
-    } else {
-        Err(ParseDurationError::Empty)
-    }
-}
-
-/// Index just past the run of bytes, starting at `from`, that satisfy `keep`.
-fn run_end(bytes: &[u8], from: usize, keep: fn(&u8) -> bool) -> usize {
-    from + bytes[from..].iter().take_while(|byte| keep(byte)).count()
+    duration_grammar::parse(input).map_err(ParseDurationError::from)
 }
 
 #[cfg(test)]
