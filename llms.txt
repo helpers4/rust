@@ -29,7 +29,8 @@
 - date — calendar dates without time zones: `Date`, `Weekday`, `DateError`, `is_leap_year`,
   `days_in_month`
 - duration — human-readable durations (`1h30m`): `parse`, `format`, `ParseDurationError`
-- env — dotenv content helpers (pure text, no I/O): `parse`, `get`, `set`, `remove`
+- env — dotenv content helpers (pure text, no I/O): `parse`, `get`, `set`, `remove`, `get_bool`,
+  `get_int`, `get_list`, `get_duration`
 - fs — file-system helpers: `write_atomic`, `read_to_string_opt`, `walk`, `normalize` and `is_within`
   (lexical path checks, no I/O)
 - function — functions: `compose`, `pipe`, `Memoize`, `retry`, `backoff`, `TokenBucket` (rate limiter with an

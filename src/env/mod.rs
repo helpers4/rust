@@ -9,12 +9,20 @@
 mod _line;
 mod error;
 mod get;
+mod get_bool;
+mod get_duration;
+mod get_int;
+mod get_list;
 mod parse;
 mod remove;
 mod set;
 
 pub use error::InvalidKeyError;
 pub use get::get;
+pub use get_bool::get_bool;
+pub use get_duration::get_duration;
+pub use get_int::get_int;
+pub use get_list::get_list;
 pub use parse::parse;
 pub use remove::remove;
 pub use set::set;
