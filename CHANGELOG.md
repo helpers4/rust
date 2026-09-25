@@ -5,6 +5,39 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.7] - 2026-09-25
+
+### 🚀 Features
+- **cache**: add a bounded LRU cache
+- **env**: add typed getters — bool, int, list, duration
+- **hex**: add base64 and base32 encoding and decoding
+- **release**: compute api-since.json and gate PRs on cargo-semver-checks
+- **string**: add words, excerpt, escape_regex, levenshtein_distance/similarity, remove_diacritics
+
+### 🐛 Bug Fixes
+- **release**: give cargo-cyclonedx's override filename its own .cdx suffix
+
+### 📝 Documentation
+- **agents**: add the replace-with-helpers4 skill for Rust
+- **agents**: add the add-helper skill and native-alternatives.json for std
+- **scorecard**: add the OpenSSF Best Practices badge
+- **security**: list the supported releases as 0.0.x
+- expand CONTRIBUTING.md to the level of the TypeScript one
+
+### ✅ Tests
+- add cargo-fuzz targets for the six untrusted-input parsers
+- add benchmarks for the string, array and number additions
+
+### 📦 Build
+- **deps**: Bump the actions group with 3 updates
+
+### 👷 CI/CD
+- **coherency**: add a coherency script for module wiring and rustdoc
+- **deps**: group major updates and attach a CycloneDX SBOM to releases
+- **release**: run mutation testing and coverage on the exact tagged release
+- **release**: attach the Sigstore bundle to the release next to the crate
+- add one aggregating status check for the branch ruleset
+
 ## [0.0.6] - 2026-09-23
 
 ### 🚀 Features
@@ -195,6 +228,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - run the minimal-versions job on nightly despite rust-toolchain.toml
 - split CI into reusable jobs with PR and main validation
 
+[0.0.7]: https://github.com/helpers4/rust/compare/v0.0.6...v0.0.7
 [0.0.6]: https://github.com/helpers4/rust/compare/v0.0.5...v0.0.6
 [0.0.5]: https://github.com/helpers4/rust/compare/v0.0.4...v0.0.5
 [0.0.4]: https://github.com/helpers4/rust/compare/v0.0.3...v0.0.4
