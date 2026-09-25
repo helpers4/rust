@@ -5,4 +5,6 @@ extend-ignore-re = [
   "caf%C3%A9",
   # A deliberately truncated AWS example key in the secret module's tests.
   "AKIAIOSFODNN7EXAMPL",
+  # The RFC 4648 base32/base64 test vectors ("f", "fo", "foo", "foob", ...).
+  '"fo"',
 ]

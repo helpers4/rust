@@ -53,7 +53,7 @@ One module per category, each behind a Cargo feature of the same name (all enabl
 | [`fs`](https://helpers4.dev/rust/modules/fs/) | atomic writes, missing file as `None`, listing a tree, lexical path checks |
 | [`function`](https://helpers4.dev/rust/modules/function/) | composition, memoization, retrying with backoff, a token-bucket rate limiter |
 | [`future`](https://helpers4.dev/rust/modules/future/) | `block_on`, `join`, `join_all` and friends, with no async runtime |
-| [`hex`](https://helpers4.dev/rust/modules/hex/) | hexadecimal encoding and decoding with typed errors |
+| [`hex`](https://helpers4.dev/rust/modules/hex/) | hexadecimal, base64 and base32 encoding/decoding with typed errors |
 | [`http`](https://helpers4.dev/rust/modules/http/) | extracting a bearer token from an `Authorization` header |
 | [`iter`](https://helpers4.dev/rust/modules/iter/) | chunking, one-pass min/max, first duplicate: for any `Iterator` |
 | [`license`](https://helpers4.dev/rust/modules/license/) | SPDX identifiers and expressions, `MIT OR Apache-2.0` checked against a policy |
