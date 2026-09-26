@@ -41,7 +41,7 @@ jobs:
           key: powerset-${{ inputs.partition }}
 
       - name: Install cargo-hack
-        uses: taiki-e/install-action@94c31af3204a9f15ab40b35ad084410b905bbc73
+        uses: taiki-e/install-action@7623a79cdfecb99d681017af368ca353d9f49bb5
         with:
           tool: cargo-hack
 
