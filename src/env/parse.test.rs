@@ -35,5 +35,5 @@ fn handles_crlf_line_endings() {
 
 #[test]
 fn empty_content_has_no_variables() {
-    assert!(parse("").is_empty());
+    assert_eq!(parse(""), []);
 }

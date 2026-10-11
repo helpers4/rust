@@ -35,7 +35,7 @@ fn cannot_go_above_the_root() {
 
 #[test]
 fn an_empty_or_dot_path_has_no_parts() {
-    assert!(parts(Path::new("")).is_empty());
-    assert!(parts(Path::new(".")).is_empty());
-    assert!(parts(Path::new("a/..")).is_empty());
+    assert_eq!(parts(Path::new("")), []);
+    assert_eq!(parts(Path::new(".")), []);
+    assert_eq!(parts(Path::new("a/..")), []);
 }

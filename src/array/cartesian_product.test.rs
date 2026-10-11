@@ -14,6 +14,6 @@ fn pairs_in_row_major_order() {
 
 #[test]
 fn an_empty_side_gives_no_pairs() {
-    assert!(cartesian_product::<i32, i32>(&[], &[1]).is_empty());
-    assert!(cartesian_product(&[1], &[] as &[i32]).is_empty());
+    assert_eq!(cartesian_product::<i32, i32>(&[], &[1]), []);
+    assert_eq!(cartesian_product(&[1], &[] as &[i32]), []);
 }

@@ -69,8 +69,8 @@ fn a_jwt_with_dots_is_one_word() {
 
 #[test]
 fn ordinary_text_has_no_findings() {
-    assert!(scan("").is_empty());
-    assert!(scan("just some text, with words and numbers 123").is_empty());
+    assert_eq!(scan(""), []);
+    assert_eq!(scan("just some text, with words and numbers 123"), []);
 }
 
 #[test]

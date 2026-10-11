@@ -20,5 +20,5 @@ fn works_on_strings() {
 
 #[test]
 fn empty_gives_empty() {
-    assert!(to_sorted_vec(&HashSet::<i32>::new()).is_empty());
+    assert_eq!(to_sorted_vec(&HashSet::<i32>::new()), []);
 }

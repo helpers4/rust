@@ -16,6 +16,6 @@ fn keeps_duplicates_that_are_not_excluded() {
 
 #[test]
 fn empty_sides() {
-    assert!(difference::<i32>(&[], &[1]).is_empty());
+    assert_eq!(difference::<i32>(&[], &[1]), []);
     assert_eq!(difference(&[1, 2], &[]), [1, 2]);
 }

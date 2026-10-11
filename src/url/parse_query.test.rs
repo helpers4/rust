@@ -56,8 +56,8 @@ fn skips_empty_pairs_and_an_empty_query() {
         parse_query("a=1&&b=2&").unwrap(),
         vec![pair("a", "1"), pair("b", "2")]
     );
-    assert!(parse_query("").unwrap().is_empty());
-    assert!(parse_query("?").unwrap().is_empty());
+    assert_eq!(parse_query("").unwrap(), []);
+    assert_eq!(parse_query("?").unwrap(), []);
 }
 
 #[test]
