@@ -6,8 +6,8 @@ use super::*;
 
 #[test]
 fn empty_and_separator_only_inputs_have_no_words() {
-    assert!(words("").is_empty());
-    assert!(words(" -_ ").is_empty());
+    assert_eq!(words(""), Vec::<&str>::new());
+    assert_eq!(words(" -_ "), Vec::<&str>::new());
 }
 
 #[test]

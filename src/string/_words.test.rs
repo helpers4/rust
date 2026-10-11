@@ -10,8 +10,8 @@ fn w(s: &str) -> Vec<String> {
 
 #[test]
 fn empty_and_separator_only_inputs_have_no_words() {
-    assert!(w("").is_empty());
-    assert!(w(" -_ ").is_empty());
+    assert_eq!(w(""), Vec::<String>::new());
+    assert_eq!(w(" -_ "), Vec::<String>::new());
 }
 
 #[test]

@@ -15,7 +15,7 @@ fn keeps_the_first_element_of_each_key() {
 
 #[test]
 fn empty_input_gives_empty_output() {
-    assert!(unique_by(&[] as &[i32], |x| *x).is_empty());
+    assert_eq!(unique_by(&[] as &[i32], |x| *x), []);
 }
 
 #[test]

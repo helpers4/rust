@@ -11,6 +11,6 @@ fn removes_later_duplicates_and_keeps_order() {
 
 #[test]
 fn empty_and_already_unique_inputs_are_unchanged() {
-    assert!(unique::<i32>(&[]).is_empty());
+    assert_eq!(unique::<i32>(&[]), []);
     assert_eq!(unique(&["a", "b"]), ["a", "b"]);
 }

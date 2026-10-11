@@ -16,6 +16,6 @@ fn keeps_duplicates() {
 
 #[test]
 fn identical_inputs_cancel_out_and_empty_side_returns_the_other() {
-    assert!(symmetric_difference(&[1, 2], &[2, 1]).is_empty());
+    assert_eq!(symmetric_difference(&[1, 2], &[2, 1]), []);
     assert_eq!(symmetric_difference(&[], &[1, 2]), [1, 2]);
 }

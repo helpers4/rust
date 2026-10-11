@@ -92,7 +92,7 @@ fn finds_the_identifiers_it_does_not_list() {
     let e =
         expr("MIT OR Fake-1.0 OR LicenseRef-x OR DocumentRef-a:LicenseRef-b OR GPL-2.0+ OR Nope+");
     assert_eq!(e.unknown_ids(), ["Fake-1.0", "Nope+"]);
-    assert!(expr("MIT AND Apache-2.0").unknown_ids().is_empty());
+    assert_eq!(expr("MIT AND Apache-2.0").unknown_ids(), Vec::<&str>::new());
 }
 
 #[test]

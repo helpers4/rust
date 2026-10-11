@@ -32,7 +32,7 @@ fn lists_files_at_every_depth_sorted() {
 fn empty_directories_contribute_nothing() {
     let dir = Scratch::new("walk-empty");
     std::fs::create_dir(dir.path().join("empty")).unwrap();
-    assert!(walk(dir.path()).unwrap().is_empty());
+    assert_eq!(walk(dir.path()).unwrap(), Vec::<PathBuf>::new());
 }
 
 #[test]

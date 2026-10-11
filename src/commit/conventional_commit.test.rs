@@ -117,7 +117,7 @@ fn footer_lookup_ignores_case_and_returns_the_first() {
 fn a_colon_line_in_the_middle_of_a_paragraph_is_not_a_footer() {
     let c = commit("fix: a\n\nfirst\nNote: still the body\nlast");
     assert_eq!(c.body(), Some("first\nNote: still the body\nlast"));
-    assert!(c.footers().is_empty());
+    assert_eq!(c.footers(), []);
 }
 
 #[test]

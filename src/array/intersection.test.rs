@@ -16,7 +16,7 @@ fn keeps_duplicates_from_a() {
 
 #[test]
 fn empty_sides_and_disjoint_inputs() {
-    assert!(intersection::<i32>(&[], &[1]).is_empty());
-    assert!(intersection(&[1], &[]).is_empty());
-    assert!(intersection(&[1], &[2]).is_empty());
+    assert_eq!(intersection::<i32>(&[], &[1]), []);
+    assert_eq!(intersection(&[1], &[]), []);
+    assert_eq!(intersection(&[1], &[2]), []);
 }
