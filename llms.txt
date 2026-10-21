@@ -37,6 +37,8 @@
 - function — functions: `compose`, `pipe`, `Memoize`, `retry`, `backoff`, `TokenBucket` (rate limiter with an
   injected clock)
 - future — runtime-neutral futures, std only: `block_on`, `now_or_never`, `yield_now`, `join`, `join_all`
+- geometry — 2D affine transforms in `f64`: `Matrix` (CSS `matrix(a b c d e f)` layout: `multiply`, `invert`,
+  `apply`, `bounding_box`), `Point`, `Rect`
 - hex — byte/text encodings with typed errors: `encode`, `encode_upper`, `decode`,
   `decode_to_slice`, `decode_array`, `base64_encode`, `base64_decode`, `Base64DecodeError`,
   `base32_encode`, `base32_decode`, `Base32DecodeError`

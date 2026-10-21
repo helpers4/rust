@@ -54,6 +54,9 @@ pub mod function;
 #[cfg(feature = "future")]
 pub mod future;
 
+#[cfg(feature = "geometry")]
+pub mod geometry;
+
 #[cfg(feature = "hex")]
 pub mod hex;
 
