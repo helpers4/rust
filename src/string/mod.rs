@@ -16,6 +16,7 @@ mod indent;
 mod kebab_case;
 mod levenshtein_distance;
 mod levenshtein_similarity;
+mod match_glob;
 mod pascal_case;
 #[cfg(feature = "string-diacritics")]
 mod remove_diacritics;
@@ -38,6 +39,7 @@ pub use indent::indent;
 pub use kebab_case::kebab_case;
 pub use levenshtein_distance::levenshtein_distance;
 pub use levenshtein_similarity::levenshtein_similarity;
+pub use match_glob::match_glob;
 pub use pascal_case::pascal_case;
 #[cfg(feature = "string-diacritics")]
 pub use remove_diacritics::remove_diacritics;
