@@ -17,7 +17,8 @@
 - array — slice helpers not in `std`: `unique`, `unique_by`, `difference`, `intersection`,
   `symmetric_difference`, `intersects`, `equals_unordered`, `count_by`, `group_by`,
   `key_by`, `duplicates`, `interleave`, `cartesian_product`
-- bytes — byte slices and sizes: `read_u16`, `read_u32`, `read_u64` (with `Endian`), `find`, `xor`,
+- bytes — byte slices and sizes: `read_u16`, `read_u32`, `read_u64` (with `Endian`), `ByteReader` (cursor:
+  fixed-size values, LEB128 varints, NUL-terminated strings), `zigzag_encode`, `zigzag_decode`, `find`, `xor`,
   `constant_time_eq`, `format_size`, `parse_size`, `ParseSizeError`
 - cache — in-memory stores with expiry and an injected clock: `ExpiringMap`, `ExpiringSet`
 - ci — CI environments and pipeline status (the environment is a lookup function): `detect`, `is_ci`,
