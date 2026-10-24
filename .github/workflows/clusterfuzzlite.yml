@@ -1,0 +1,48 @@
+name: ClusterFuzzLite
+
+# Runs the cargo-fuzz targets of fuzz/ through ClusterFuzzLite: briefly on a pull request that
+# touches the code they exercise, and for longer on a schedule. It is also what makes the fuzzers
+# visible to OpenSSF Scorecard (its Fuzzing check looks for ClusterFuzzLite or OSS-Fuzz), next to
+# the daily run of fuzz.yml.
+
+on:
+  pull_request:
+    paths:
+      - "src/**"
+      - "fuzz/**"
+      - ".clusterfuzzlite/**"
+      - "Cargo.toml"
+      - "Cargo.lock"
+      - ".github/workflows/clusterfuzzlite.yml"
+  schedule:
+    - cron: "20 4 * * 0" # Every Sunday at 04:20 UTC
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions: read-all
+
+jobs:
+  fuzz:
+    name: Fuzz (${{ github.event_name == 'pull_request' && 'code change' || 'batch' }})
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Build the fuzzers
+        id: build
+        uses: google/clusterfuzzlite/actions/build_fuzzers@884713a6c30a92e5e8544c39945cd7cb630abcd1 # v1
+        with:
+          language: rust
+          sanitizer: address
+
+      - name: Run the fuzzers
+        uses: google/clusterfuzzlite/actions/run_fuzzers@884713a6c30a92e5e8544c39945cd7cb630abcd1 # v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          fuzz-seconds: ${{ github.event_name == 'pull_request' && 120 || 600 }}
+          mode: ${{ github.event_name == 'pull_request' && 'code-change' || 'batch' }}
+          sanitizer: address
+          report-unreproducible-crashes: false

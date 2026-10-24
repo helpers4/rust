@@ -12,6 +12,7 @@ entry-point workflows that call reusable `job-*.yml` building blocks (`workflow_
 | `scorecard.yml` | weekly, manual | [OpenSSF Scorecard](https://securityscorecards.dev/viewer/?uri=github.com/helpers4/rust) analysis, published (the site shows the score) and uploaded to code scanning |
 | `fuzz.yml` | daily, manual | [cargo-fuzz](https://github.com/rust-fuzz/cargo-fuzz) (`fuzz/`, a detached workspace), 120s per parser target: `commit`, `duration`, `easing`, `env`, `hex`, `rgba`, `ulid`, `url`, `uuid`, `version`; a persistent corpus cache, crash inputs uploaded as an artifact |
 | `zizmor.yml` | `push`/`pull_request` touching workflows, manual | [zizmor](https://docs.zizmor.sh/) static analysis of the workflows (template injection, permissions, persisted credentials), in the Security tab |
+| `clusterfuzzlite.yml` | `pull_request` (code paths), weekly, manual | The same fuzz targets through [ClusterFuzzLite](https://google.github.io/clusterfuzzlite/) (`.clusterfuzzlite/`): 2 minutes on a PR, 10 weekly; what OpenSSF Scorecard's Fuzzing check looks for |
 | `dependency-review.yml` | `pull_request` touching dependencies | Fails a PR that adds a dependency with a known vulnerability of moderate severity or more |
 | `osv-scanner.yml` | `push` to `main`, `pull_request`, weekly, manual | [OSV-Scanner](https://google.github.io/osv-scanner/) on `Cargo.lock` and `fuzz/Cargo.lock`, in the Security tab |
 | `release.yml` | manual (`workflow_dispatch`) | Publishes the version in `Cargo.toml` to crates.io, then tags it and creates the GitHub release |
