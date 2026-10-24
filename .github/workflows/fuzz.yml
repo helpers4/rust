@@ -22,9 +22,13 @@ jobs:
         target:
           - fuzz_commit_parse
           - fuzz_duration_parse
+          - fuzz_easing_parse
           - fuzz_env_parse
           - fuzz_hex_decode
+          - fuzz_rgba_parse
+          - fuzz_ulid_parse
           - fuzz_url_parse
+          - fuzz_uuid_parse
           - fuzz_version_parse
     steps:
       - name: Checkout code
