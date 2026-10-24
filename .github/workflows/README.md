@@ -7,7 +7,7 @@ entry-point workflows that call reusable `job-*.yml` building blocks (`workflow_
 | --- | --- | --- |
 | `pr-validation.yml` | `pull_request` | Build, tests + coverage, compatibility, lint, docs, security, semver and conventional commits on every PR, plus one sticky status comment |
 | `main-validation.yml` | `push` to `main` | The same suite post-merge, uploading coverage to Codecov |
-| `mutation-dashboard.yml` | `push` to `main`, weekly, manual | Full [cargo-mutants](https://mutants.rs/) run in 4 shards, merged into one score in the job summary |
+| `mutation-dashboard.yml` | `push` to `main`, weekly, manual | Full [cargo-mutants](https://mutants.rs/) run in 12 shards (each must stay under the job's 45 minutes), merged into one score in the job summary |
 | `compat-full.yml` | weekly, manual | Every combination of up to 3 Cargo features (`cargo hack --feature-powerset --depth 3`), in 8 shards — the PR path only checks pairs (`--depth 2`), see `job-compat.yml` |
 | `scorecard.yml` | weekly, manual | [OpenSSF Scorecard](https://securityscorecards.dev/viewer/?uri=github.com/helpers4/rust) analysis, published (the site shows the score) and uploaded to code scanning |
 | `fuzz.yml` | daily, manual | [cargo-fuzz](https://github.com/rust-fuzz/cargo-fuzz) (`fuzz/`, a detached workspace), 120s per parser target: `commit`, `duration`, `env`, `hex`, `url`, `version`; a persistent corpus cache, crash inputs uploaded as an artifact |
@@ -26,7 +26,7 @@ entry-point workflows that call reusable `job-*.yml` building blocks (`workflow_
 | `job-docs.yml` | `cargo doc` with warnings denied (broken intra-doc links) and every doctest |
 | `job-security.yml` | `cargo deny`: RustSec advisories, yanked crates, licenses, bans, sources |
 | `job-semver.yml` | `cargo-semver-checks` against the published baseline; a change that needs a major bump under strict SemVer requires a `BREAKING CHANGE:` footer in the PR |
-| `job-mutation.yml` | cargo-mutants, informational: only the lines a PR touches (`--in-diff`, skipped above 3 000 changed implementation lines, which the full run on `main` covers), or one shard of a full run. Configured in `.cargo/mutants.toml` |
+| `job-mutation.yml` | cargo-mutants, informational: only the lines a PR touches (`--in-diff`, skipped above 500 changed implementation lines, which the full run on `main` covers), or one shard of a full run. Configured in `.cargo/mutants.toml` |
 | `job-bench.yml` | criterion, informational: only the benches a PR affects, compared against the base branch measured on the same runner; every bench on `main` |
 | `job-build.yml` | Release build with every feature, benchmarks compile, `cargo package` |
 

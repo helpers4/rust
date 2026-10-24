@@ -2,6 +2,12 @@ name: Mutation Dashboard
 
 # Full mutation run on main, split into shards, merged into one score. Informational: a low score
 # never fails the workflow, it just shows where the tests are weakest.
+#
+# Sizing: a mutant takes about 14 s (build + tests) and a shard runs two at a time, so a shard of
+# ~500 mutants needs about an hour, past the job's 45 minutes (with 4 shards for ~2000 mutants,
+# every shard was cut). Keep each shard under ~30 minutes: when a run shows shards near the limit
+# ("Found N mutants to test" in a shard's log), raise the shard count here, in `matrix` and in
+# `shard:` below.
 
 on:
   push:
@@ -29,10 +35,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [0, 1, 2, 3]
+        shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
     uses: ./.github/workflows/job-mutation.yml
     with:
-      shard: ${{ matrix.shard }}/4
+      shard: ${{ matrix.shard }}/12
       artifact-name: mutants-shard-${{ matrix.shard }}
 
   aggregate:
