@@ -27,6 +27,25 @@ minimum_test_timeout = 60
 #
 # `min_max` only ever replaces `min`/`max` with a value equal to it (`item == min`/`item == max`),
 # so making the comparison non-strict (`<=`/`>=`) reassigns the same value and changes nothing.
+#
+# `cubic_bezier_at` bisects `x(s) = t` 40 times: `<` or `<=` only differs when `x(middle) == t`
+# exactly, where the search converges to the same point from the other side.
+# `settling_time_ms` doubles `end` until the motion is at rest, then walks back from it: starting
+# from any `end` past the settling time gives the same result, so doubling by `end += 2` instead
+# of `end *= 2` only changes how many steps it takes; `last <= 0` or `last < 0` differ at
+# `last == 0` only, where the displacement is 1 and the walk stops anyway, and `< REST`, `<= REST`,
+# `>= REST` or `> REST` only differ when the envelope or the displacement equals the threshold
+# exactly.
+#
+# `Rng::below` redraws while `low < threshold`: `<` or `<=` only differs when `low == threshold`
+# exactly (one draw in 2^64), and `<` or `<=` on `low < bound` only skips a threshold computation
+# that cannot reject anything. `simplify_polyline` starts each scan at `first + 1`; starting at
+# `first` instead adds the point at distance 0, which is never farther than the tolerance.
+#
+# Mutants that make a loop run forever (the tests cannot fail, they can only hang until the
+# timeout): the loop controls of `resolve_inputs`, `stops_at`, `Rng::below`, `Rng::next_u64` (every
+# `below` redraws for ever when it returns 0), `alphanumeric_with`, `short_id_with`, and
+# `compare_natural` (a `take_number` that consumes nothing).
 exclude_re = [
   "replace \\| with \\^ in decode_into",
   "replace match guard now >= earliest with true in .*evict_expired",
@@ -36,4 +55,20 @@ exclude_re = [
   "replace > with >= in min_max",
   "replace < with <= in Hsl::to_rgb",
   "replace <impl Wake for ThreadWaker>::wake with \\(\\)",
+  "replace < with <= in cubic_bezier_at",
+  "replace \\*= with \\+= in settling_time_ms",
+  "replace < with <= in settling_time_ms",
+  "replace <= with < in settling_time_ms",
+  "replace >= with > in settling_time_ms",
+  "replace < with <= in Rng::below",
+  "replace \\+ with \\* in simplify_polyline",
+  "replace \\+= with \\*= in (resolve_inputs|stops_at)",
+  "replace Rng::next_u64 -> u64 with 0",
+  "replace < with > in Rng::below",
+  "replace \\* with / in Rng::below",
+  "replace [-%] with / in short_id_with",
+  "replace < with (==|<=|>) in short_id_with",
+  "replace < with (==|>) in alphanumeric_with",
+  "replace match guard x.is_ascii_digit\\(\\) && y.is_ascii_digit\\(\\) with true in compare_natural",
+  "replace take_number -> .* with",
 ]
