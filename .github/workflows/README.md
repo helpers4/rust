@@ -28,7 +28,7 @@ entry-point workflows that call reusable `job-*.yml` building blocks (`workflow_
 | `job-compat.yml` | OS (Linux, macOS, Windows) × toolchain (stable, beta, MSRV 1.85); every pair of Cargo features (`cargo hack --depth 2`; up to 3 at a time is `compat-full.yml`); `wasm32-unknown-unknown` and `wasm32-wasip1`; minimal dependency versions (informational) |
 | `job-compat-full.yml` | One shard (`k/n`) of the depth-3 feature powerset for `compat-full.yml` |
 | `job-docs.yml` | `cargo doc` with warnings denied (broken intra-doc links) and every doctest |
-| `job-security.yml` | `cargo deny`: RustSec advisories, yanked crates, licenses, bans, sources; also on its own every day, since new advisories appear without any change in the repository |
+| `job-security.yml` | `cargo deny --all-features`: RustSec advisories, yanked crates, licenses, bans, sources, including the optional dependencies; also on its own every day, since new advisories appear without any change in the repository |
 | `job-semver.yml` | `cargo-semver-checks` against the published baseline; a change that needs a major bump under strict SemVer requires a `BREAKING CHANGE:` footer in the PR |
 | `job-mutation.yml` | cargo-mutants, informational: only the lines a PR touches (`--in-diff`, skipped above 500 changed implementation lines, which the full run on `main` covers), or one shard of a full run. Configured in `.cargo/mutants.toml` |
 | `job-bench.yml` | criterion, informational: only the benches a PR affects, compared against the base branch measured on the same runner; every bench on `main` |

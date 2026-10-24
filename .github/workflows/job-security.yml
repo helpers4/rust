@@ -26,6 +26,8 @@ jobs:
         with:
           tool: cargo-deny
 
-      # Advisories (RustSec), yanked crates, licenses, bans and sources, per deny.toml.
+      # Advisories (RustSec), yanked crates, licenses, bans and sources, per deny.toml. All
+      # features, because the optional dependencies (getrandom, unicode-normalization) ship to
+      # the users who enable them, and a default-features graph would not see them.
       - name: Run cargo-deny
-        run: cargo deny check
+        run: cargo deny --all-features check
