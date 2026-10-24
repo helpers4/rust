@@ -5,6 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.9] - 2026-10-24
+
+### 🚀 Features
+- **animation**: add the animation module
+- **array**: add toggle, toggle_by and replace_or_append
+- **color**: add Rgba, and CSS output for Rgb and Hsl
+- **geometry**: add Size, matrix constructors, Rect operations, fit and simplify_polyline
+- **id**: add the id module
+- **random**: add the random module and the random-entropy feature
+- **string**: add compare_natural and GlobSet
+
+### 📝 Documentation
+- **bytes**: mention the ByteReader in the README module table
+
+### ✅ Tests
+- **security**: fuzz the new parsers
+
+### 👷 CI/CD
+- **CI-CD**: document the equivalent and hanging mutants of the new modules
+- **CI-CD**: make Release stop early when a tagged version has unreleased changes
+- **CI-CD**: run the full mutation run in 12 shards
+- **security**: run cargo-deny on all features
+- **security**: run the fuzzers through ClusterFuzzLite
+- **security**: add zizmor, dependency review, OSV-Scanner and a daily audit
+- **security**: fix the zizmor findings in the workflows
+
 ## [0.0.8] - 2026-10-24
 
 ### 🚀 Features
@@ -243,6 +269,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - run the minimal-versions job on nightly despite rust-toolchain.toml
 - split CI into reusable jobs with PR and main validation
 
+[0.0.9]: https://github.com/helpers4/rust/compare/v0.0.8...v0.0.9
 [0.0.8]: https://github.com/helpers4/rust/compare/v0.0.7...v0.0.8
 [0.0.7]: https://github.com/helpers4/rust/compare/v0.0.6...v0.0.7
 [0.0.6]: https://github.com/helpers4/rust/compare/v0.0.5...v0.0.6
