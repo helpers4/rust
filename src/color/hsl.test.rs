@@ -57,3 +57,19 @@ fn zero_saturation_is_a_grey_and_the_ends_are_black_and_white() {
     assert_eq!(Hsl::new(123.0, 1.0, 0.0).to_rgb(), Rgb::new(0, 0, 0));
     assert_eq!(Hsl::new(123.0, 1.0, 1.0).to_rgb(), Rgb::new(255, 255, 255));
 }
+
+#[test]
+fn to_css_writes_the_hue_and_percentages() {
+    assert_eq!(Hsl::new(210.0, 1.0, 0.5).to_css(), "hsl(210 100% 50%)");
+    assert_eq!(Hsl::new(0.0, 0.0, 0.0).to_css(), "hsl(0 0% 0%)");
+    assert_eq!(
+        Hsl::new(120.5, 0.123_4, 0.987_6).to_css(),
+        "hsl(120.5 12.3% 98.8%)"
+    );
+}
+
+#[test]
+fn to_css_wraps_a_hue_that_rounds_up_to_360() {
+    assert_eq!(Hsl::new(359.97, 0.5, 0.5).to_css(), "hsl(0 50% 50%)");
+    assert_eq!(Hsl::new(359.94, 0.5, 0.5).to_css(), "hsl(359.9 50% 50%)");
+}

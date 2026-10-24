@@ -72,3 +72,29 @@ pub(crate) mod duration_grammar {
         from + bytes[from..].iter().take_while(|byte| keep(byte)).count()
     }
 }
+
+/// Number formatting for the CSS output of `color`.
+#[cfg(feature = "color")]
+pub(crate) mod css_number {
+    /// A number for a CSS value: rounded to `decimals` places, without trailing zeros (`12.0` is
+    /// `"12"`, `0.50` is `"0.5"`) and without a negative zero, including when a small negative
+    /// value rounds to zero.
+    pub(crate) fn trimmed(value: f64, decimals: usize) -> String {
+        let text = format!("{value:.decimals$}");
+        let text = if text.contains('.') {
+            text.trim_end_matches('0').trim_end_matches('.')
+        } else {
+            &text
+        };
+        // A small negative value rounds to "-0", which CSS reads but nobody means.
+        if text == "-0" {
+            "0".to_string()
+        } else {
+            text.to_string()
+        }
+    }
+}
+
+#[cfg(all(test, feature = "color"))]
+#[path = "internal.test.rs"]
+mod tests;

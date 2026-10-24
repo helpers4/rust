@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 use super::Rgb;
+use crate::internal::css_number::trimmed;
 
 /// A color as hue, saturation and lightness.
 ///
@@ -77,6 +78,34 @@ impl Hsl {
     #[must_use]
     pub fn l(self) -> f64 {
         self.l
+    }
+
+    /// The CSS form `hsl(h s% l%)`, in the space-separated syntax every current browser and SVG
+    /// renderer reads: the hue in degrees, saturation and lightness as percentages, all rounded
+    /// to one decimal.
+    ///
+    /// # Returns
+    ///
+    /// For instance `"hsl(210 100% 50%)"`.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use helpers4::color::Hsl;
+    ///
+    /// assert_eq!(Hsl::new(210.0, 1.0, 0.5).to_css(), "hsl(210 100% 50%)");
+    /// assert_eq!(Hsl::new(359.97, 0.1234, 0.5).to_css(), "hsl(0 12.3% 50%)");
+    /// ```
+    #[must_use]
+    pub fn to_css(self) -> String {
+        // A hue that rounds up to 360 is written 0: the hue circle wraps.
+        let hue = (self.h * 10.0).round() / 10.0 % 360.0;
+        format!(
+            "hsl({} {}% {}%)",
+            trimmed(hue, 1),
+            trimmed(self.s * 100.0, 1),
+            trimmed(self.l * 100.0, 1)
+        )
     }
 
     /// The nearest 8-bit sRGB color.

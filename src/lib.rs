@@ -12,7 +12,7 @@
 #![warn(missing_docs)]
 
 // Crate-private, not a Cargo feature: see its own doc comment.
-#[cfg(any(feature = "duration", feature = "env"))]
+#[cfg(any(feature = "duration", feature = "env", feature = "color"))]
 mod internal;
 
 #[cfg(feature = "ansi")]
