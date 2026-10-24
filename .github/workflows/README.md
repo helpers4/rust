@@ -49,9 +49,15 @@ A release is a normal PR followed by one manual workflow run.
 1. **Prepare**: a PR `chore(release): 🔖 X.Y.Z` that bumps `version` in `Cargo.toml` (and
    `Cargo.lock`), adds the changelog section (`git cliff --tag vX.Y.Z -o CHANGELOG.md`), and
    updates `api-since.json` for any helper added this round (`python3 scripts/update-api-since.py
-   X.Y.Z`, needs the nightly toolchain: `rustup toolchain install nightly`). Merge it.
+   X.Y.Z`, needs the nightly toolchain: `rustup toolchain install nightly`, and
+   `cargo install cargo-public-api`). Merge it. Order matters: run `update-api-since.py` first, on
+   a clean working tree (`cargo public-api diff` checks out the previous tag, so uncommitted
+   changes make it fail), then bump `Cargo.toml` and write the changelog. `git cliff` rewrites
+   older sections when a commit lands after their tag: keep only the new section and its compare
+   link.
 2. **Run** *Actions → Release → Run workflow* on `main` (tick `dry-run` first if in doubt). The workflow
-   checks the version and its changelog section, re-runs lint, tests, compatibility, docs and
+   checks the version and its changelog section (and stops early, saying so, if the version is
+   already tagged but `src/` or `Cargo.toml` changed since: bump the version first), re-runs lint, tests, compatibility, docs and
    security on that exact commit, confirms every public item has an `api-since.json` entry, then
    (in the `crates-io` environment) publishes, waits until
    crates.io serves the version, attests the `.crate` (SLSA provenance), and creates the tag and

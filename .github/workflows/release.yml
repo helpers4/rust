@@ -87,6 +87,22 @@ jobs:
             echo "tagged=false" >> "$GITHUB_OUTPUT"
           fi
 
+      # A tagged version is final: code that changed since its tag needs a new version, i.e. a
+      # `chore(release): 🔖 X.Y.Z` pull request merged first. Without this check the run goes on
+      # until the api-since.json check fails, without saying what is missing.
+      - name: Source changed since the tag of this version?
+        if: steps.tagged.outputs.tagged == 'true'
+        env:
+          VERSION: ${{ steps.meta.outputs.version }}
+        run: |
+          TAG="v$VERSION"
+          CHANGED=$(git diff --name-only "$TAG" HEAD -- src Cargo.toml | tr '\n' ' ')
+          if [ -n "$CHANGED" ]; then
+            echo "::error::Version $VERSION is already tagged ($TAG), but these changed since: $CHANGED"
+            echo "::error::Bump the version first: a 'chore(release): 🔖 X.Y.Z' pull request (Cargo.toml, CHANGELOG.md, api-since.json), merged before running Release."
+            exit 1
+          fi
+
   # The same gates as a pull request, on the exact commit that will be released.
   lint:
     needs: guard
