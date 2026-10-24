@@ -73,8 +73,8 @@ pub(crate) mod duration_grammar {
     }
 }
 
-/// Number formatting for the CSS output of `color`.
-#[cfg(feature = "color")]
+/// Number formatting for the CSS output of `color` and `animation`.
+#[cfg(any(feature = "color", feature = "animation"))]
 pub(crate) mod css_number {
     /// A number for a CSS value: rounded to `decimals` places, without trailing zeros (`12.0` is
     /// `"12"`, `0.50` is `"0.5"`) and without a negative zero, including when a small negative
@@ -95,6 +95,6 @@ pub(crate) mod css_number {
     }
 }
 
-#[cfg(all(test, feature = "color"))]
+#[cfg(all(test, any(feature = "color", feature = "animation")))]
 #[path = "internal.test.rs"]
 mod tests;

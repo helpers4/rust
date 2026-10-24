@@ -12,8 +12,16 @@
 #![warn(missing_docs)]
 
 // Crate-private, not a Cargo feature: see its own doc comment.
-#[cfg(any(feature = "duration", feature = "env", feature = "color"))]
+#[cfg(any(
+    feature = "duration",
+    feature = "env",
+    feature = "color",
+    feature = "animation"
+))]
 mod internal;
+
+#[cfg(feature = "animation")]
+pub mod animation;
 
 #[cfg(feature = "ansi")]
 pub mod ansi;
