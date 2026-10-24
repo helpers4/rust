@@ -52,6 +52,9 @@
 - net — network address and hostname checks: `is_public_ip` (SSRF guard, IANA registry),
   `is_valid_hostname`, `HostnameError`
 - number — numeric helpers: `lerp`, `round_to`, `mean`, `median`, `percentage`, `gcd`, `lcm`
+- random — randomness with no hidden global: `Rng` (seedable SplitMix64), `shuffle`, `sample`, `choose`,
+  and with the `random-entropy` feature (OS entropy, `getrandom`) `random_bytes`, `random_hex`,
+  `random_alphanumeric`, `Rng::from_entropy`, `EntropyError`
 - secret — keeping secrets out of logs: `Secret`, `redact`, `mask`, `detect`, `scan`, `TokenKind`, `Finding`
 - set — `HashSet` helpers: `union_all`, `intersection_all`, `toggle`, `to_sorted_vec`, `jaccard`, `subsets`
 - string — string manipulation: `capitalize`, `title_case`, `camel_case`, `pascal_case`,

@@ -25,6 +25,8 @@
   "markdown",
   "net",
   "number",
+  "random",
+  "random-entropy",
   "release",
   "scorecard",
   "secret",
