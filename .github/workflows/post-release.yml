@@ -75,7 +75,8 @@ jobs:
         if: github.event_name == 'release'
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release upload "${{ github.ref_name }}" mutation-report.tar.gz --clobber
+          TAG: ${{ github.ref_name }}
+        run: gh release upload "$TAG" mutation-report.tar.gz --clobber
 
   coverage:
     uses: ./.github/workflows/job-tests.yml
