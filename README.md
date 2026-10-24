@@ -42,7 +42,7 @@ One module per category, each behind a Cargo feature of the same name (all enabl
 | ------ | -------------- |
 | [`animation`](https://helpers4.dev/rust/modules/animation/) | CSS easings parsed and evaluated (`cubic-bezier()`, `steps()`, `linear()`), damped springs, `linear()` output |
 | [`ansi`](https://helpers4.dev/rust/modules/ansi/) | stripping and building ANSI escape sequences (colors, styles) |
-| [`array`](https://helpers4.dev/rust/modules/array/) | unique, difference, intersection, grouping, counting, duplicates, interleaving |
+| [`array`](https://helpers4.dev/rust/modules/array/) | unique, difference, intersection, grouping, counting, duplicates, interleaving, toggling, upserting |
 | [`bytes`](https://helpers4.dev/rust/modules/bytes/) | integers at an offset, byte search, XOR, constant-time comparison, `1.5 KiB` sizes |
 | [`cache`](https://helpers4.dev/rust/modules/cache/) | maps and sets whose entries expire, with the clock passed in |
 | [`ci`](https://helpers4.dev/rust/modules/ci/) | which CI service is this, is it a pull request, and a Markdown status report |
