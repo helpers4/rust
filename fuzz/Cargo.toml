@@ -14,7 +14,7 @@ cargo-fuzz = true
 
 [dependencies]
 libfuzzer-sys = "0.4"
-helpers4 = { path = "..", default-features = false, features = ["commit", "duration", "env", "hex", "url", "version"] }
+helpers4 = { path = "..", default-features = false, features = ["animation", "color", "commit", "duration", "env", "hex", "id", "url", "version"] }
 
 [[bin]]
 name = "fuzz_env_parse"
@@ -49,5 +49,29 @@ doc = false
 [[bin]]
 name = "fuzz_hex_decode"
 path = "fuzz_targets/fuzz_hex_decode.rs"
+test = false
+doc = false
+
+[[bin]]
+name = "fuzz_easing_parse"
+path = "fuzz_targets/fuzz_easing_parse.rs"
+test = false
+doc = false
+
+[[bin]]
+name = "fuzz_uuid_parse"
+path = "fuzz_targets/fuzz_uuid_parse.rs"
+test = false
+doc = false
+
+[[bin]]
+name = "fuzz_ulid_parse"
+path = "fuzz_targets/fuzz_ulid_parse.rs"
+test = false
+doc = false
+
+[[bin]]
+name = "fuzz_rgba_parse"
+path = "fuzz_targets/fuzz_rgba_parse.rs"
 test = false
 doc = false
