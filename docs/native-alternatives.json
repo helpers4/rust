@@ -272,6 +272,14 @@
       "since": null,
       "example": null,
       "notes": "Not in std. helpers4 string::camel_case, snake_case, kebab_case, pascal_case, constant_case."
+    },
+    {
+      "name": "natural sort order (frame 2 before frame 10)",
+      "libraries": ["natord", "alphanumeric-sort"],
+      "native": null,
+      "since": null,
+      "example": null,
+      "notes": "Not in std. helpers4 string::compare_natural compares runs of digits by value."
     }
   ],
   "map": [

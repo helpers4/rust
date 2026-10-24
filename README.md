@@ -67,7 +67,7 @@ One module per category, each behind a Cargo feature of the same name (all enabl
 | [`random`](https://helpers4.dev/rust/modules/random/) | a seedable generator for shuffling and sampling; keys and tokens from the OS (`random-entropy`) |
 | [`secret`](https://helpers4.dev/rust/modules/secret/) | a wrapper that never prints its value, redaction, masking, token detection |
 | [`set`](https://helpers4.dev/rust/modules/set/) | union and intersection of many sets, toggling, sorted output, similarity, power set |
-| [`string`](https://helpers4.dev/rust/modules/string/) | case conversion, slugs, truncation, indentation, whitespace, HTML escaping |
+| [`string`](https://helpers4.dev/rust/modules/string/) | case conversion, slugs, truncation, indentation, whitespace, HTML escaping, glob sets, natural order |
 | [`time`](https://helpers4.dev/rust/modules/time/) | the system clock as unix time, without a silent `0` |
 | [`url`](https://helpers4.dev/rust/modules/url/) | an RFC 3986 parser with reference resolution, percent-encoding, query strings |
 | [`validate`](https://helpers4.dev/rust/modules/validate/) | shape checks: email, UUID, slug |
