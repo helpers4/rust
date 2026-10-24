@@ -44,6 +44,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
+          persist-credentials: false
           fetch-depth: 0
 
       - name: Setup Rust
@@ -87,6 +88,7 @@ jobs:
         if: steps.changed.outputs.skip != 'true' && inputs.base-ref != ''
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
+          persist-credentials: false
           ref: ${{ inputs.base-ref }}
           path: base
 
@@ -95,9 +97,10 @@ jobs:
         continue-on-error: true
         env:
           CARGO_TARGET_DIR: ${{ github.workspace }}/target
+          MODULES: ${{ steps.changed.outputs.modules }}
         run: |
           cd base
-          for m in ${{ steps.changed.outputs.modules }}; do
+          for m in $MODULES; do
             # A module new in this PR has no baseline on the base branch.
             [ -f "benches/$m.rs" ] || continue
             cargo bench --bench "$m" -- $CRITERION_ARGS --save-baseline base
@@ -107,10 +110,13 @@ jobs:
         id: bench
         if: steps.changed.outputs.skip != 'true'
         continue-on-error: true
+        env:
+          MODULES: ${{ steps.changed.outputs.modules }}
+          BASE_REF: ${{ inputs.base-ref }}
         run: |
           : > bench-output.txt
-          for m in ${{ steps.changed.outputs.modules }}; do
-            if [ -n "${{ inputs.base-ref }}" ]; then
+          for m in $MODULES; do
+            if [ -n "$BASE_REF" ]; then
               # Benchmarks with no baseline yet fall back to saving one instead of failing.
               cargo bench --bench "$m" -- $CRITERION_ARGS --baseline-lenient base 2>&1 | tee -a bench-output.txt
             else
