@@ -7,11 +7,13 @@
 mod _words;
 mod camel_case;
 mod capitalize;
+mod compare_natural;
 mod constant_case;
 mod dedent;
 mod escape_html;
 mod escape_regex;
 mod excerpt;
+mod glob_set;
 mod indent;
 mod kebab_case;
 mod levenshtein_distance;
@@ -30,11 +32,13 @@ mod words;
 
 pub use camel_case::camel_case;
 pub use capitalize::capitalize;
+pub use compare_natural::compare_natural;
 pub use constant_case::constant_case;
 pub use dedent::dedent;
 pub use escape_html::escape_html;
 pub use escape_regex::escape_regex;
 pub use excerpt::excerpt;
+pub use glob_set::GlobSet;
 pub use indent::indent;
 pub use kebab_case::kebab_case;
 pub use levenshtein_distance::levenshtein_distance;
