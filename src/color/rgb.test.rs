@@ -227,3 +227,9 @@ fn lightens_and_darkens_towards_white_and_black() {
         Rgb::new(255, 255, 255)
     );
 }
+
+#[test]
+fn to_css_writes_the_space_separated_function() {
+    assert_eq!(Rgb::new(255, 136, 0).to_css(), "rgb(255 136 0)");
+    assert_eq!(Rgb::new(0, 0, 0).to_css(), "rgb(0 0 0)");
+}

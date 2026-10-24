@@ -157,6 +157,25 @@ impl Rgb {
         format!("#{:02x}{:02x}{:02x}", self.r, self.g, self.b)
     }
 
+    /// The CSS form `rgb(r g b)`, in the space-separated syntax every current browser and SVG
+    /// renderer reads.
+    ///
+    /// # Returns
+    ///
+    /// For instance `"rgb(255 136 0)"`.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use helpers4::color::Rgb;
+    ///
+    /// assert_eq!(Rgb::new(255, 136, 0).to_css(), "rgb(255 136 0)");
+    /// ```
+    #[must_use]
+    pub fn to_css(self) -> String {
+        format!("rgb({} {} {})", self.r, self.g, self.b)
+    }
+
     /// The same color as hue, saturation and lightness.
     ///
     /// # Returns

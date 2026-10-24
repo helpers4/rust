@@ -23,7 +23,7 @@
 - cache — in-memory stores with expiry and an injected clock: `ExpiringMap`, `ExpiringSet`
 - ci — CI environments and pipeline status (the environment is a lookup function): `detect`, `is_ci`,
   `is_pull_request`, `Provider`, `Status`, `overall`, `render_report`
-- color — colors: `Rgb` (parse `#rgb`, `#rrggbb`, `rgb()`, names), `Hsl`, `mix`, `contrast_ratio` (WCAG),
+- color — colors: `Rgb` (parse `#rgb`, `#rrggbb`, `rgb()`, names; `to_css`), `Rgba` (alpha: `#rrggbbaa`, `rgb(r g b / a)`), `Hsl`, `mix`, `contrast_ratio` (WCAG),
   `best_text_color`, `ParseColorError`
 - commit — Conventional Commits: `Commit` (parse), `Bump`, `bump_for`, `is_valid`, `emoji_for`,
   `ParseCommitError`
