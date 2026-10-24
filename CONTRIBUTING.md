@@ -286,6 +286,17 @@ test(commit): ✅ cover type characters
 A breaking change uses the real Conventional Commits `BREAKING CHANGE:` footer in its own
 paragraph: the changelog generator only detects that.
 
+## MSRV and `no_std`
+
+- **MSRV** is the `rust-version` in `Cargo.toml` (1.85 today) and the CI tests it. Raising it is a
+  minor change, never a patch: it is announced in the changelog and the release notes, and only
+  done when a language or std feature is worth it. While the crate is `0.0.x`, that means a
+  `0.0.(x+1)` release.
+- **`no_std`** is not supported yet: every module uses `std`. It is deferred until someone needs
+  it and will be decided before 1.0. Nothing prevents it, since modules are independent: the pure
+  ones (`hex`, `version`, `string`, `array`, `color`, `bytes`) could become `no_std + alloc` behind
+  a default `std` feature.
+
 ## Pull requests
 
 - One pull request per piece of work: keep pushing to it rather than opening another.
