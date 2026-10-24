@@ -54,6 +54,7 @@ One module per category, each behind a Cargo feature of the same name (all enabl
 | [`fs`](https://helpers4.dev/rust/modules/fs/) | atomic writes, missing file as `None`, listing a tree, lexical path checks |
 | [`function`](https://helpers4.dev/rust/modules/function/) | composition, memoization, retrying with backoff, a token-bucket rate limiter |
 | [`future`](https://helpers4.dev/rust/modules/future/) | `block_on`, `join`, `join_all` and friends, with no async runtime |
+| [`geometry`](https://helpers4.dev/rust/modules/geometry/) | affine matrices in the CSS/SVG layout, rectangles and hit-testing, `object-fit` placement, polyline simplification |
 | [`hex`](https://helpers4.dev/rust/modules/hex/) | hexadecimal, base64 and base32 encoding/decoding with typed errors |
 | [`http`](https://helpers4.dev/rust/modules/http/) | extracting a bearer token from an `Authorization` header |
 | [`id`](https://helpers4.dev/rust/modules/id/) | UUID v4 and v7, ULID, short ids over an alphabet: time and randomness passed in |

@@ -135,3 +135,33 @@ fn bounding_box_grows_around_a_rotation() {
     assert!(close(b.width, std::f64::consts::SQRT_2));
     assert!(close(b.height, std::f64::consts::SQRT_2));
 }
+
+#[test]
+fn the_constructors_match_the_hand_written_matrices() {
+    assert_eq!(Matrix::translate(10.0, -5.0), translate(10.0, -5.0));
+    assert_eq!(Matrix::scale(2.0, -1.0), scale(2.0, -1.0));
+    let (sin, cos) = 0.7f64.sin_cos();
+    assert_eq!(
+        Matrix::rotate(0.7),
+        Matrix::new(cos, sin, -sin, cos, 0.0, 0.0)
+    );
+}
+
+#[test]
+fn rotate_turns_clockwise_with_y_down() {
+    let p = Matrix::rotate(std::f64::consts::FRAC_PI_2).apply(Point::new(1.0, 0.0));
+    assert!(close(p.x, 0.0) && close(p.y, 1.0));
+}
+
+#[test]
+fn to_css_writes_the_six_entries_in_order_without_negative_zero() {
+    assert_eq!(
+        Matrix::new(2.0, 0.0, 0.0, 2.0, 10.0, -5.0).to_css(),
+        "matrix(2, 0, 0, 2, 10, -5)"
+    );
+    assert_eq!(
+        Matrix::new(0.5, -0.0, -0.0, 0.5, -0.0, 1.25).to_css(),
+        "matrix(0.5, 0, 0, 0.5, 0, 1.25)"
+    );
+    assert_eq!(Matrix::IDENTITY.to_css(), "matrix(1, 0, 0, 1, 0, 0)");
+}

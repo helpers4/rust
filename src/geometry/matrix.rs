@@ -73,6 +73,79 @@ impl Matrix {
         Self { a, b, c, d, e, f }
     }
 
+    /// A translation by `(tx, ty)`.
+    ///
+    /// # Arguments
+    ///
+    /// - `tx` - Horizontal offset.
+    /// - `ty` - Vertical offset.
+    ///
+    /// # Returns
+    ///
+    /// The matrix.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use helpers4::geometry::{Matrix, Point};
+    ///
+    /// assert_eq!(Matrix::translate(10.0, 5.0).apply(Point::new(1.0, 1.0)), Point::new(11.0, 6.0));
+    /// ```
+    #[must_use]
+    pub const fn translate(tx: f64, ty: f64) -> Self {
+        Self::new(1.0, 0.0, 0.0, 1.0, tx, ty)
+    }
+
+    /// A scaling from the origin; pass the same factor twice for a uniform scale, a negative
+    /// factor to flip an axis.
+    ///
+    /// # Arguments
+    ///
+    /// - `sx` - Horizontal factor.
+    /// - `sy` - Vertical factor.
+    ///
+    /// # Returns
+    ///
+    /// The matrix.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use helpers4::geometry::{Matrix, Point};
+    ///
+    /// assert_eq!(Matrix::scale(2.0, 2.0).apply(Point::new(3.0, 4.0)), Point::new(6.0, 8.0));
+    /// assert_eq!(Matrix::scale(1.0, -1.0).apply(Point::new(3.0, 4.0)), Point::new(3.0, -4.0));
+    /// ```
+    #[must_use]
+    pub const fn scale(sx: f64, sy: f64) -> Self {
+        Self::new(sx, 0.0, 0.0, sy, 0.0, 0.0)
+    }
+
+    /// A rotation around the origin. With the y axis pointing down (screens, CSS, SVG), a
+    /// positive angle turns clockwise, like CSS `rotate()`.
+    ///
+    /// # Arguments
+    ///
+    /// - `radians` - The angle, in radians.
+    ///
+    /// # Returns
+    ///
+    /// The matrix.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use helpers4::geometry::{Matrix, Point};
+    ///
+    /// let p = Matrix::rotate(std::f64::consts::FRAC_PI_2).apply(Point::new(1.0, 0.0));
+    /// assert!(p.x.abs() < 1e-12 && (p.y - 1.0).abs() < 1e-12);
+    /// ```
+    #[must_use]
+    pub fn rotate(radians: f64) -> Self {
+        let (sin, cos) = radians.sin_cos();
+        Self::new(cos, sin, -sin, cos, 0.0, 0.0)
+    }
+
     /// Multiplies `self` by `other`, in the mathematical order: `other` applies first, then
     /// `self`, as in a CSS transform list (`transform: self other`).
     ///
@@ -145,6 +218,36 @@ impl Matrix {
         .iter()
         .all(|v| v.is_finite())
         .then_some(inverse)
+    }
+
+    /// The CSS and SVG `transform` value, `matrix(a, b, c, d, e, f)`.
+    ///
+    /// Entries are written as Rust prints them, without rounding (and `0` for `-0`); a
+    /// non-finite entry gives a value CSS rejects.
+    ///
+    /// # Returns
+    ///
+    /// For instance `"matrix(2, 0, 0, 2, 10, -5)"`.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use helpers4::geometry::Matrix;
+    ///
+    /// assert_eq!(Matrix::new(2.0, 0.0, 0.0, 2.0, 10.0, -5.0).to_css(), "matrix(2, 0, 0, 2, 10, -5)");
+    /// ```
+    #[must_use]
+    pub fn to_css(self) -> String {
+        // `+ 0.0` writes 0 instead of -0.
+        format!(
+            "matrix({}, {}, {}, {}, {}, {})",
+            self.a + 0.0,
+            self.b + 0.0,
+            self.c + 0.0,
+            self.d + 0.0,
+            self.e + 0.0,
+            self.f + 0.0
+        )
     }
 
     /// Transforms a point.
