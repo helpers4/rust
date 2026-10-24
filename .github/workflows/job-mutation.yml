@@ -75,7 +75,7 @@ jobs:
         env:
           BASE_REF: ${{ inputs.base-ref }}
           SHARD: ${{ inputs.shard }}
-          MAX_DIFF_LINES: 3000
+          MAX_DIFF_LINES: 500
         run: |
           ARGS="-j2"
           if [ -n "$SHARD" ]; then
