@@ -11,6 +11,9 @@ entry-point workflows that call reusable `job-*.yml` building blocks (`workflow_
 | `compat-full.yml` | weekly, manual | Every combination of up to 3 Cargo features (`cargo hack --feature-powerset --depth 3`), in 8 shards — the PR path only checks pairs (`--depth 2`), see `job-compat.yml` |
 | `scorecard.yml` | weekly, manual | [OpenSSF Scorecard](https://securityscorecards.dev/viewer/?uri=github.com/helpers4/rust) analysis, published (the site shows the score) and uploaded to code scanning |
 | `fuzz.yml` | daily, manual | [cargo-fuzz](https://github.com/rust-fuzz/cargo-fuzz) (`fuzz/`, a detached workspace), 120s per parser target: `commit`, `duration`, `easing`, `env`, `hex`, `rgba`, `ulid`, `url`, `uuid`, `version`; a persistent corpus cache, crash inputs uploaded as an artifact |
+| `zizmor.yml` | `push`/`pull_request` touching workflows, manual | [zizmor](https://docs.zizmor.sh/) static analysis of the workflows (template injection, permissions, persisted credentials), in the Security tab |
+| `dependency-review.yml` | `pull_request` touching dependencies | Fails a PR that adds a dependency with a known vulnerability of moderate severity or more |
+| `osv-scanner.yml` | `push` to `main`, `pull_request`, weekly, manual | [OSV-Scanner](https://google.github.io/osv-scanner/) on `Cargo.lock` and `fuzz/Cargo.lock`, in the Security tab |
 | `release.yml` | manual (`workflow_dispatch`) | Publishes the version in `Cargo.toml` to crates.io, then tags it and creates the GitHub release |
 | `post-release.yml` | `release: published`, manual | Full mutation run on the exact tagged commit, attached to the release (`mutation-dashboard.yml` skips the release-prep commit itself); coverage uploaded to Codecov |
 | `auto-assign.yml` | issues, PRs | Assigns the maintainer |
@@ -24,7 +27,7 @@ entry-point workflows that call reusable `job-*.yml` building blocks (`workflow_
 | `job-compat.yml` | OS (Linux, macOS, Windows) × toolchain (stable, beta, MSRV 1.85); every pair of Cargo features (`cargo hack --depth 2`; up to 3 at a time is `compat-full.yml`); `wasm32-unknown-unknown` and `wasm32-wasip1`; minimal dependency versions (informational) |
 | `job-compat-full.yml` | One shard (`k/n`) of the depth-3 feature powerset for `compat-full.yml` |
 | `job-docs.yml` | `cargo doc` with warnings denied (broken intra-doc links) and every doctest |
-| `job-security.yml` | `cargo deny`: RustSec advisories, yanked crates, licenses, bans, sources |
+| `job-security.yml` | `cargo deny`: RustSec advisories, yanked crates, licenses, bans, sources; also on its own every day, since new advisories appear without any change in the repository |
 | `job-semver.yml` | `cargo-semver-checks` against the published baseline; a change that needs a major bump under strict SemVer requires a `BREAKING CHANGE:` footer in the PR |
 | `job-mutation.yml` | cargo-mutants, informational: only the lines a PR touches (`--in-diff`, skipped above 500 changed implementation lines, which the full run on `main` covers), or one shard of a full run. Configured in `.cargo/mutants.toml` |
 | `job-bench.yml` | criterion, informational: only the benches a PR affects, compared against the base branch measured on the same runner; every bench on `main` |
