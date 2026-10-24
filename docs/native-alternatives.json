@@ -144,6 +144,42 @@
       "since": null,
       "example": null,
       "notes": "Not in std. helpers4 array::cartesian_product covers the two-slice case."
+    },
+    {
+      "name": "compact (drop the empty values)",
+      "libraries": ["lodash", "radashi"],
+      "native": "Iterator::flatten() over Options",
+      "since": "Rust 1.0",
+      "example": "vec![Some(1), None, Some(3)].into_iter().flatten().collect::<Vec<_>>()"
+    },
+    {
+      "name": "range",
+      "libraries": ["lodash", "radashi", "itertools"],
+      "native": "(start..end).step_by(n)",
+      "since": "Rust 1.0 / 1.28 (step_by)",
+      "example": "(0..10).step_by(3).collect::<Vec<_>>()"
+    },
+    {
+      "name": "without (exclude values)",
+      "libraries": ["lodash"],
+      "native": "Vec::retain() / Iterator::filter()",
+      "since": "Rust 1.0",
+      "example": "v.retain(|x| *x != 2)"
+    },
+    {
+      "name": "select (filter and map in one pass)",
+      "libraries": ["radashi"],
+      "native": "Iterator::filter_map()",
+      "since": "Rust 1.0",
+      "example": "xs.iter().filter_map(|x| (x % 2 == 0).then_some(x * 10))"
+    },
+    {
+      "name": "shuffle / sample / choose",
+      "libraries": ["lodash", "rand"],
+      "native": null,
+      "since": null,
+      "example": null,
+      "notes": "Not in std (it has no random numbers). helpers4 random::shuffle, sample and choose take a seedable random::Rng as an argument."
     }
   ],
   "string": [
