@@ -35,6 +35,16 @@ updates:
         patterns: ["*"]
         update-types: ["major"]
 
+  # The ClusterFuzzLite build image, pinned by digest in .clusterfuzzlite/Dockerfile.
+  - package-ecosystem: "docker"
+    directory: "/.clusterfuzzlite"
+    schedule:
+      interval: "weekly"
+    cooldown:
+      default-days: 7
+    labels:
+      - "dependencies"
+
   # No devcontainer.json lives in this repo (the org workspace's is in helpers4/.dev), so this has
   # nothing to update today; kept for parity with helpers4/typescript and in case one is added.
   - package-ecosystem: "devcontainers"
