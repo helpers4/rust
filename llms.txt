@@ -43,6 +43,9 @@
   `decode_to_slice`, `decode_array`, `base64_encode`, `base64_decode`, `Base64DecodeError`,
   `base32_encode`, `base32_decode`, `Base32DecodeError`
 - http — HTTP header value helpers: `bearer_token` (RFC 7235 / 6750)
+- id — unique ids without crates, time and randomness as parameters: `Uuid` (v4, v7), `Ulid`, `Alphabet`,
+  `short_id`, and with `random-entropy` `new_short_id`, `Uuid::new_v4`/`new_v7`, `Ulid::new`; `ParseUuidError`,
+  `ParseUlidError`, `AlphabetError`
 - iter — helpers for any `Iterator`: `chunk`, `min_max`, `first_duplicate`
 - license — SPDX licenses: `lookup`, `normalize`, `Expression` (parse and evaluate `MIT OR Apache-2.0`),
   `Category`, `LicenseInfo`, `header`, `ParseExpressionError`
