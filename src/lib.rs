@@ -63,6 +63,9 @@ pub mod hex;
 #[cfg(feature = "http")]
 pub mod http;
 
+#[cfg(feature = "id")]
+pub mod id;
+
 #[cfg(feature = "iter")]
 pub mod iter;
 

@@ -55,6 +55,7 @@ One module per category, each behind a Cargo feature of the same name (all enabl
 | [`future`](https://helpers4.dev/rust/modules/future/) | `block_on`, `join`, `join_all` and friends, with no async runtime |
 | [`hex`](https://helpers4.dev/rust/modules/hex/) | hexadecimal, base64 and base32 encoding/decoding with typed errors |
 | [`http`](https://helpers4.dev/rust/modules/http/) | extracting a bearer token from an `Authorization` header |
+| [`id`](https://helpers4.dev/rust/modules/id/) | UUID v4 and v7, ULID, short ids over an alphabet: time and randomness passed in |
 | [`iter`](https://helpers4.dev/rust/modules/iter/) | chunking, one-pass min/max, first duplicate: for any `Iterator` |
 | [`license`](https://helpers4.dev/rust/modules/license/) | SPDX identifiers and expressions, `MIT OR Apache-2.0` checked against a policy |
 | [`map`](https://helpers4.dev/rust/modules/map/) | picking, omitting and transforming the entries of a `HashMap` |
@@ -70,7 +71,7 @@ One module per category, each behind a Cargo feature of the same name (all enabl
 | [`validate`](https://helpers4.dev/rust/modules/validate/) | shape checks: email, UUID, slug |
 | [`version`](https://helpers4.dev/rust/modules/version/) | semantic versions, Cargo-style requirements, comparison |
 
-More are planned (random values and identifiers, …): see the [roadmap](https://github.com/orgs/helpers4/projects/1).
+More are planned: see the [roadmap](https://github.com/orgs/helpers4/projects/1).
 
 ## Quick start
 
