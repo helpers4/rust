@@ -9,10 +9,13 @@ No "Since 0.x" annotation is written in the source (see AGENTS.md): it is comput
 API diff between releases, with `cargo public-api` (needs the nightly toolchain: `rustup toolchain
 install nightly`).
 
-Usage, when preparing a release's version-bump PR (after bumping Cargo.toml, alongside
-`git cliff --tag vX.Y.Z -o CHANGELOG.md`):
+Usage, when preparing a release's version-bump PR: first, on a clean working tree (the diff
+checks out the previous tag, so uncommitted changes make it fail), then bump Cargo.toml and run
+`git cliff --tag vX.Y.Z -o CHANGELOG.md`:
 
     python3 scripts/update-api-since.py X.Y.Z
+
+(needs `cargo install cargo-public-api` and the nightly toolchain)
 
 Only new top-level items (`helpers4::<module>::<Name>`, matching what `mod.rs` re-exports) get an
 entry; a changed signature on an existing name keeps its original "since" version, and a method or
