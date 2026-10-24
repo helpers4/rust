@@ -1,0 +1,32 @@
+name: Dependency review
+
+# On a pull request that touches the dependencies, fails if it adds one with a known
+# vulnerability of at least moderate severity. The scheduled advisory audit (cargo-deny, in
+# security-schedule.yml) covers the ones already in the tree.
+
+on:
+  pull_request:
+    paths:
+      - "Cargo.toml"
+      - "Cargo.lock"
+      - "fuzz/Cargo.toml"
+      - "fuzz/Cargo.lock"
+      - ".github/workflows/**"
+
+permissions:
+  contents: read
+
+jobs:
+  review:
+    name: Dependency review
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      - name: Review the dependency changes
+        uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
+        with:
+          fail-on-severity: moderate

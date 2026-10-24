@@ -1,7 +1,13 @@
 name: Job - Security Audit
 
+# Also runs by itself every day: new RustSec advisories, yanked crates and license changes appear
+# without any change in this repository, so the pull request audit alone would only see them on
+# the next pull request.
 on:
   workflow_call:
+  schedule:
+    - cron: "0 5 * * *" # Every day at 05:00 UTC
+  workflow_dispatch:
 
 permissions:
   contents: read
