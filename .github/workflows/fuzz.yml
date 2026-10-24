@@ -20,6 +20,7 @@ jobs:
       fail-fast: false
       matrix:
         target:
+          - fuzz_byte_reader
           - fuzz_commit_parse
           - fuzz_duration_parse
           - fuzz_easing_parse
