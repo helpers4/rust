@@ -218,6 +218,7 @@ name = "helpers4"
 version = "0.0.8"
 dependencies = [
  "criterion",
+ "getrandom 0.4.3",
  "proptest",
  "unicode-normalization",
 ]

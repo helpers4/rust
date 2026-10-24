@@ -81,6 +81,9 @@ pub mod net;
 #[cfg(feature = "number")]
 pub mod number;
 
+#[cfg(feature = "random")]
+pub mod random;
+
 #[cfg(feature = "secret")]
 pub mod secret;
 

@@ -61,6 +61,7 @@ One module per category, each behind a Cargo feature of the same name (all enabl
 | [`markdown`](https://helpers4.dev/rust/modules/markdown/) | escaping, links, code blocks, quotes, tables and heading anchors |
 | [`net`](https://helpers4.dev/rust/modules/net/) | is this IP address public (an SSRF guard), is this a valid hostname |
 | [`number`](https://helpers4.dev/rust/modules/number/) | interpolation, rounding, mean, median, percentages, gcd and lcm |
+| [`random`](https://helpers4.dev/rust/modules/random/) | a seedable generator for shuffling and sampling; keys and tokens from the OS (`random-entropy`) |
 | [`secret`](https://helpers4.dev/rust/modules/secret/) | a wrapper that never prints its value, redaction, masking, token detection |
 | [`set`](https://helpers4.dev/rust/modules/set/) | union and intersection of many sets, toggling, sorted output, similarity, power set |
 | [`string`](https://helpers4.dev/rust/modules/string/) | case conversion, slugs, truncation, indentation, whitespace, HTML escaping |
