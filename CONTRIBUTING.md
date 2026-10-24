@@ -64,6 +64,15 @@ and CI enforces most of them.
   module's feature (see `validate/is_slug.spec.rs`).
 - **Names may repeat across modules** (`set::union_all`, `array::...`); callers import through the
   module path, so pick the plain-English name that fits the module.
+- **Free functions, no extension traits.** A helper is a function called through its module path
+  (`array::chunk(&v, 2)`), never a method added to a std type through a trait: an extension method
+  can start clashing with a future std method (`unstable_name_collisions`) or with `itertools` at
+  the caller. A `prelude` of extension traits is not part of the crate; it would be an opt-in
+  addition if real demand shows up. When a helper has the name of a std or `itertools` method,
+  keep the module path as the disambiguation and say in its rustdoc what it does differently.
+  A policy-laden helper (for example recovering from a poisoned `Mutex`, which can hide a broken
+  invariant) is not added under a short generic name; if it is ever wanted it gets an explicit one
+  and documents the policy.
 
 ## Adding a helper
 
