@@ -170,3 +170,31 @@ fn from_str_is_parse() {
     assert_eq!("#ff880080".parse::<Rgba>(), Ok(Rgba::new(255, 136, 0, 128)));
     assert!("nope".parse::<Rgba>().is_err());
 }
+
+#[test]
+fn from_unit_scales_clamps_and_rounds_the_channels() {
+    assert_eq!(
+        Rgba::from_unit(1.0, 0.5, 0.0, 0.5),
+        Rgba::new(255, 128, 0, 128)
+    );
+    assert_eq!(
+        Rgba::from_unit(2.0, -1.0, 0.2, 1.0),
+        Rgba::new(255, 0, 51, 255)
+    );
+    assert_eq!(
+        Rgba::from_unit(f64::NAN, 0.0, 0.0, f64::NAN),
+        Rgba::new(0, 0, 0, 0)
+    );
+}
+
+#[test]
+fn to_unit_gives_the_channels_as_fractions() {
+    assert_eq!(Rgba::new(255, 51, 0, 255).to_unit(), [1.0, 0.2, 0.0, 1.0]);
+}
+
+#[test]
+fn from_unit_and_to_unit_round_trip() {
+    let color = Rgba::new(12, 200, 99, 7);
+    let [r, g, b, a] = color.to_unit();
+    assert_eq!(Rgba::from_unit(r, g, b, a), color);
+}
