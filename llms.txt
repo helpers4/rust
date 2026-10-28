@@ -21,12 +21,14 @@
   `key_by`, `duplicates`, `interleave`, `cartesian_product`, `toggle`, `toggle_by`, `replace_or_append`
 - bytes — byte slices and sizes: `read_u16`, `read_u32`, `read_u64` (with `Endian`), `ByteReader` (cursor:
   fixed-size values, LEB128 varints, NUL-terminated strings), `zigzag_encode`, `zigzag_decode`, `find`, `xor`,
-  `constant_time_eq`, `format_size`, `parse_size`, `ParseSizeError`
+  `constant_time_eq`, `format_size`, `parse_size`, `ParseSizeError`, `media_type_of` (image type from magic bytes),
+  `media_type_of_path` (type from an extension)
 - cache — in-memory stores with expiry and an injected clock: `ExpiringMap`, `ExpiringSet`
 - ci — CI environments and pipeline status (the environment is a lookup function): `detect`, `is_ci`,
   `is_pull_request`, `Provider`, `Status`, `overall`, `render_report`
-- color — colors: `Rgb` (parse `#rgb`, `#rrggbb`, `rgb()`, names; `to_css`), `Rgba` (alpha: `#rrggbbaa`, `rgb(r g b / a)`), `Hsl`, `mix`, `contrast_ratio` (WCAG),
-  `best_text_color`, `ParseColorError`
+- color — colors: `Rgb` (parse `#rgb`, `#rrggbb`, `rgb()`, names; `to_css`), `Rgba` (alpha: `#rrggbbaa`, `rgb(r g b / a)`), `Hsl`, `Hsb`, `mix`, `blend` (all CSS blend modes, `BlendMode`), `premultiply`,
+  `unpremultiply`, `Rgba::from_unit` / `to_unit` (0-1 float channels), `contrast_ratio` (WCAG), `best_text_color`,
+  `ParseColorError`
 - commit — Conventional Commits: `Commit` (parse), `Bump`, `bump_for`, `is_valid`, `emoji_for`,
   `ParseCommitError`
 - date — calendar dates without time zones: `Date`, `Weekday`, `DateError`, `is_leap_year`,
@@ -34,6 +36,9 @@
 - duration — human-readable durations (`1h30m`): `parse`, `format`, `ParseDurationError`
 - env — dotenv content helpers (pure text, no I/O): `parse`, `get`, `set`, `remove`, `get_bool`,
   `get_int`, `get_list`, `get_duration`
+- font — fonts, no dependency: `pick_closest` (CSS font matching with `FontFace` / `FontRequest`, variable faces cover a weight
+  range), `weight_of_style`, `is_italic`, `split_postscript`, `same_family`, `read_font` (TrueType, OpenType, collection and
+  WOFF files into a `FontInfo`; not WOFF2), `FontError`
 - fs — file-system helpers: `write_atomic`, `read_to_string_opt`, `walk`, `normalize` and `is_within`
   (lexical path checks, no I/O)
 - function — functions: `compose`, `pipe`, `Memoize`, `retry`, `backoff`, `TokenBucket` (rate limiter with an
@@ -41,7 +46,8 @@
 - future — runtime-neutral futures, std only: `block_on`, `now_or_never`, `yield_now`, `join`, `join_all`
 - geometry — 2D geometry in `f64`: `Matrix` (CSS `matrix(a b c d e f)` layout: `translate`, `scale`, `rotate`,
   `multiply`, `invert`, `apply`, `bounding_box`, `to_css`), `Point`, `Size`, `Rect` (`union`, `intersection`,
-  `contains_point`, …), `fit` (CSS `object-fit`, with `FitMode` and `FitAlign`), `simplify_polyline`
+  `contains_point`, …), `Matrix::rect_to_rect`, `fit` (CSS `object-fit`, with `FitMode` and `FitAlign`), `simplify_polyline`, SVG path data:
+  `parse_path` (`PathCommand`), `format_path`, `transform_path`, `rounded_rect_path`, `ellipse_path`, `ParsePathError`
 - hex — byte/text encodings with typed errors: `encode`, `encode_upper`, `decode`,
   `decode_to_slice`, `decode_array`, `base64_encode`, `base64_decode`, `Base64DecodeError`,
   `base32_encode`, `base32_decode`, `Base32DecodeError`
@@ -69,7 +75,7 @@
 - string — string manipulation: `capitalize`, `title_case`, `camel_case`, `pascal_case`,
   `snake_case`, `kebab_case`, `constant_case`, `slugify`, `truncate`, `excerpt`, `squish`,
   `indent`, `dedent`, `escape_html`, `unescape_html`, `escape_regex`, `words`,
-  `levenshtein_distance`, `levenshtein_similarity`, `match_glob`, `GlobSet` (globs with `!` exclusions),
+  `levenshtein_distance`, `levenshtein_similarity`, `match_glob`, `match_glob_ignore_case`, `parse_pattern` (`/source/flags` or glob, `Pattern`), `GlobSet` (globs with `!` exclusions),
   `compare_natural` (`"frame 2"` before `"frame 10"`), and (feature `string-diacritics`, which pulls the optional
   dependency `unicode-normalization`) `remove_diacritics`
 - time — the system clock as unix time: `unix_now`, `unix_now_millis`, `ClockError`

@@ -14,7 +14,7 @@ categories = ["algorithms"]
 include = ["/src/**", "/benches/**", "/Cargo.toml", "/LICENSE", "/README.md", "/SECURITY.md", "/CHANGELOG.md", "/llms.txt"]
 
 [features]
-default = ["animation", "ansi", "array", "bytes", "cache", "ci", "color", "commit", "date", "duration", "env", "fs", "function", "future", "geometry", "hex", "http", "id", "iter", "kiwi", "license", "map", "markdown", "net", "number", "random", "secret", "set", "string", "time", "url", "validate", "version"]
+default = ["animation", "ansi", "array", "bytes", "cache", "ci", "color", "commit", "date", "duration", "env", "font", "fs", "function", "future", "geometry", "hex", "http", "id", "iter", "kiwi", "license", "map", "markdown", "net", "number", "random", "secret", "set", "string", "time", "url", "validate", "version"]
 # One feature per module: `default-features = false, features = ["string"]`
 # compiles only what is used.
 animation = []
@@ -29,6 +29,7 @@ date = []
 duration = []
 env = []
 fs = []
+font = []
 function = []
 future = []
 geometry = []
