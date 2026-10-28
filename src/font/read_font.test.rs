@@ -245,3 +245,29 @@ fn rejects_truncated_files() {
         Err(FontError::Truncated)
     );
 }
+
+#[test]
+fn with_equal_ranks_the_first_record_wins() {
+    let name = name_table(&[windows(1, "First"), windows(1, "Second")]);
+    assert_eq!(read(&[(*b"name", name)]).family, "First");
+}
+
+#[test]
+fn finds_the_weight_axis_wherever_it_is() {
+    let mut first = typical_tables("Inter", "Regular", 400, 0);
+    first.push((
+        *b"fvar",
+        fvar(&[(b"wght", 200.0, 400.0, 800.0), (b"opsz", 8.0, 14.0, 32.0)]),
+    ));
+    assert_eq!(read(&first).weight_range, Some((200.0, 800.0)));
+    let mut third = typical_tables("Inter", "Regular", 400, 0);
+    third.push((
+        *b"fvar",
+        fvar(&[
+            (b"opsz", 8.0, 14.0, 32.0),
+            (b"slnt", -10.0, 0.0, 0.0),
+            (b"wght", 300.0, 400.0, 700.0),
+        ]),
+    ));
+    assert_eq!(read(&third).weight_range, Some((300.0, 700.0)));
+}

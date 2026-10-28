@@ -78,3 +78,7 @@ pub(crate) fn arc_to_cubics(
         })
         .collect()
 }
+
+#[cfg(test)]
+#[path = "_arc_to_cubics.test.rs"]
+mod tests;

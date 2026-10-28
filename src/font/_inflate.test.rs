@@ -286,3 +286,175 @@ fn reads_the_runs_of_zeros_and_repeats_of_a_dynamic_block() {
         Some(text.len())
     );
 }
+
+/// The canonical Huffman codes of a set of code lengths, as `(code, length)` per symbol.
+fn canonical(lengths: &[u32]) -> Vec<(u32, u32)> {
+    let longest = lengths.iter().copied().max().unwrap_or(0);
+    let mut code = 0;
+    let mut out = vec![(0, 0); lengths.len()];
+    for length in 1..=longest {
+        for (symbol, &known) in lengths.iter().enumerate() {
+            if known == length {
+                out[symbol] = (code, length);
+                code += 1;
+            }
+        }
+        code <<= 1;
+    }
+    out
+}
+
+/// One entry of the code lengths of a dynamic block, written with the code length code.
+enum Op {
+    /// A zero length (symbol 0).
+    Zero,
+    /// The nonzero length `value` (its own symbol).
+    Value,
+    /// A run of 11 to 138 zeros (symbol 18).
+    Zeros(u32),
+    /// A run of 3 to 10 zeros (symbol 17).
+    ShortZeros(u32),
+    /// 3 to 6 copies of the previous length (symbol 16).
+    Repeat(u32),
+}
+
+/// A dynamic block header (`hlit` literal codes, `hdist` distance codes), with the lengths
+/// written by `ops` and the nonzero length `value`. The block data follows through `bits`.
+fn dynamic_block(hlit: u32, hdist: u32, value: usize, ops: &[Op]) -> BitWriter {
+    let mut lengths = [0u32; 19];
+    lengths[0] = 2;
+    lengths[value] = 2;
+    lengths[18] = 2;
+    lengths[16] = 3;
+    lengths[17] = 3;
+    let codes = canonical(&lengths);
+    let order = [
+        16usize, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15,
+    ];
+    let used = order
+        .iter()
+        .rposition(|&symbol| lengths[symbol] != 0)
+        .unwrap_or(3)
+        + 1;
+
+    let mut bits = BitWriter::default();
+    bits.put(1, 1)
+        .put(2, 2)
+        .put(hlit - 257, 5)
+        .put(hdist - 1, 5);
+    bits.put(u32::try_from(used).unwrap_or(4) - 4, 4);
+    for &symbol in &order[..used] {
+        bits.put(lengths[symbol], 3);
+    }
+    for op in ops {
+        let (symbol, extra, extra_bits) = match op {
+            Op::Zero => (0, 0, 0),
+            Op::Value => (value, 0, 0),
+            Op::Zeros(n) => (18, n - 11, 7),
+            Op::ShortZeros(n) => (17, n - 3, 3),
+            Op::Repeat(n) => (16, n - 3, 2),
+        };
+        let (code, length) = codes[symbol];
+        bits.code(code, length).put(extra, extra_bits);
+    }
+    bits
+}
+
+/// The ops of a block with the literal codes `0` and `256` and the distance code `0`, each of
+/// length 1, and `hlit` literal and `hdist` distance entries in all.
+fn two_literal_ops(hlit: u32, hdist: u32) -> Vec<Op> {
+    let mut ops = vec![Op::Value, Op::Zeros(138), Op::Zeros(117), Op::Value];
+    if hlit > 257 {
+        ops.push(Op::Zeros(hlit - 257));
+    }
+    ops.push(Op::Value);
+    if hdist > 1 {
+        ops.push(Op::Zeros(hdist - 1));
+    }
+    ops
+}
+
+fn two_literal_block(hlit: u32, hdist: u32) -> Vec<u8> {
+    let mut bits = dynamic_block(hlit, hdist, 1, &two_literal_ops(hlit, hdist));
+    // Literal 0 is the code `0`, the end of block the code `1`.
+    bits.code(0, 1).code(1, 1);
+    bits.zlib()
+}
+
+#[test]
+fn accepts_the_largest_literal_and_distance_counts() {
+    assert_eq!(
+        zlib_decompress(&two_literal_block(286, 30), 1),
+        Some(vec![0])
+    );
+    assert_eq!(
+        zlib_decompress(&two_literal_block(257, 1), 1),
+        Some(vec![0])
+    );
+}
+
+#[test]
+fn rejects_one_literal_or_distance_code_too_many_in_an_otherwise_valid_block() {
+    assert_eq!(zlib_decompress(&two_literal_block(287, 30), 1), None);
+    assert_eq!(zlib_decompress(&two_literal_block(257, 31), 1), None);
+    assert_eq!(zlib_decompress(&two_literal_block(287, 31), 1), None);
+}
+
+#[test]
+fn reads_repeats_of_the_previous_length_and_short_runs_of_zeros() {
+    // Lengths 3 for symbols 0 to 5 (a 3, then 5 copies), 250 zeros, 3 for the end of block, then
+    // a distance code of length 3 and 29 zeros (7 + 22).
+    let ops = [
+        Op::Value,
+        Op::Repeat(5),
+        Op::Zeros(138),
+        Op::Zeros(112),
+        Op::Value,
+        Op::Value,
+        Op::ShortZeros(7),
+        Op::Zeros(22),
+    ];
+    let mut bits = dynamic_block(257, 30, 3, &ops);
+    // Seven codes of length 3: symbols 0 to 5 are `000` to `101`, the end of block is `110`.
+    bits.code(0b101, 3).code(0b010, 3).code(0b110, 3);
+    assert_eq!(zlib_decompress(&bits.zlib(), 2), Some(vec![5, 2]));
+}
+
+#[test]
+fn a_stream_may_end_exactly_on_its_last_bit() {
+    // Six 9-bit literals (144 to 149) between a 3-bit header and a 7-bit end of block: 64 bits.
+    let mut bits = BitWriter::default();
+    bits.put(1, 1).put(1, 2);
+    for literal in 0..6 {
+        bits.code(0x190 + literal, 9);
+    }
+    bits.code(0, 7);
+    assert_eq!(bits.bytes.len(), 8);
+    assert_eq!(
+        zlib_decompress(&bits.zlib(), 6),
+        Some(vec![144, 145, 146, 147, 148, 149])
+    );
+}
+
+#[test]
+fn stored_blocks_count_what_the_earlier_blocks_wrote() {
+    let stream = zlib(&[
+        0x00, 2, 0, 0xfd, 0xff, b'a', b'b', // not the last block
+        0x01, 2, 0, 0xfd, 0xff, b'c', b'd',
+    ]);
+    assert_eq!(zlib_decompress(&stream, 4), Some(b"abcd".to_vec()));
+    assert_eq!(zlib_decompress(&stream, 3), None);
+}
+
+#[test]
+fn each_header_fault_alone_is_enough_to_refuse_a_valid_stream() {
+    let body = [0x01, 1, 0, 0xfe, 0xff, b'x'];
+    let with = |cmf: u8, flg: u8| [&[cmf, flg][..], &body].concat();
+    assert_eq!(zlib_decompress(&with(0x78, 0x01), 1), Some(b"x".to_vec()));
+    // Another compression method, with a header checksum that is right.
+    assert_eq!(zlib_decompress(&with(0x79, 0x18), 1), None);
+    // The right method, with a checksum that is wrong.
+    assert_eq!(zlib_decompress(&with(0x78, 0x00), 1), None);
+    // The right method and checksum, with a preset dictionary.
+    assert_eq!(zlib_decompress(&with(0x78, 0xbb), 1), None);
+}

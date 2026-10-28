@@ -122,3 +122,26 @@ fn handles_a_rotated_ellipse_and_every_direction_of_the_chord() {
         }
     }
 }
+
+#[test]
+fn a_relative_move_starts_from_the_current_point() {
+    assert_eq!(normalized("M1 1 L2 2 m1 3 l1 0"), "M1 1 L2 2 M3 5 L4 5");
+}
+
+#[test]
+fn a_relative_arc_ends_relative_to_the_current_point() {
+    assert_eq!(normalized("M3 4 a0 5 0 0 1 2 6"), "M3 4 L5 10");
+    assert_eq!(normalized("M3 4 a5 0 0 0 1 2 6"), "M3 4 L5 10");
+    let commands = normalize_path(&parse_path("M3 4 a5 5 0 0 1 10 0").unwrap());
+    let last = commands.last().unwrap();
+    assert_eq!((last.values[4], last.values[5]), (13.0, 4.0));
+}
+
+#[test]
+fn smooth_curves_reflect_the_control_point_through_the_current_point() {
+    assert_eq!(
+        normalized("M0 0 C0 1 1 2 3 3 S4 4 5 5"),
+        "M0 0 C0 1 1 2 3 3 C5 4 4 4 5 5"
+    );
+    assert_eq!(normalized("M0 0 Q1 1 3 5 T7 9"), "M0 0 Q1 1 3 5 Q5 9 7 9");
+}

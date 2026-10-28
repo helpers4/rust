@@ -66,3 +66,14 @@ fn round_trips_through_rgb_for_every_gray_and_a_spread_of_colors() {
         assert_eq!(Rgb::new(r, g, b).to_hsb().to_rgb(), Rgb::new(r, g, b));
     }
 }
+
+#[test]
+fn reads_the_hue_when_blue_is_the_strongest_channel() {
+    // (100, 50, 200): hue = 60 * ((100 - 50) / 150 + 4) = 260.
+    let hsb = Rgb::new(100, 50, 200).to_hsb();
+    assert!((hsb.h() - 260.0).abs() < 1e-9);
+    assert!((hsb.s() - 0.75).abs() < 1e-9);
+    assert!((hsb.b() - 200.0 / 255.0).abs() < 1e-9);
+    // And when green is: 60 * ((100 - 50) / 150 + 2) = 140.
+    assert!((Rgb::new(50, 200, 100).to_hsb().h() - 140.0).abs() < 1e-9);
+}

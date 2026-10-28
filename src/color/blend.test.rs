@@ -200,3 +200,157 @@ fn a_mode_that_mixes_channels_is_a_no_op_for_identical_colors() {
 fn the_default_mode_is_normal() {
     assert_eq!(BlendMode::default(), BlendMode::Normal);
 }
+
+#[test]
+fn lighten_and_hard_light_differ_from_normal() {
+    // Backdrop 200, source 10: lighten keeps 200 (normal would give 10).
+    assert_eq!(blend(gray(200), gray(10), BlendMode::Lighten).r(), 200);
+    // Backdrop 200, source 51: hard light multiplies (normal would give 51).
+    assert_eq!(blend(gray(200), gray(51), BlendMode::HardLight).r(), 80);
+}
+
+/// Values worked out apart from this code, from the W3C Compositing and Blending formulas, with
+/// colors that clip at black, at white, at both or at neither.
+#[test]
+fn non_separable_modes_match_the_specification() {
+    let cases = [
+        ((255, 0, 0), (0, 0, 255), BlendMode::Hue, (54, 54, 255)),
+        ((255, 0, 0), (0, 0, 255), BlendMode::Saturation, (255, 0, 0)),
+        ((255, 0, 0), (0, 0, 255), BlendMode::Color, (54, 54, 255)),
+        ((255, 0, 0), (0, 0, 255), BlendMode::Luminosity, (94, 0, 0)),
+        (
+            (240, 140, 40),
+            (30, 150, 160),
+            BlendMode::Hue,
+            (28, 213, 228),
+        ),
+        (
+            (240, 140, 40),
+            (30, 150, 160),
+            BlendMode::Saturation,
+            (212, 147, 82),
+        ),
+        (
+            (240, 140, 40),
+            (30, 150, 160),
+            BlendMode::Color,
+            (74, 194, 204),
+        ),
+        (
+            (240, 140, 40),
+            (30, 150, 160),
+            BlendMode::Luminosity,
+            (193, 97, 0),
+        ),
+        ((20, 200, 40), (250, 30, 60), BlendMode::Hue, (252, 72, 96)),
+        (
+            (20, 200, 40),
+            (250, 30, 60),
+            BlendMode::Saturation,
+            (0, 213, 24),
+        ),
+        (
+            (20, 200, 40),
+            (250, 30, 60),
+            BlendMode::Color,
+            (255, 70, 95),
+        ),
+        (
+            (20, 200, 40),
+            (250, 30, 60),
+            BlendMode::Luminosity,
+            (0, 165, 18),
+        ),
+        (
+            (200, 200, 10),
+            (10, 30, 240),
+            BlendMode::Hue,
+            (165, 172, 255),
+        ),
+        (
+            (200, 200, 10),
+            (10, 30, 240),
+            BlendMode::Saturation,
+            (201, 201, 0),
+        ),
+        (
+            (200, 200, 10),
+            (10, 30, 240),
+            BlendMode::Color,
+            (165, 172, 255),
+        ),
+        (
+            (200, 200, 10),
+            (10, 30, 240),
+            BlendMode::Luminosity,
+            (53, 53, 0),
+        ),
+        (
+            (255, 255, 255),
+            (255, 0, 0),
+            BlendMode::Hue,
+            (255, 255, 255),
+        ),
+        (
+            (255, 255, 255),
+            (255, 0, 0),
+            BlendMode::Saturation,
+            (255, 255, 255),
+        ),
+        (
+            (255, 255, 255),
+            (255, 0, 0),
+            BlendMode::Color,
+            (255, 255, 255),
+        ),
+        (
+            (255, 255, 255),
+            (255, 0, 0),
+            BlendMode::Luminosity,
+            (77, 77, 77),
+        ),
+        ((10, 10, 10), (0, 255, 0), BlendMode::Hue, (10, 10, 10)),
+        (
+            (10, 10, 10),
+            (0, 255, 0),
+            BlendMode::Saturation,
+            (10, 10, 10),
+        ),
+        ((10, 10, 10), (0, 255, 0), BlendMode::Color, (0, 17, 0)),
+        (
+            (10, 10, 10),
+            (0, 255, 0),
+            BlendMode::Luminosity,
+            (150, 150, 150),
+        ),
+        ((250, 250, 20), (5, 5, 200), BlendMode::Hue, (221, 221, 255)),
+        (
+            (250, 250, 20),
+            (5, 5, 200),
+            BlendMode::Saturation,
+            (246, 246, 51),
+        ),
+        (
+            (250, 250, 20),
+            (5, 5, 200),
+            BlendMode::Color,
+            (221, 221, 255),
+        ),
+        (
+            (250, 250, 20),
+            (5, 5, 200),
+            BlendMode::Luminosity,
+            (30, 30, 0),
+        ),
+    ];
+    for ((br, bg, bb), (sr, sg, sb), mode, (r, g, b)) in cases {
+        let out = blend(Rgba::new(br, bg, bb, 255), Rgba::new(sr, sg, sb, 255), mode);
+        assert_eq!(
+            (out.r(), out.g(), out.b()),
+            (r, g, b),
+            "{mode:?} {:?} over {:?}",
+            (sr, sg, sb),
+            (br, bg, bb)
+        );
+    }
+}
