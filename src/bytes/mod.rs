@@ -6,7 +6,8 @@
 //!
 //! Reading integers at an offset without panicking, a [`ByteReader`] cursor for binary formats
 //! (fixed-size values, LEB128 varints, zigzag, NUL-terminated strings), a byte-slice search, a
-//! constant-time comparison, XOR, and human-readable sizes (`1.5 KiB`) in both directions.
+//! constant-time comparison, XOR, human-readable sizes (`1.5 KiB`) in both directions, and the
+//! media type of an image from its first bytes or of a file from its extension.
 
 mod byte_reader;
 mod constant_time_eq;
@@ -14,6 +15,8 @@ mod endian;
 mod error;
 mod find;
 mod format_size;
+mod media_type_of;
+mod media_type_of_path;
 mod parse_size;
 mod read_u16;
 mod read_u32;
@@ -28,6 +31,8 @@ pub use endian::Endian;
 pub use error::ParseSizeError;
 pub use find::find;
 pub use format_size::format_size;
+pub use media_type_of::media_type_of;
+pub use media_type_of_path::media_type_of_path;
 pub use parse_size::parse_size;
 pub use read_u16::read_u16;
 pub use read_u32::read_u32;
