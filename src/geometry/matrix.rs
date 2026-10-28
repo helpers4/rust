@@ -220,6 +220,42 @@ impl Matrix {
         .then_some(inverse)
     }
 
+    /// The translation and scale that put one rectangle exactly on another, for animating or
+    /// fitting between two boxes. An axis where `from` has no extent is only translated (scale
+    /// `1`).
+    ///
+    /// # Arguments
+    ///
+    /// - `from` - The rectangle to move.
+    /// - `to` - The rectangle to reach.
+    ///
+    /// # Returns
+    ///
+    /// The matrix that maps `from` onto `to`.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use helpers4::geometry::{Matrix, Rect};
+    ///
+    /// let m = Matrix::rect_to_rect(Rect::new(0.0, 0.0, 10.0, 10.0), Rect::new(5.0, 5.0, 20.0, 10.0));
+    /// assert_eq!(m, Matrix::new(2.0, 0.0, 0.0, 1.0, 5.0, 5.0));
+    /// ```
+    #[must_use]
+    pub fn rect_to_rect(from: Rect, to: Rect) -> Self {
+        let a = if from.width == 0.0 {
+            1.0
+        } else {
+            to.width / from.width
+        };
+        let d = if from.height == 0.0 {
+            1.0
+        } else {
+            to.height / from.height
+        };
+        Self::new(a, 0.0, 0.0, d, to.x - from.x * a, to.y - from.y * d)
+    }
+
     /// The CSS and SVG `transform` value, `matrix(a, b, c, d, e, f)`.
     ///
     /// Entries are written as Rust prints them, without rounding (and `0` for `-0`); a
