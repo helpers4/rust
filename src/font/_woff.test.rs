@@ -68,3 +68,30 @@ fn rejects_truncated_files() {
         );
     }
 }
+
+#[test]
+fn finds_a_wanted_table_after_other_tables() {
+    let bytes = woff(&[
+        (*b"glyf", vec![9; 4]),
+        (*b"head", vec![5, 6]),
+        (*b"name", vec![1, 2, 3]),
+    ]);
+    let tables = load(&bytes).unwrap();
+    assert_eq!(tables.get(*b"head"), Some(&[5u8, 6][..]));
+    assert_eq!(tables.get(*b"name"), Some(&[1u8, 2, 3][..]));
+}
+
+#[test]
+fn inflates_a_table_of_a_megabyte() {
+    let bytes = woff_with(ZEROS_COMPRESSED, u32::try_from(ZEROS_SIZE).unwrap());
+    let tables = load(&bytes).unwrap();
+    assert_eq!(tables.get(*b"name").map(<[u8]>::len), Some(ZEROS_SIZE));
+}
+
+#[test]
+fn a_table_stored_larger_than_its_size_is_refused_even_if_it_inflates() {
+    // The data is a valid zlib stream of 11 bytes, but the file says the table is 11 bytes long
+    // and stores 22.
+    let bytes = woff_with(STORED, 11);
+    assert_eq!(load(&bytes).err(), Some(FontError::InvalidCompressedData));
+}

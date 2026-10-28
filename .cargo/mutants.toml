@@ -46,6 +46,18 @@ minimum_test_timeout = 60
 # timeout): the loop controls of `resolve_inputs`, `stops_at`, `Rng::below`, `Rng::next_u64` (every
 # `below` redraws for ever when it returns 0), `alphanumeric_with`, `short_id_with`, and
 # `compare_natural` (a `take_number` that consumes nothing).
+#
+# `Hsb::to_rgb` picks a formula per 60 degree sector, like `Hsl::to_rgb`: at the exact boundary
+# both formulas give the same color. `stretch_order` and `weight_order` list the values CSS tries
+# in order and take the first one a face has: `>` or `<` made non-strict only repeats the wanted
+# value in the list. In the font arc conversion, `lambda > 1.0` scales the radii by
+# `sqrt(lambda)`, which is 1 at exactly 1, and `delta` is never exactly 0 (the end points differ).
+# `load` in the WOFF reader tests `stored < size` after `stored == size` was handled, so `<=` is
+# the same test.
+#
+# Mutants that make a loop run forever in the font inflate: the length-run counts of
+# `dynamic_codes` (`3 + bits` as `3 * bits` or `3 - bits` is zero for some streams, and the loop
+# that fills the code lengths then never advances).
 exclude_re = [
   "replace \\| with \\^ in decode_into",
   "replace match guard now >= earliest with true in .*evict_expired",
@@ -71,4 +83,10 @@ exclude_re = [
   "replace < with (==|>) in alphanumeric_with",
   "replace match guard x.is_ascii_digit\\(\\) && y.is_ascii_digit\\(\\) with true in compare_natural",
   "replace take_number -> .* with",
+  "replace < with <= in Hsb::to_rgb",
+  "replace [<>] with [<>]= in (stretch_order|weight_order)",
+  "replace < with <= in load",
+  "replace > with >= in arc_to_cubics",
+  "replace < with <= in arc_to_cubics",
+  "replace \\+ with [-*] in dynamic_codes",
 ]
