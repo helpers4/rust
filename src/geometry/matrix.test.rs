@@ -165,3 +165,30 @@ fn to_css_writes_the_six_entries_in_order_without_negative_zero() {
     );
     assert_eq!(Matrix::IDENTITY.to_css(), "matrix(1, 0, 0, 1, 0, 0)");
 }
+
+#[test]
+fn rect_to_rect_translates_and_scales_one_rectangle_onto_another() {
+    let from = Rect::new(0.0, 0.0, 10.0, 10.0);
+    let to = Rect::new(5.0, 5.0, 20.0, 10.0);
+    let m = Matrix::rect_to_rect(from, to);
+    assert_eq!(m, Matrix::new(2.0, 0.0, 0.0, 1.0, 5.0, 5.0));
+    assert_eq!(m.bounding_box(from), to);
+}
+
+#[test]
+fn rect_to_rect_is_the_identity_from_a_rectangle_to_itself() {
+    let r = Rect::new(3.0, 4.0, 5.0, 6.0);
+    assert_eq!(Matrix::rect_to_rect(r, r), Matrix::IDENTITY);
+}
+
+#[test]
+fn rect_to_rect_only_translates_an_axis_without_extent() {
+    assert_eq!(
+        Matrix::rect_to_rect(Rect::new(1.0, 1.0, 0.0, 2.0), Rect::new(4.0, 3.0, 9.0, 4.0)),
+        Matrix::new(1.0, 0.0, 0.0, 2.0, 3.0, 1.0)
+    );
+    assert_eq!(
+        Matrix::rect_to_rect(Rect::new(1.0, 1.0, 2.0, 0.0), Rect::new(4.0, 3.0, 4.0, 9.0)),
+        Matrix::new(2.0, 0.0, 0.0, 1.0, 2.0, 2.0)
+    );
+}
