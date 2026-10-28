@@ -53,6 +53,9 @@ pub mod duration;
 #[cfg(feature = "env")]
 pub mod env;
 
+#[cfg(feature = "font")]
+pub mod font;
+
 #[cfg(feature = "fs")]
 pub mod fs;
 

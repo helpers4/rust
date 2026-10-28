@@ -43,18 +43,19 @@ One module per category, each behind a Cargo feature of the same name (all enabl
 | [`animation`](https://helpers4.dev/rust/modules/animation/) | CSS easings parsed and evaluated (`cubic-bezier()`, `steps()`, `linear()`), damped springs, `linear()` output |
 | [`ansi`](https://helpers4.dev/rust/modules/ansi/) | stripping and building ANSI escape sequences (colors, styles) |
 | [`array`](https://helpers4.dev/rust/modules/array/) | unique, difference, intersection, grouping, counting, duplicates, interleaving, toggling, upserting |
-| [`bytes`](https://helpers4.dev/rust/modules/bytes/) | integers at an offset, a `ByteReader` cursor (LEB128, zigzag, C strings), byte search, XOR, constant-time comparison, `1.5 KiB` sizes |
+| [`bytes`](https://helpers4.dev/rust/modules/bytes/) | integers at an offset, a `ByteReader` cursor (LEB128, zigzag, C strings), byte search, XOR, constant-time comparison, `1.5 KiB` sizes, media types |
 | [`cache`](https://helpers4.dev/rust/modules/cache/) | maps and sets whose entries expire, with the clock passed in |
 | [`ci`](https://helpers4.dev/rust/modules/ci/) | which CI service is this, is it a pull request, and a Markdown status report |
-| [`color`](https://helpers4.dev/rust/modules/color/) | `#rgb`/`rgb()`/names, alpha, CSS output, HSL, blending and WCAG contrast |
+| [`color`](https://helpers4.dev/rust/modules/color/) | `#rgb`/`rgb()`/names, alpha, CSS output, HSL, HSB, CSS blend modes, premultiplied alpha and WCAG contrast |
 | [`commit`](https://helpers4.dev/rust/modules/commit/) | Conventional Commits: parsing, breaking changes and the version bump they call for |
 | [`date`](https://helpers4.dev/rust/modules/date/) | calendar dates without time zones: ISO 8601, weekdays, day arithmetic |
 | [`duration`](https://helpers4.dev/rust/modules/duration/) | parsing and formatting durations as `1h30m` |
 | [`env`](https://helpers4.dev/rust/modules/env/) | reading and editing `.env` files as text |
+| [`font`](https://helpers4.dev/rust/modules/font/) | CSS font matching, weight and style names, reading a TTF, OTF or WOFF file's names, weight and style |
 | [`fs`](https://helpers4.dev/rust/modules/fs/) | atomic writes, missing file as `None`, listing a tree, lexical path checks |
 | [`function`](https://helpers4.dev/rust/modules/function/) | composition, memoization, retrying with backoff, a token-bucket rate limiter |
 | [`future`](https://helpers4.dev/rust/modules/future/) | `block_on`, `join`, `join_all` and friends, with no async runtime |
-| [`geometry`](https://helpers4.dev/rust/modules/geometry/) | affine matrices in the CSS/SVG layout, rectangles and hit-testing, `object-fit` placement, polyline simplification |
+| [`geometry`](https://helpers4.dev/rust/modules/geometry/) | affine matrices in the CSS/SVG layout, rectangles and hit-testing, `object-fit` placement, polyline simplification, SVG path data |
 | [`hex`](https://helpers4.dev/rust/modules/hex/) | hexadecimal, base64 and base32 encoding/decoding with typed errors |
 | [`http`](https://helpers4.dev/rust/modules/http/) | extracting a bearer token from an `Authorization` header |
 | [`id`](https://helpers4.dev/rust/modules/id/) | UUID v4 and v7, ULID, short ids over an alphabet: time and randomness passed in |
@@ -68,7 +69,7 @@ One module per category, each behind a Cargo feature of the same name (all enabl
 | [`random`](https://helpers4.dev/rust/modules/random/) | a seedable generator for shuffling and sampling; keys and tokens from the OS (`random-entropy`) |
 | [`secret`](https://helpers4.dev/rust/modules/secret/) | a wrapper that never prints its value, redaction, masking, token detection |
 | [`set`](https://helpers4.dev/rust/modules/set/) | union and intersection of many sets, toggling, sorted output, similarity, power set |
-| [`string`](https://helpers4.dev/rust/modules/string/) | case conversion, slugs, truncation, indentation, whitespace, HTML escaping, glob sets, natural order |
+| [`string`](https://helpers4.dev/rust/modules/string/) | case conversion, slugs, truncation, indentation, whitespace, HTML escaping, glob sets, `/regex/` or glob patterns, natural order |
 | [`time`](https://helpers4.dev/rust/modules/time/) | the system clock as unix time, without a silent `0` |
 | [`url`](https://helpers4.dev/rust/modules/url/) | an RFC 3986 parser with reference resolution, percent-encoding, query strings |
 | [`validate`](https://helpers4.dev/rust/modules/validate/) | shape checks: email, UUID, slug |
