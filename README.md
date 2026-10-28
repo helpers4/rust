@@ -59,6 +59,7 @@ One module per category, each behind a Cargo feature of the same name (all enabl
 | [`http`](https://helpers4.dev/rust/modules/http/) | extracting a bearer token from an `Authorization` header |
 | [`id`](https://helpers4.dev/rust/modules/id/) | UUID v4 and v7, ULID, short ids over an alphabet: time and randomness passed in |
 | [`iter`](https://helpers4.dev/rust/modules/iter/) | chunking, one-pass min/max, first duplicate: for any `Iterator` |
+| [`kiwi`](https://helpers4.dev/rust/modules/kiwi/) | decoding of the schema-based Kiwi binary format (Figma `.fig` files) into a dynamic value tree |
 | [`license`](https://helpers4.dev/rust/modules/license/) | SPDX identifiers and expressions, `MIT OR Apache-2.0` checked against a policy |
 | [`map`](https://helpers4.dev/rust/modules/map/) | picking, omitting and transforming the entries of a `HashMap` |
 | [`markdown`](https://helpers4.dev/rust/modules/markdown/) | escaping, links, code blocks, quotes, tables and heading anchors |
