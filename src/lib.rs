@@ -77,6 +77,9 @@ pub mod id;
 #[cfg(feature = "iter")]
 pub mod iter;
 
+#[cfg(feature = "kiwi")]
+pub mod kiwi;
+
 #[cfg(feature = "license")]
 pub mod license;
 
