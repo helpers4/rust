@@ -156,21 +156,19 @@ fn dynamic_codes(bits: &mut Bits<'_>) -> Option<(Huffman, Huffman)> {
     let code_code = Huffman::new(&lengths);
 
     let total = literals + distances;
-    let mut all = vec![0u8; total];
-    let mut index = 0;
-    while index < total {
+    let mut all: Vec<u8> = Vec::with_capacity(total);
+    while all.len() < total {
         let symbol = code_code.decode(bits)?;
         let (value, repeat) = match symbol {
             0..=15 => (symbol as u8, 1),
-            16 => (all[index.checked_sub(1)?], 3 + bits.bits(2)? as usize),
+            16 => (*all.last()?, 3 + bits.bits(2)? as usize),
             17 => (0, 3 + bits.bits(3)? as usize),
             _ => (0, 11 + bits.bits(7)? as usize),
         };
-        if index + repeat > total {
+        if all.len() + repeat > total {
             return None;
         }
-        all[index..index + repeat].fill(value);
-        index += repeat;
+        all.resize(all.len() + repeat, value);
     }
     // Without an end-of-block code the block could never end.
     if all[256] == 0 {

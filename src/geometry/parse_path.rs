@@ -17,18 +17,18 @@ fn arity(letter: char) -> Option<usize> {
     }
 }
 
-fn skip_separators(bytes: &[u8], mut i: usize) -> usize {
-    while i < bytes.len() && (bytes[i].is_ascii_whitespace() || bytes[i] == b',') {
-        i += 1;
-    }
-    i
+fn skip_separators(bytes: &[u8], from: usize) -> usize {
+    from + bytes[from..]
+        .iter()
+        .take_while(|b| b.is_ascii_whitespace() || **b == b',')
+        .count()
 }
 
-fn digits(bytes: &[u8], mut i: usize) -> usize {
-    while i < bytes.len() && bytes[i].is_ascii_digit() {
-        i += 1;
-    }
-    i
+fn digits(bytes: &[u8], from: usize) -> usize {
+    from + bytes[from..]
+        .iter()
+        .take_while(|b| b.is_ascii_digit())
+        .count()
 }
 
 /// Reads a number at `i`, returning it with the offset after it.
