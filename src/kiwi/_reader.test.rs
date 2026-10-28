@@ -57,8 +57,8 @@ fn var_float_reads_kiwi_floats() {
 
 #[test]
 fn string_reads_null_terminated_utf8() {
-    let mut r = Reader::new(b"caf\xc3\xa9\0next\0");
-    assert_eq!(r.string().as_deref(), Ok("café"));
+    let mut r = Reader::new(b"na\xc3\xafve\0next\0");
+    assert_eq!(r.string().as_deref(), Ok("naïve"));
     assert_eq!(r.string().as_deref(), Ok("next"));
 }
 

@@ -117,7 +117,7 @@ fn reads_the_weight_axis_of_a_variable_font() {
     tables.push((
         *b"fvar",
         fvar(&[
-            (b"wdth", 75.0, 100.0, 125.0),
+            (b"opsz", 75.0, 100.0, 125.0),
             (b"wght", 100.0, 400.0, 900.0),
         ]),
     ));
@@ -129,7 +129,7 @@ fn reads_the_weight_axis_of_a_variable_font() {
 #[test]
 fn a_variable_font_without_a_weight_axis_has_no_range() {
     let mut tables = typical_tables("Inter", "Regular", 400, 0);
-    tables.push((*b"fvar", fvar(&[(b"wdth", 75.0, 100.0, 125.0)])));
+    tables.push((*b"fvar", fvar(&[(b"opsz", 75.0, 100.0, 125.0)])));
     assert_eq!(read(&tables).weight_range, None);
     let mut truncated = typical_tables("Inter", "Regular", 400, 0);
     truncated.push((
@@ -162,8 +162,8 @@ fn a_windows_english_record_beats_the_others() {
 
 #[test]
 fn a_macintosh_record_is_decoded_as_ascii() {
-    let name = name_table(&[(1, 0, 0, 1, b"Caf\x8e".to_vec())]);
-    assert_eq!(read(&[(*b"name", name)]).family, "Caf\u{fffd}");
+    let name = name_table(&[(1, 0, 0, 1, b"Bar\x8e".to_vec())]);
+    assert_eq!(read(&[(*b"name", name)]).family, "Bar\u{fffd}");
 }
 
 #[test]
