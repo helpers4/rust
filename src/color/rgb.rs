@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 use super::_named::NAMED;
-use super::{Hsl, ParseColorError};
+use super::{Hsb, Hsl, ParseColorError};
 use std::fmt;
 use std::str::FromStr;
 
@@ -206,6 +206,47 @@ impl Rgb {
             (r - g) / delta + 4.0
         };
         Hsl::new(sector * 60.0, saturation, lightness)
+    }
+
+    /// The same color as hue, saturation and brightness (HSB, also called HSV), the model of
+    /// design tool color pickers.
+    ///
+    /// # Returns
+    ///
+    /// The [`Hsb`] value. Converting it back with [`Hsb::to_rgb`] gives this color again.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use helpers4::color::{Hsb, Rgb};
+    ///
+    /// assert_eq!(Rgb::new(255, 0, 0).to_hsb(), Hsb::new(0.0, 1.0, 1.0));
+    /// assert_eq!(Rgb::new(10, 10, 10).to_hsb().s(), 0.0);
+    /// ```
+    #[must_use]
+    pub fn to_hsb(self) -> Hsb {
+        let (max, min) = (
+            self.r.max(self.g).max(self.b),
+            self.r.min(self.g).min(self.b),
+        );
+        let (r, g, b) = (
+            f64::from(self.r) / 255.0,
+            f64::from(self.g) / 255.0,
+            f64::from(self.b) / 255.0,
+        );
+        let brightness = f64::from(max) / 255.0;
+        let delta = f64::from(max - min) / 255.0;
+        if delta <= 0.0 {
+            return Hsb::new(0.0, 0.0, brightness);
+        }
+        let sector = if max == self.r {
+            ((g - b) / delta).rem_euclid(6.0)
+        } else if max == self.g {
+            (b - r) / delta + 2.0
+        } else {
+            (r - g) / delta + 4.0
+        };
+        Hsb::new(sector * 60.0, delta / brightness, brightness)
     }
 
     /// The WCAG relative luminance: `0.0` for black, `1.0` for white.

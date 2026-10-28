@@ -233,6 +233,61 @@ impl Rgba {
         f64::from(self.a) / 255.0
     }
 
+    /// Builds a color from channels given as floats from `0.0` to `1.0`, the way Figma, Sketch
+    /// and Penpot store them. Each value is clamped to that range (a `NaN` counts as `0.0`) and
+    /// rounded to the nearest 8-bit value.
+    ///
+    /// # Arguments
+    ///
+    /// - `r` - Red, `0.0` to `1.0`.
+    /// - `g` - Green, `0.0` to `1.0`.
+    /// - `b` - Blue, `0.0` to `1.0`.
+    /// - `a` - Alpha, `0.0` (transparent) to `1.0` (opaque).
+    ///
+    /// # Returns
+    ///
+    /// The 8-bit color.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use helpers4::color::Rgba;
+    ///
+    /// let orange = Rgba::from_unit(1.0, 0.5, 0.0, 0.5);
+    /// assert_eq!(orange, Rgba::new(255, 128, 0, 128));
+    /// assert_eq!(orange.to_hex(), "#ff800080");
+    /// ```
+    #[must_use]
+    #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)] // clamped to 0..=255 first
+    pub fn from_unit(r: f64, g: f64, b: f64, a: f64) -> Self {
+        let channel = |value: f64| {
+            if value.is_nan() {
+                0
+            } else {
+                (value.clamp(0.0, 1.0) * 255.0).round() as u8
+            }
+        };
+        Self::new(channel(r), channel(g), channel(b), channel(a))
+    }
+
+    /// The channels as floats from `0.0` to `1.0`, the way Figma, Sketch and Penpot store them.
+    ///
+    /// # Returns
+    ///
+    /// `[r, g, b, a]`.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use helpers4::color::Rgba;
+    ///
+    /// assert_eq!(Rgba::new(255, 51, 0, 255).to_unit(), [1.0, 0.2, 0.0, 1.0]);
+    /// ```
+    #[must_use]
+    pub fn to_unit(self) -> [f64; 4] {
+        [self.r, self.g, self.b, self.a].map(|c| f64::from(c) / 255.0)
+    }
+
     /// The same color without its alpha.
     ///
     /// # Returns
