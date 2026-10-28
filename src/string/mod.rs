@@ -19,6 +19,8 @@ mod kebab_case;
 mod levenshtein_distance;
 mod levenshtein_similarity;
 mod match_glob;
+mod match_glob_ignore_case;
+mod parse_pattern;
 mod pascal_case;
 #[cfg(feature = "string-diacritics")]
 mod remove_diacritics;
@@ -44,6 +46,9 @@ pub use kebab_case::kebab_case;
 pub use levenshtein_distance::levenshtein_distance;
 pub use levenshtein_similarity::levenshtein_similarity;
 pub use match_glob::match_glob;
+pub use match_glob_ignore_case::match_glob_ignore_case;
+pub use parse_pattern::Pattern;
+pub use parse_pattern::parse_pattern;
 pub use pascal_case::pascal_case;
 #[cfg(feature = "string-diacritics")]
 pub use remove_diacritics::remove_diacritics;
