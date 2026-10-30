@@ -212,6 +212,7 @@ fn lighten_and_hard_light_differ_from_normal() {
 /// Values worked out apart from this code, from the W3C Compositing and Blending formulas, with
 /// colors that clip at black, at white, at both or at neither.
 #[test]
+#[allow(clippy::too_many_lines)] // a table of cases
 fn non_separable_modes_match_the_specification() {
     let cases = [
         ((255, 0, 0), (0, 0, 255), BlendMode::Hue, (54, 54, 255)),
