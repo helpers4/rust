@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.10] - 2026-10-30
+
+### 🚀 Features
+- **bytes**: add media_type_of and media_type_of_path
+- **color**: add blend, premultiply, Hsb and unit channels
+- **font**: add CSS font matching and font file reading
+- **geometry**: add SVG path helpers and Matrix::rect_to_rect
+- **kiwi**: add a Kiwi schema and message decoder
+- **string**: add match_glob_ignore_case and parse_pattern
+
+### ♻️ Refactoring
+- **geometry**: write the path scanners without index loops
+
+### 📝 Documentation
+- **agents**: document the MSRV policy and the no_std status
+- **agents**: document the free-functions naming policy
+
+### ✅ Tests
+- **font**: avoid words the spell checker flags
+- **security**: fuzz ByteReader
+- kill the surviving mutants of the new modules
+
+### 📦 Build
+- **deps**: Bump unicode-normalization
+
 ## [0.0.9] - 2026-10-24
 
 ### 🚀 Features
@@ -269,6 +294,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - run the minimal-versions job on nightly despite rust-toolchain.toml
 - split CI into reusable jobs with PR and main validation
 
+[0.0.10]: https://github.com/helpers4/rust/compare/v0.0.9...v0.0.10
 [0.0.9]: https://github.com/helpers4/rust/compare/v0.0.8...v0.0.9
 [0.0.8]: https://github.com/helpers4/rust/compare/v0.0.7...v0.0.8
 [0.0.7]: https://github.com/helpers4/rust/compare/v0.0.6...v0.0.7
