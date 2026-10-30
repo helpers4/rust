@@ -306,8 +306,6 @@ fn canonical(lengths: &[u32]) -> Vec<(u32, u32)> {
 
 /// One entry of the code lengths of a dynamic block, written with the code length code.
 enum Op {
-    /// A zero length (symbol 0).
-    Zero,
     /// The nonzero length `value` (its own symbol).
     Value,
     /// A run of 11 to 138 zeros (symbol 18).
@@ -348,7 +346,6 @@ fn dynamic_block(hlit: u32, hdist: u32, value: usize, ops: &[Op]) -> BitWriter {
     }
     for op in ops {
         let (symbol, extra, extra_bits) = match op {
-            Op::Zero => (0, 0, 0),
             Op::Value => (value, 0, 0),
             Op::Zeros(n) => (18, n - 11, 7),
             Op::ShortZeros(n) => (17, n - 3, 3),

@@ -35,6 +35,7 @@ fn on_ellipse(
 
 /// What the arc from parameter `start` through `sweep_angle` must be, computed from the
 /// parametric ellipse (the standard four-thirds tangent rule per quarter turn at most).
+#[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)] // a small positive count
 fn expected(
     center: (f64, f64),
     radii: (f64, f64),
