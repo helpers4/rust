@@ -47,6 +47,9 @@ minimum_test_timeout = 60
 # `below` redraws for ever when it returns 0), `alphanumeric_with`, `short_id_with`, and
 # `compare_natural` (a `take_number` that consumes nothing).
 #
+# `clip_color` only rescales a channel when the color goes past 0 or 1: at exactly 0 or 1 the
+# rescaling gives the channel back unchanged, so a non-strict comparison is the same color.
+#
 # `Hsb::to_rgb` picks a formula per 60 degree sector, like `Hsl::to_rgb`: at the exact boundary
 # both formulas give the same color. `stretch_order` and `weight_order` list the values CSS tries
 # in order and take the first one a face has: `>` or `<` made non-strict only repeats the wanted
@@ -89,4 +92,5 @@ exclude_re = [
   "replace > with >= in arc_to_cubics",
   "replace < with <= in arc_to_cubics",
   "replace \\+ with [-*] in dynamic_codes",
+  "replace [<>] with [<>]= in clip_color",
 ]

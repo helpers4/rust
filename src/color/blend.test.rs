@@ -355,3 +355,34 @@ fn non_separable_modes_match_the_specification() {
         );
     }
 }
+
+#[test]
+fn black_and_white_survive_the_non_separable_modes() {
+    let white = gray(255);
+    let black = gray(0);
+    for mode in [
+        BlendMode::Hue,
+        BlendMode::Saturation,
+        BlendMode::Color,
+        BlendMode::Luminosity,
+    ] {
+        assert_eq!(blend(white, white, mode), white);
+        assert_eq!(blend(black, black, mode), black);
+    }
+}
+
+#[test]
+fn set_sat_scales_the_channels_above_the_smallest_one() {
+    assert_eq!(set_sat([0.5, 0.75, 1.0], 0.5), [0.0, 0.25, 0.5]);
+    assert_eq!(set_sat([0.5, 0.5, 0.5], 0.5), [0.0; 3]);
+}
+
+#[test]
+fn clip_color_pulls_both_ends_back_in_range() {
+    let low = clip_color([-0.2, 0.2, 0.6]);
+    let high = clip_color([0.4, 0.8, 1.4]);
+    for c in low.into_iter().chain(high) {
+        assert!((-1e-12..=1.0 + 1e-12).contains(&c), "{c}");
+    }
+    assert_eq!(clip_color([0.0, 0.5, 1.0]), [0.0, 0.5, 1.0]);
+}

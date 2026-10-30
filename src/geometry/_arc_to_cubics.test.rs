@@ -154,3 +154,24 @@ fn radii_that_are_too_small_are_scaled_up_to_reach_the_end_point() {
         [5.0, 5.0 * K_QUARTER, 5.0 * K_QUARTER, 5.0, 0.0, 5.0],
     );
 }
+
+#[test]
+fn scaled_radii_keep_their_ratio_and_center_the_ellipse_on_the_chord() {
+    for (rotation, to) in [(0.0, (6.0, 8.0)), (30.0, (10.0, 4.0)), (-70.0, (-3.0, 9.0))] {
+        let radii: (f64, f64) = (2.0, 1.0);
+        let arc = arc_to_cubics((0.0, 0.0), radii, rotation, false, true, to);
+        let (sin, cos) = rotation.to_radians().sin_cos();
+        // The ellipse that just spans the chord: its radii grow by the root of this ratio.
+        let (dx, dy) = (-to.0 / 2.0, -to.1 / 2.0);
+        let (x, y) = (cos * dx + sin * dy, -sin * dx + cos * dy);
+        let scale = (x * x / (radii.0 * radii.0) + y * y / (radii.1 * radii.1)).sqrt();
+        assert!(scale > 1.0);
+        let center = (to.0 / 2.0, to.1 / 2.0);
+        for cubic in &arc {
+            let (px, py) = (cubic.values[4] - center.0, cubic.values[5] - center.1);
+            let (u, v) = (cos * px + sin * py, -sin * px + cos * py);
+            let on = (u / (radii.0 * scale)).powi(2) + (v / (radii.1 * scale)).powi(2);
+            assert!((on - 1.0).abs() < 1e-6, "{rotation}: {on}");
+        }
+    }
+}
