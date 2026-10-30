@@ -455,3 +455,16 @@ fn each_header_fault_alone_is_enough_to_refuse_a_valid_stream() {
     // The right method and checksum, with a preset dictionary.
     assert_eq!(zlib_decompress(&with(0x78, 0xbb), 1), None);
 }
+
+#[test]
+fn a_stored_block_may_not_pass_the_limit_together_with_what_is_already_written() {
+    let block = [2, 0, 0xfd, 0xff, b'c', b'd'];
+    let mut out = vec![b'a', b'b'];
+    assert_eq!(stored(&mut Bits::new(&block), &mut out, 3), None);
+    assert_eq!(out, b"ab");
+    assert_eq!(stored(&mut Bits::new(&block), &mut out, 4), Some(()));
+    assert_eq!(out, b"abcd");
+    // A block that fits alone but not after one byte.
+    let mut one = vec![b'a'];
+    assert_eq!(stored(&mut Bits::new(&block), &mut one, 2), None);
+}
