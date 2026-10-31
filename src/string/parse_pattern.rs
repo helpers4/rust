@@ -33,7 +33,11 @@ pub enum Pattern {
 /// yourself.
 ///
 /// The regular expression is returned as text, since this crate has no regex engine; the source
-/// is not validated.
+/// is not validated. This differs from the TypeScript `parsePatternOrRegExp`, which compiles the
+/// expression and throws a `SyntaxError` when it is invalid or repeats a flag (`/a/ii`): here
+/// both come back as a [`Pattern::RegExp`], and the error appears when you compile it. The flags
+/// are the JavaScript ones; an engine such as the `regex` crate knows only some of them (`i`,
+/// `m`, `s`, `u`), so write rules with those to read the same on both sides.
 ///
 /// # Arguments
 ///
