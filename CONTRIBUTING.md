@@ -21,8 +21,9 @@ Open the organization workspace in VS Code and *Reopen in Container*. It ships t
 - The tools CI uses, all installable with `cargo install --locked <name>`:
   `cargo-llvm-cov`, `cargo-hack`, `cargo-mutants`, `cargo-deny`, `cargo-machete`, `typos-cli`,
   `cargo-semver-checks`
-- `git-cliff` and `cargo-public-api` (needs the nightly toolchain: `rustup toolchain install
-  nightly`) if you prepare a release (see [Releasing](.github/workflows/README.md#releasing))
+- `cargo-public-api` (needs the nightly toolchain: `rustup toolchain install nightly`) if you want
+  to preview `api-since.json` (the release records it, see
+  [Releasing](.github/workflows/README.md#releasing))
 - `cargo-fuzz` (also nightly) if you touch a parser and want to fuzz it locally: `fuzz/` is a
   detached workspace, see [Fuzzing](#fuzzing)
 

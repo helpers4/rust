@@ -15,7 +15,7 @@ entry-point workflows that call reusable `job-*.yml` building blocks (`workflow_
 | `clusterfuzzlite.yml` | `pull_request` (code paths), weekly, manual | The same fuzz targets through [ClusterFuzzLite](https://google.github.io/clusterfuzzlite/) (`.clusterfuzzlite/`): 2 minutes on a PR, 10 weekly; what OpenSSF Scorecard's Fuzzing check looks for |
 | `dependency-review.yml` | `pull_request` touching dependencies | Fails a PR that adds a dependency with a known vulnerability of moderate severity or more |
 | `osv-scanner.yml` | `push` to `main`, `pull_request`, weekly, manual | [OSV-Scanner](https://google.github.io/osv-scanner/) on `Cargo.lock` and `fuzz/Cargo.lock`, in the Security tab |
-| `release.yml` | manual (`workflow_dispatch`) | Publishes the version in `Cargo.toml` to crates.io, then tags it and creates the GitHub release |
+| `release.yml` | manual (`workflow_dispatch`) | After the gates, [helpers4/action-release](https://github.com/helpers4/action-release) computes the version, commits it to `main`, publishes to crates.io, tags it and creates the GitHub release; then the crate is attested and the SBOM attached |
 | `post-release.yml` | `release: published`, manual | Full mutation run on the exact tagged commit, attached to the release (`mutation-dashboard.yml` skips the release-prep commit itself); coverage uploaded to Codecov |
 | `auto-assign.yml` | issues, PRs | Assigns the maintainer |
 
@@ -48,28 +48,28 @@ rejects any other scope.
 
 ## Releasing
 
-A release is a normal PR followed by one manual workflow run.
+A release is one manual workflow run; there is no version-bump PR.
 
-1. **Prepare**: a PR `chore(release): 🔖 X.Y.Z` that bumps `version` in `Cargo.toml` (and
-   `Cargo.lock`), adds the changelog section (`git cliff --tag vX.Y.Z -o CHANGELOG.md`), and
-   updates `api-since.json` for any helper added this round (`python3 scripts/update-api-since.py
-   X.Y.Z`, needs the nightly toolchain: `rustup toolchain install nightly`, and
-   `cargo install cargo-public-api`). Merge it. Order matters: run `update-api-since.py` first, on
-   a clean working tree (`cargo public-api diff` checks out the previous tag, so uncommitted
-   changes make it fail), then bump `Cargo.toml` and write the changelog. `git cliff` rewrites
-   older sections when a commit lands after their tag: keep only the new section and its compare
-   link.
-2. **Run** *Actions → Release → Run workflow* on `main` (tick `dry-run` first if in doubt). The workflow
-   checks the version and its changelog section (and stops early, saying so, if the version is
-   already tagged but `src/` or `Cargo.toml` changed since: bump the version first), re-runs lint, tests, compatibility, docs and
-   security on that exact commit, confirms every public item has an `api-since.json` entry, then
-   (in the `crates-io` environment) publishes, waits until
-   crates.io serves the version, attests the `.crate` (SLSA provenance), and creates the tag and
-   the GitHub release from the changelog, with the `.crate`, its Sigstore bundle
-   (`helpers4-X.Y.Z.crate.sigstore.json`) and a CycloneDX SBOM (`helpers4-X.Y.Z.cdx.json`)
-   attached. It never commits.
-3. **Resume**: if a run published but failed afterwards, run it again. It detects that the version
-   is already on crates.io and only finishes the tag and the release.
+1. **Write the summary** (optional): a short human summary of the release under `## [Unreleased]`
+   in `CHANGELOG.md`, in a normal PR. It leads the section of the version and the release notes,
+   above the list generated from the commits.
+2. **Run** *Actions → Release → Run workflow* on `main`: `bump` is `auto` (from the Conventional
+   Commits; before 1.0.0 a `feat` is a patch and a breaking change a minor) or a forced level.
+   Tick `dry-run` first if in doubt: it does everything but write, and the job summary tells the
+   version, what each check found, the files that would change and the release notes. The workflow
+   re-runs lint, tests, compatibility, docs and security on that exact commit, then (in the
+   `crates-io` environment):
+   - records the public items added since the last tag as `"next"` in `api-since.json`
+     (`scripts/update-api-since.py next`, `cargo public-api` on the nightly toolchain) and checks
+     that every public item has an entry;
+   - [helpers4/action-release](https://github.com/helpers4/action-release) writes the version in
+     `Cargo.toml` and `Cargo.lock`, replaces `"next"` by it, adds the section to `CHANGELOG.md`,
+     dry-runs `cargo publish`, pushes the signed release commit to `main` (`helpers4-bot`, a bypass
+     actor of the `main` ruleset), tags it, publishes to crates.io and publishes the GitHub release;
+   - attests the `.crate` (SLSA provenance) and attaches it to the release with its Sigstore
+     bundle (`helpers4-X.Y.Z.crate.sigstore.json`) and a CycloneDX SBOM (`helpers4-X.Y.Z.cdx.json`).
+3. **Resume**: if a run failed after the release commit, run it again (or `bump: resume`). Only
+   what crates.io does not serve yet is published, then the release.
 
 ### Authentication
 

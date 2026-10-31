@@ -159,10 +159,10 @@ def check_examples(mods: list[str]) -> list[str]:
 
 def check_api_since(mods: list[str]) -> list[str]:
     """Every exported item has an `api-since.json` entry. `api-since.json` only gains entries
-    when someone runs `update-api-since.py <version>` while preparing a release (the version a
-    helper ships in is not known before then), so this is **not** part of the default checks that
-    run on every PR — job-lint.yml would fail for the ordinary PR that adds a helper. It runs only
-    at release time, from `release.yml`, right before publishing (`--api-since` flag)."""
+    when `update-api-since.py next` runs, in `release.yml` (the version a helper ships in is not
+    known before then; the release replaces "next" by it), so this is **not** part of the default
+    checks that run on every PR — job-lint.yml would fail for the ordinary PR that adds a helper.
+    It runs only at release time, from `release.yml`, right before the release (`--api-since`)."""
     api_since_path = ROOT / "api-since.json"
     if not api_since_path.is_file():
         return ["api-since.json: file does not exist"]
@@ -173,7 +173,7 @@ def check_api_since(mods: list[str]) -> list[str]:
             if f"{module}::{name}" not in api_since:
                 failures.append(
                     f"api-since.json: no entry for `{module}::{name}` — "
-                    f"run `python3 scripts/update-api-since.py <version>` while preparing the release"
+                    f"run `python3 scripts/update-api-since.py next`"
                 )
     return failures
 
