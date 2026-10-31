@@ -10,7 +10,7 @@ use super::ParseUuidError;
 /// A UUID (RFC 9562): 128 bits, written `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`.
 ///
 /// Two kinds can be built here, from randomness and time **you pass in** (see
-/// [`new_v4`](Self::new_v4) and [`new_v7`](Self::new_v7), with the `random-entropy` feature, to
+/// `new_v4` and `new_v7`, with the `random-entropy` feature, to
 /// take them from the system):
 ///
 /// - [`v4`](Self::v4): 122 random bits, the general-purpose unique id;
@@ -87,7 +87,7 @@ impl Uuid {
     /// # Arguments
     ///
     /// - `random` - Random bytes, from a secure source for an id that must be unpredictable
-    ///   (see [`random_bytes`](crate::random::random_bytes)).
+    ///   (see `random_bytes`).
     ///
     /// # Returns
     ///

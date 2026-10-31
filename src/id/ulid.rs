@@ -14,7 +14,7 @@ const SYMBOLS: &[u8; 32] = b"0123456789ABCDEFGHJKMNPQRSTVWXYZ";
 ///
 /// Ulids sort by creation time, both as numbers and as text, and are shorter than a UUID. Time
 /// and randomness are **parameters** of [`from_parts`](Self::from_parts); with the
-/// `random-entropy` feature, [`new`](Self::new) takes them from the system. Ids made in the
+/// `random-entropy` feature, `new` takes them from the system. Ids made in the
 /// same millisecond are not ordered among themselves (there is no monotonic counter).
 ///
 /// # Examples

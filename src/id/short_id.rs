@@ -10,7 +10,7 @@ use crate::random::Rng;
 ///
 /// The same generator state always gives the same id, which makes it right for tests and
 /// reproducible fixtures, and **wrong for anything secret** (a 64-bit seed can be guessed): use
-/// [`new_short_id`](super::new_short_id) (feature `random-entropy`) for tokens.
+/// `new_short_id` (feature `random-entropy`) for tokens.
 ///
 /// # Arguments
 ///
