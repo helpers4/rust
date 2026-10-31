@@ -10,8 +10,8 @@
 //!
 //! Keys, tokens and anything an attacker must not predict come from the operating system, with
 //! the `random-entropy` feature (not in `default`, it pulls the `getrandom` crate):
-//! [`random_bytes`], [`random_hex`], [`random_alphanumeric`] and [`Rng::from_entropy`]. They
-//! return an [`EntropyError`] when the system cannot provide bytes, and never fall back to
+//! `random_bytes`, `random_hex`, `random_alphanumeric` and `Rng::from_entropy`. They
+//! return an `EntropyError` when the system cannot provide bytes, and never fall back to
 //! weaker randomness. They are not built for `wasm32-unknown-unknown`, which has no default
 //! entropy source: pass bytes from the host (`crypto.getRandomValues`) to the pure constructors
 //! of the `id` module instead.
