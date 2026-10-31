@@ -130,7 +130,7 @@ jobs:
 
       - name: Release
         id: release
-        uses: helpers4/action-release@v0
+        uses: helpers4/action-release@ff5478af5ec4d768ad896e8539a42cb2bed15803 # v0.4.4
         with:
           bump: ${{ inputs.bump }}
           dry-run: ${{ inputs.dry-run }}
