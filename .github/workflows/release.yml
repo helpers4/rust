@@ -1,11 +1,18 @@
 name: Release
 
-# Publishes the version that is in Cargo.toml on `main` to crates.io, then tags it and creates
-# the GitHub release. The version bump itself goes through a normal PR (`chore(release): 🔖 X.Y.Z`,
-# CHANGELOG.md generated with `git cliff --tag vX.Y.Z`), so this workflow never commits.
+# Releases helpers4 with helpers4/action-release: from `main`, after the same gates as a pull
+# request, it computes the version from the Conventional Commits, writes it in Cargo.toml and
+# Cargo.lock, adds the section of the version to CHANGELOG.md (a human summary written under
+# `## [Unreleased]` leads it), dry-runs `cargo publish`, pushes the signed release commit to `main`
+# (as helpers4-bot, which bypasses the ruleset), tags it, publishes to crates.io with trusted
+# publishing and publishes the GitHub release. The steps after the action attest the packaged
+# crate and attach the signature and the SBOM to that release.
 #
-# Resumable: if a run published to crates.io but failed afterwards (tag, release), run it again —
-# it sees the version is already on crates.io and only finishes the remaining steps.
+# api-since.json: `scripts/update-api-since.py next` records the items added since the last tag as
+# "next" (cargo public-api, nightly), and the action replaces "next" by the version.
+#
+# Resumable: if a run failed after the release commit, run it again (or `bump: resume`): the action
+# publishes only what crates.io does not serve yet, and the steps below finish the release.
 #
 # Authentication is crates.io trusted publishing: a short-lived token minted from the GitHub OIDC
 # identity of this run, so no secret is stored. The Trusted Publisher is configured on crates.io
@@ -14,6 +21,11 @@ name: Release
 on:
   workflow_dispatch:
     inputs:
+      bump:
+        description: "bump"
+        type: choice
+        default: auto
+        options: [auto, patch, minor, major, alpha, beta, rc, resume]
       dry-run:
         description: "dry-run"
         type: boolean
@@ -33,74 +45,17 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    outputs:
-      version: ${{ steps.meta.outputs.version }}
-      published: ${{ steps.published.outputs.published }}
-      tagged: ${{ steps.tagged.outputs.tagged }}
     steps:
       - name: Repository and branch guard
+        env:
+          DRY_RUN: ${{ inputs.dry-run }}
         run: |
           if [ "$GITHUB_REPOSITORY" != "helpers4/rust" ]; then
             echo "::error::Releases only run from helpers4/rust (this is $GITHUB_REPOSITORY)."
             exit 1
           fi
-          if [ "${{ inputs.dry-run }}" != "true" ] && [ "$GITHUB_REF" != "refs/heads/main" ]; then
+          if [ "$DRY_RUN" != "true" ] && [ "$GITHUB_REF" != "refs/heads/main" ]; then
             echo "::error::A real release only runs from main (this is $GITHUB_REF). Use dry-run elsewhere."
-            exit 1
-          fi
-
-      - name: Checkout code
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        with:
-          persist-credentials: false
-          fetch-depth: 0
-
-      - name: Read the version
-        id: meta
-        run: |
-          VERSION=$(sed -nE '0,/^version = "([^"]+)"/s//\1/p' Cargo.toml)
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-          echo "Releasing $VERSION"
-          # The release notes come from CHANGELOG.md: refuse to release without them.
-          if ! grep -q "^## \[$VERSION\]" CHANGELOG.md; then
-            echo "::error::CHANGELOG.md has no '## [$VERSION]' section. Generate it: git cliff --tag v$VERSION -o CHANGELOG.md"
-            exit 1
-          fi
-
-      - name: Already on crates.io?
-        id: published
-        run: |
-          CODE=$(curl -s -o /dev/null -w '%{http_code}' -H 'User-Agent: helpers4-release' \
-            "https://crates.io/api/v1/crates/helpers4/${{ steps.meta.outputs.version }}")
-          if [ "$CODE" = "200" ]; then
-            echo "published=true" >> "$GITHUB_OUTPUT"
-            echo "helpers4 ${{ steps.meta.outputs.version }} is already on crates.io: only tag and release remain."
-          else
-            echo "published=false" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Already tagged?
-        id: tagged
-        run: |
-          if git ls-remote --exit-code --tags origin "refs/tags/v${{ steps.meta.outputs.version }}" >/dev/null 2>&1; then
-            echo "tagged=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "tagged=false" >> "$GITHUB_OUTPUT"
-          fi
-
-      # A tagged version is final: code that changed since its tag needs a new version, i.e. a
-      # `chore(release): 🔖 X.Y.Z` pull request merged first. Without this check the run goes on
-      # until the api-since.json check fails, without saying what is missing.
-      - name: Source changed since the tag of this version?
-        if: steps.tagged.outputs.tagged == 'true'
-        env:
-          VERSION: ${{ steps.meta.outputs.version }}
-        run: |
-          TAG="v$VERSION"
-          CHANGED=$(git diff --name-only "$TAG" HEAD -- src Cargo.toml | tr '\n' ' ')
-          if [ -n "$CHANGED" ]; then
-            echo "::error::Version $VERSION is already tagged ($TAG), but these changed since: $CHANGED"
-            echo "::error::Bump the version first: a 'chore(release): 🔖 X.Y.Z' pull request (Cargo.toml, CHANGELOG.md, api-since.json), merged before running Release."
             exit 1
           fi
 
@@ -125,22 +80,29 @@ jobs:
     needs: guard
     uses: ./.github/workflows/job-security.yml
 
-  publish:
+  release:
     needs: [guard, lint, tests, compat, docs, security]
     runs-on: ubuntu-latest
     # The name must match the Trusted Publisher configured on crates.io. It can also carry required
     # reviewers (repository Settings -> Environments) so nothing is published without an approval.
     environment: crates-io
     permissions:
-      contents: write # tag + GitHub release
+      contents: write # the release commit, the tag, the GitHub release
       id-token: write # trusted publishing and build provenance
       attestations: write
+    outputs:
+      version: ${{ steps.release.outputs.version }}
     steps:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
           fetch-depth: 0
+
+      - name: Setup Node (runs the release action)
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
 
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@6bed0761d98439e5a578e2877258200ad565ba87
@@ -150,46 +112,36 @@ jobs:
       - name: Cache
         uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0
 
-      # Catches a release-prep PR that bumped the version but forgot
-      # `python3 scripts/update-api-since.py X.Y.Z` for a helper added this round.
+      - name: Install cargo-public-api
+        uses: taiki-e/install-action@a4d3f3f761dcd95cce1b72cb61cb6d1963438177
+        with:
+          tool: cargo-public-api
+
+      - name: Install the nightly toolchain (rustdoc JSON)
+        run: rustup toolchain install nightly --profile minimal
+
+      # The items added since the last tag get "next" in api-since.json; the release replaces it by
+      # the version. On a clean tree: `cargo public-api diff` checks out the previous tag.
+      - name: Record the new public items in api-since.json
+        run: python3 scripts/update-api-since.py next
+
       - name: Every public item has an api-since.json entry
         run: python3 scripts/coherency.py --api-since
 
-      - name: Package
-        run: |
-          cargo package --locked
-          ls -l target/package/*.crate
+      - name: Release
+        id: release
+        uses: helpers4/action-release@v0
+        with:
+          bump: ${{ inputs.bump }}
+          dry-run: ${{ inputs.dry-run }}
+          since-json: api-since.json
+          app-id: ${{ vars.HELPERS4_BOT_ID }}
+          app-key: ${{ secrets.HELPERS4_BOT_KEY }}
 
-      - name: Verify the publication (dry run)
-        if: inputs.dry-run
-        run: cargo publish --dry-run --locked
-
-      - name: Authenticate to crates.io (trusted publishing)
-        id: auth
-        if: ${{ !inputs.dry-run && needs.guard.outputs.published != 'true' }}
-        uses: rust-lang/crates-io-auth-action@3268eb413133e2960fa4ae0e963ca76380c54cd9
-
-      - name: Publish to crates.io
-        if: ${{ !inputs.dry-run && needs.guard.outputs.published != 'true' }}
-        env:
-          CARGO_REGISTRY_TOKEN: ${{ steps.auth.outputs.token }}
-        run: cargo publish --locked
-
-      - name: Wait for crates.io to serve the new version
-        if: ${{ !inputs.dry-run }}
-        run: |
-          for i in $(seq 1 30); do
-            CODE=$(curl -s -o /dev/null -w '%{http_code}' -H 'User-Agent: helpers4-release' \
-              "https://crates.io/api/v1/crates/helpers4/${{ needs.guard.outputs.version }}")
-            [ "$CODE" = "200" ] && { echo "Visible on crates.io."; exit 0; }
-            sleep 10
-          done
-          echo "::error::helpers4 ${{ needs.guard.outputs.version }} is not visible on crates.io after 5 minutes."
-          exit 1
-
+      # `cargo publish` leaves the packaged crate in target/package.
       - name: Attest the packaged crate
         id: attest
-        if: ${{ !inputs.dry-run }}
+        if: ${{ !inputs.dry-run && hashFiles('target/package/*.crate') != '' }}
         uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
         with:
           subject-path: target/package/*.crate
@@ -199,14 +151,16 @@ jobs:
       # Scorecard's Signed-Releases check) can see. Verify with:
       #   gh attestation verify helpers4-X.Y.Z.crate --repo helpers4/rust
       - name: Keep the signature bundle next to the crate
-        if: ${{ !inputs.dry-run }}
+        if: ${{ steps.attest.outcome == 'success' }}
+        env:
+          VERSION: ${{ steps.release.outputs.version }}
+          BUNDLE: ${{ steps.attest.outputs.bundle-path }}
         run: |
-          cp "${{ steps.attest.outputs.bundle-path }}" \
-            "target/package/helpers4-${{ needs.guard.outputs.version }}.crate.sigstore.json"
+          cp "$BUNDLE" "target/package/helpers4-$VERSION.crate.sigstore.json"
           ls -l target/package/
 
       - name: Install cargo-cyclonedx
-        if: ${{ !inputs.dry-run }}
+        if: ${{ steps.attest.outcome == 'success' }}
         uses: taiki-e/install-action@a4d3f3f761dcd95cce1b72cb61cb6d1963438177
         with:
           tool: cargo-cyclonedx
@@ -215,68 +169,31 @@ jobs:
       # it is the machine-readable proof of that, and it will actually list something once a
       # module with an optional dependency is enabled at build time.
       - name: Generate the SBOM (CycloneDX)
-        if: ${{ !inputs.dry-run }}
+        if: ${{ steps.attest.outcome == 'success' }}
+        env:
+          VERSION: ${{ steps.release.outputs.version }}
         run: |
-          cargo cyclonedx --format json --all-features \
-            --override-filename "helpers4-${{ needs.guard.outputs.version }}.cdx"
-          mv "helpers4-${{ needs.guard.outputs.version }}.cdx.json" target/package/
+          cargo cyclonedx --format json --all-features --override-filename "helpers4-$VERSION.cdx"
+          mv "helpers4-$VERSION.cdx.json" target/package/
 
-      - name: Extract the release notes
-        if: ${{ !inputs.dry-run }}
-        run: |
-          awk -v v="${{ needs.guard.outputs.version }}" '
-            $0 ~ "^## \\[" v "\\]" { on=1; next }
-            on && /^## \[/ { exit }
-            on { print }
-          ' CHANGELOG.md > release-notes.md
-          test -s release-notes.md
-
-      # `gh release create --target` creates the tag on the exact commit that was tested.
-      - name: Create the tag and the GitHub release
-        if: ${{ !inputs.dry-run && needs.guard.outputs.tagged != 'true' }}
+      - name: Attach the crate, its signature and the SBOM to the release
+        if: ${{ steps.attest.outcome == 'success' }}
         env:
           GH_TOKEN: ${{ github.token }}
-        run: |
-          gh release create "v${{ needs.guard.outputs.version }}" \
-            --target "$GITHUB_SHA" \
-            --title "v${{ needs.guard.outputs.version }}" \
-            --notes-file release-notes.md \
-            target/package/*.crate \
-            target/package/*.sigstore.json \
-            target/package/*.cdx.json
-
-      # Resuming a release whose tag exists already: make sure the signature and SBOM are on it too.
-      - name: Attach the signature and SBOM to the existing release
-        if: ${{ !inputs.dry-run && needs.guard.outputs.tagged == 'true' }}
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          gh release upload "v${{ needs.guard.outputs.version }}" \
-            target/package/*.sigstore.json target/package/*.cdx.json --clobber
-
-      - name: Summary
-        run: |
-          {
-            echo "### helpers4 ${{ needs.guard.outputs.version }}"
-            if [ "${{ inputs.dry-run }}" = "true" ]; then
-              echo "Dry run: nothing was published, tagged or released."
-            else
-              echo "Published to crates.io: https://crates.io/crates/helpers4/${{ needs.guard.outputs.version }}"
-              echo "Release: https://github.com/${{ github.repository }}/releases/tag/v${{ needs.guard.outputs.version }}"
-            fi
-          } >> "$GITHUB_STEP_SUMMARY"
+          TAG: ${{ steps.release.outputs.tag }}
+        run: gh release upload "$TAG" target/package/*.crate target/package/*.sigstore.json target/package/*.cdx.json --clobber
 
   # Tells the website to regenerate its Rust docs from this release's tag (helpers4/website,
   # on-rust-release.yml checks the tag out and reads it). Best-effort: a failure here never fails
   # the release; run "On Rust Release" on the website by hand with the version instead. It needs the
   # tag, so it runs once `publish` (which creates it) is done.
   trigger-website-docs:
-    needs: [guard, publish]
+    needs: release
     if: ${{ !inputs.dry-run }}
     runs-on: ubuntu-latest
     continue-on-error: true
     concurrency:
-      group: trigger-website-docs-${{ needs.guard.outputs.version }}
+      group: trigger-website-docs-${{ needs.release.outputs.version }}
       cancel-in-progress: false
     steps:
       - name: Trigger the website docs update
@@ -285,7 +202,7 @@ jobs:
           target-owner: helpers4
           target-repo: website
           event-type: rust-release
-          payload: '{"version": "${{ needs.guard.outputs.version }}"}'
+          payload: '{"version": "${{ needs.release.outputs.version }}"}'
           app-id: ${{ vars.TRIGGANATOR_ID }}
           app-private-key: ${{ secrets.TRIGGANATOR_KEY }}
           fallback-app-id: ${{ vars.PUSHINATOR_ID }}
