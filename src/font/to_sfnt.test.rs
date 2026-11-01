@@ -135,3 +135,11 @@ fn refuses_tables_that_add_up_to_more_than_the_limit() {
         Some(FontError::InvalidCompressedData)
     );
 }
+
+#[test]
+fn rebuilds_a_woff_with_a_table_of_a_megabyte() {
+    let mut bytes = woff(&[(*b"name", ZEROS_COMPRESSED.to_vec())]);
+    let size = u32::try_from(ZEROS_SIZE).unwrap();
+    bytes[44 + 12..44 + 16].copy_from_slice(&size.to_be_bytes());
+    assert_eq!(to_sfnt(&bytes).unwrap().len(), 12 + 16 + ZEROS_SIZE);
+}

@@ -9,6 +9,7 @@ use super::_inflate::zlib_decompress;
 use super::_sfnt::{Tables, be16, be32, is_wanted};
 use super::FontError;
 use std::borrow::Cow;
+use std::cmp::Ordering;
 
 /// A table larger than this is refused instead of inflated: the names, weight and style tables
 /// are a few kilobytes.
@@ -20,14 +21,12 @@ const MAX_SFNT_SIZE: usize = 256 * 1024 * 1024;
 
 /// The data of a table: as stored, or inflated to `size` bytes when `size` is at most `limit`.
 fn table(data: &[u8], size: usize, limit: usize) -> Result<Cow<'_, [u8]>, FontError> {
-    if data.len() == size {
-        Ok(Cow::Borrowed(data))
-    } else if data.len() < size && size <= limit {
-        zlib_decompress(data, size)
+    match data.len().cmp(&size) {
+        Ordering::Equal => Ok(Cow::Borrowed(data)),
+        Ordering::Less if size <= limit => zlib_decompress(data, size)
             .map(Cow::Owned)
-            .ok_or(FontError::InvalidCompressedData)
-    } else {
-        Err(FontError::InvalidCompressedData)
+            .ok_or(FontError::InvalidCompressedData),
+        _ => Err(FontError::InvalidCompressedData),
     }
 }
 
@@ -57,6 +56,11 @@ pub(crate) fn load(bytes: &[u8]) -> Result<Tables<'_>, FontError> {
 /// The sfnt font a WOFF file was made from: every table inflated, in a table directory the way
 /// TrueType and OpenType files have it. The checksums are the ones the WOFF file records.
 pub(crate) fn to_sfnt(bytes: &[u8]) -> Result<Vec<u8>, FontError> {
+    rebuild(bytes, MAX_SFNT_SIZE)
+}
+
+/// [`to_sfnt`] for tables that add up to at most `max` bytes.
+fn rebuild(bytes: &[u8], max: usize) -> Result<Vec<u8>, FontError> {
     let header = bytes.get(..44).ok_or(FontError::Truncated)?;
     let count = be16(header, 12);
     let mut tables = Vec::new();
@@ -68,17 +72,13 @@ pub(crate) fn to_sfnt(bytes: &[u8]) -> Result<Vec<u8>, FontError> {
         let stored = be32(record, 8) as usize;
         let size = be32(record, 12) as usize;
         total = total.saturating_add(size);
-        if total > MAX_SFNT_SIZE {
+        if total > max {
             return Err(FontError::InvalidCompressedData);
         }
         let data = bytes
             .get(offset..offset.saturating_add(stored))
             .ok_or(FontError::Truncated)?;
-        tables.push((
-            &record[..4],
-            be32(record, 16),
-            table(data, size, MAX_SFNT_SIZE)?,
-        ));
+        tables.push((&record[..4], be32(record, 16), table(data, size, max)?));
     }
 
     let entry_selector = count.checked_ilog2().unwrap_or(0);

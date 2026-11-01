@@ -59,8 +59,10 @@ pub(crate) fn load(bytes: &[u8], index: usize) -> Result<Tables<'_>, FontError> 
     }
     match &bytes[..4] {
         b"ttcf" => {
-            let at = 12 + 4 * index;
-            let record = bytes.get(at..at + 4).ok_or(FontError::Truncated)?;
+            let record = bytes
+                .get(12 + 4 * index..)
+                .and_then(|rest| rest.get(..4))
+                .ok_or(FontError::Truncated)?;
             from_sfnt(bytes, be32(record, 0) as usize)
         }
         b"wOFF" => _woff::load(bytes),
