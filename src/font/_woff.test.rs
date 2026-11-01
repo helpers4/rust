@@ -95,3 +95,33 @@ fn a_table_stored_larger_than_its_size_is_refused_even_if_it_inflates() {
     let bytes = woff_with(STORED, 11);
     assert_eq!(load(&bytes).err(), Some(FontError::InvalidCompressedData));
 }
+
+#[test]
+fn rebuilds_tables_that_add_up_to_exactly_the_limit() {
+    let bytes = woff(&[(*b"head", vec![1; 4]), (*b"name", vec![2; 6])]);
+    assert_eq!(rebuild(&bytes, 10).map(|sfnt| sfnt.len()), Ok(12 + 32 + 12));
+    assert_eq!(rebuild(&bytes, 9), Err(FontError::InvalidCompressedData));
+    assert_eq!(rebuild(&bytes, 0), Err(FontError::InvalidCompressedData));
+}
+
+#[test]
+fn rebuilds_a_table_inflated_to_exactly_the_limit() {
+    let mut bytes = woff(&[(*b"name", NAME_TABLE_COMPRESSED.to_vec())]);
+    let size = u32::try_from(NAME_TABLE_ORIGINAL_SIZE).unwrap();
+    bytes[44 + 12..44 + 16].copy_from_slice(&size.to_be_bytes());
+    assert!(rebuild(&bytes, NAME_TABLE_ORIGINAL_SIZE).is_ok());
+    assert!(rebuild(&bytes, NAME_TABLE_ORIGINAL_SIZE - 1).is_err());
+}
+
+#[test]
+fn a_table_is_inflated_only_up_to_the_limit() {
+    let size = NAME_TABLE_ORIGINAL_SIZE;
+    assert_eq!(
+        table(NAME_TABLE_COMPRESSED, size, size).map(|t| t.len()),
+        Ok(size)
+    );
+    assert_eq!(
+        table(NAME_TABLE_COMPRESSED, size, size - 1),
+        Err(FontError::InvalidCompressedData)
+    );
+}
