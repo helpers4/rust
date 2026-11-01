@@ -20,6 +20,10 @@ fn display_describes_each_variant() {
         "invalid compressed WOFF table"
     );
     assert_eq!(
+        FontError::IndexOutOfRange.to_string(),
+        "the file has no font with this index"
+    );
+    assert_eq!(
         FontError::MissingNameTable.to_string(),
         "the font has no name table"
     );

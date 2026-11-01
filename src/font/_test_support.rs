@@ -130,13 +130,25 @@ pub(super) fn sfnt_at(tables: &[Table], start: usize, version: [u8; 4]) -> Vec<u
 
 /// A TrueType collection whose first font holds `tables`.
 pub(super) fn collection(tables: &[Table]) -> Vec<u8> {
+    collection_of(&[tables])
+}
+
+/// A TrueType collection holding one font per entry of `fonts`.
+pub(super) fn collection_of(fonts: &[&[Table]]) -> Vec<u8> {
     let mut out = Vec::new();
     out.extend(b"ttcf");
     out.extend(0x0001_0000u32.to_be_bytes());
-    out.extend(1u32.to_be_bytes());
-    out.extend(16u32.to_be_bytes());
-    // The offsets in the table records are from the start of the file: build the font at 16.
-    out.extend(sfnt_at(tables, 16, [0, 1, 0, 0])[16..].iter());
+    out.extend((fonts.len() as u32).to_be_bytes());
+    let mut start = 12 + 4 * fonts.len();
+    let mut data = Vec::new();
+    for tables in fonts {
+        out.extend((start as u32).to_be_bytes());
+        // The offsets in the table records are from the start of the file.
+        let font = sfnt_at(tables, start, [0, 1, 0, 0])[start..].to_vec();
+        start += font.len();
+        data.extend(font);
+    }
+    out.extend(data);
     out
 }
 
