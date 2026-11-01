@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 //! The tables of a font file that [`read_font`](super::read_font) reads, found in a TrueType,
-//! OpenType or collection file (first font) or in a WOFF file. Not re-exported.
+//! OpenType or collection file (any of its fonts) or in a WOFF file. Not re-exported.
 
 use super::_woff;
 use super::FontError;
@@ -38,18 +38,33 @@ impl Tables<'_> {
     }
 }
 
-/// The tables of the font in `bytes`.
-pub(crate) fn load(bytes: &[u8]) -> Result<Tables<'_>, FontError> {
+/// How many fonts the file holds: the count of a collection, 1 for any other supported format.
+pub(crate) fn count(bytes: &[u8]) -> Result<usize, FontError> {
     let magic = bytes.get(..4).ok_or(FontError::Truncated)?;
     match magic {
-        [0, 1, 0, 0] | b"OTTO" | b"true" => from_sfnt(bytes, 0),
+        [0, 1, 0, 0] | b"OTTO" | b"true" | b"wOFF" => Ok(1),
         b"ttcf" => {
-            let header = bytes.get(..16).ok_or(FontError::Truncated)?;
-            from_sfnt(bytes, be32(header, 12) as usize)
+            let header = bytes.get(..12).ok_or(FontError::Truncated)?;
+            Ok(be32(header, 8) as usize)
         }
-        b"wOFF" => _woff::load(bytes),
         b"wOF2" => Err(FontError::UnsupportedWoff2),
         _ => Err(FontError::UnknownFormat),
+    }
+}
+
+/// The tables of the font number `index` in `bytes`.
+pub(crate) fn load(bytes: &[u8], index: usize) -> Result<Tables<'_>, FontError> {
+    if index >= count(bytes)? {
+        return Err(FontError::IndexOutOfRange);
+    }
+    match &bytes[..4] {
+        b"ttcf" => {
+            let at = 12 + 4 * index;
+            let record = bytes.get(at..at + 4).ok_or(FontError::Truncated)?;
+            from_sfnt(bytes, be32(record, 0) as usize)
+        }
+        b"wOFF" => _woff::load(bytes),
+        _ => from_sfnt(bytes, 0),
     }
 }
 

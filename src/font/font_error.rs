@@ -16,6 +16,9 @@ pub enum FontError {
     UnsupportedWoff2,
     /// A WOFF table whose compressed data is invalid or does not have its announced size.
     InvalidCompressedData,
+    /// The font number asked for is not in the file: a collection holds fewer fonts, and any
+    /// other file holds only the font number 0.
+    IndexOutOfRange,
     /// The file has no `name` table.
     MissingNameTable,
     /// The `name` table holds neither a typographic nor a plain family name.
@@ -29,6 +32,7 @@ impl fmt::Display for FontError {
             Self::UnknownFormat => write!(f, "not a TrueType, OpenType or WOFF font"),
             Self::UnsupportedWoff2 => write!(f, "WOFF2 fonts are not supported"),
             Self::InvalidCompressedData => write!(f, "invalid compressed WOFF table"),
+            Self::IndexOutOfRange => write!(f, "the file has no font with this index"),
             Self::MissingNameTable => write!(f, "the font has no name table"),
             Self::MissingFamily => write!(f, "the font has no family name"),
         }

@@ -37,8 +37,8 @@
 - env — dotenv content helpers (pure text, no I/O): `parse`, `get`, `set`, `remove`, `get_bool`,
   `get_int`, `get_list`, `get_duration`
 - font — fonts, no dependency: `pick_closest` (CSS font matching with `FontFace` / `FontRequest`, variable faces cover a weight
-  range), `weight_of_style`, `is_italic`, `split_postscript`, `same_family`, `read_font` (TrueType, OpenType, collection and
-  WOFF files into a `FontInfo`; not WOFF2), `FontError`
+  range), `weight_of_style`, `is_italic`, `split_postscript`, `same_family`, `read_font` / `read_font_at` (TrueType, OpenType, collection and
+  WOFF files into a `FontInfo`; not WOFF2), `font_count` (fonts in a collection), `to_sfnt` (WOFF → decompressed sfnt), `FontError`
 - fs — file-system helpers: `write_atomic`, `read_to_string_opt`, `walk`, `normalize` and `is_within`
   (lexical path checks, no I/O)
 - function — functions: `compose`, `pipe`, `Memoize`, `retry`, `backoff`, `TokenBucket` (rate limiter with an
