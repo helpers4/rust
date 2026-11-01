@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+## [0.0.11] - 2026-11-01
+
+### 🚀 Features
+- **font**: read any font of a collection and hand back the decoded sfnt
+
+### 🐛 Bug Fixes
+- **font**: add FontError::IndexOutOfRange last so the other variants keep their value
+
+### 📝 Documentation
+- **string**: list how parse_pattern differs from parsePatternOrRegExp
+- stop linking to items only built with random-entropy
+
+### ✅ Tests
+- **font**: kill the surviving mutants of the sfnt rebuild
+
+### 📦 Build
+- **deps**: Bump the actions group across 1 directory with 2 updates
+
+### 👷 CI/CD
+- **release**: pin helpers4/action-release by commit SHA
+- **release**: release with helpers4/action-release
+
 ## [0.0.10] - 2026-10-30
 
 ### 🚀 Features
@@ -303,4 +327,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [0.0.4]: https://github.com/helpers4/rust/compare/v0.0.3...v0.0.4
 [0.0.3]: https://github.com/helpers4/rust/compare/v0.0.2...v0.0.3
 [0.0.2]: https://github.com/helpers4/rust/compare/v0.0.1...v0.0.2
-
