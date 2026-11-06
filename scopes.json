@@ -1,12 +1,11 @@
 [
-  "agents",
+  "ai",
   "animation",
   "ansi",
   "array",
   "bytes",
   "cache",
   "ci",
-  "CI-CD",
   "coherency",
   "color",
   "commit",
@@ -42,5 +41,6 @@
   "time",
   "url",
   "validate",
-  "version"
+  "version",
+  "docs"
 ]
