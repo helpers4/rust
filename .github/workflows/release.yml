@@ -113,7 +113,7 @@ jobs:
         uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0
 
       - name: Install cargo-public-api
-        uses: taiki-e/install-action@86f7a0ffb25f40114606501a311ebcfaf882ea32
+        uses: taiki-e/install-action@c509219cf42fba86913069efd0ade2458c59337b
         with:
           tool: cargo-public-api
 
@@ -130,7 +130,7 @@ jobs:
 
       - name: Release
         id: release
-        uses: helpers4/action-release@ff5478af5ec4d768ad896e8539a42cb2bed15803 # v0.4.4
+        uses: helpers4/action-release@c6c22ee68ccdc124c7f036bf95617d13062b1294 # v0.6.1
         with:
           bump: ${{ inputs.bump }}
           dry-run: ${{ inputs.dry-run }}
@@ -161,7 +161,7 @@ jobs:
 
       - name: Install cargo-cyclonedx
         if: ${{ steps.attest.outcome == 'success' }}
-        uses: taiki-e/install-action@86f7a0ffb25f40114606501a311ebcfaf882ea32
+        uses: taiki-e/install-action@c509219cf42fba86913069efd0ade2458c59337b
         with:
           tool: cargo-cyclonedx
 
