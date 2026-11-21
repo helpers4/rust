@@ -46,7 +46,7 @@ jobs:
       # checksummed prebuilt binary from the upstream GitHub release instead of an unlocked
       # `cargo install` build.
       - name: Install cargo-binstall
-        uses: cargo-bins/cargo-binstall@851112458b5f28a29e5bc14a690c3f283d9dcc6f # v1.26.2
+        uses: cargo-bins/cargo-binstall@5885714d0a40a14b2535c6ffc051fd8e49aa9665 # v1.27.0
 
       - name: Install cargo-fuzz
         # `--target x86_64-unknown-linux-gnu` below is required: cargo-binstall fetches the
